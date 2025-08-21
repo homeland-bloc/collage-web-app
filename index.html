@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Collage Creator</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .upload-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e1e5f7;
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px 0;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .upload-area.dragover {
+            border-color: #48bb78;
+            background: #f0fff4;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #a0aec0;
+            margin-bottom: 15px;
+        }
+
+        .url-input-section {
+            margin: 20px 0;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            min-height: 80px;
+        }
+
+        .image-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(229, 62, 62, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-counter {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .generate-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .collage-preview {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .preview-canvas {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            max-width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .status-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+
+        .status-info {
+            background: #bee3f8;
+            color: #2a4365;
+            border: 1px solid #90cdf4;
+        }
+
+        /* Popup Notification Styles */
+        .popup-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            padding: 20px 30px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: popupFadeIn 0.3s ease-out;
+            max-width: 400px;
+            min-width: 300px;
+        }
+
+        .popup-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .popup-error {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+        }
+
+        .popup-info {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+        }
+
+        @keyframes popupFadeIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes popupFadeOut {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        .popup-notification.fade-out {
+            animation: popupFadeOut 0.3s ease-in forwards;
+        }
+
+        /* Image Detection Display */
+        .detection-info {
+            background: #edf2f7;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #4a5568;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #a0aec0;
+            padding: 40px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .upload-area {
+                padding: 20px;
+            }
+            
+            .images-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ Simple Collage Creator</h1>
+            <p>Upload images and generate compact, beautiful collages automatically</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2>📸 Add Your Images</h2>
+                <p>Upload up to 10 images via drag & drop, file selection, or URL</p>
+                
+                <!-- Drag & Drop Area -->
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">🖼️</div>
+                    <h3>Drag & Drop Images Here</h3>
+                    <p>or click to select files</p>
+                    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                </div>
+
+                <!-- URL Input -->
+                <div class="url-input-section">
+                    <input type="url" id="urlInput" class="url-input" placeholder="Or paste image URL here...">
+                    <button type="button" class="btn" id="addUrlBtn">Add URL</button>
+                </div>
+
+                <!-- Image Counter -->
+                <div class="image-counter" id="imageCounter">
+                    0 / 10 images added
+                </div>
+
+                <!-- Detection Info -->
+                <div class="detection-info" id="detectionInfo" style="display: none;">
+                    📊 Analyzing image types...
+                </div>
+
+                <!-- Images Grid -->
+                <div class="images-grid" id="imagesGrid">
+                    <div class="empty-state">
+                        No images added yet. Start by uploading or dragging images above.
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="generate-section">
+                    <button type="button" class="btn btn-success" id="generateBtn" disabled>
+                        🎨 Generate Collage
+                    </button>
+                </div>
+            </div>
+
+            <!-- Collage Preview -->
+            <div class="collage-preview" id="collagePreview" style="display: none;">
+                <h2>🎉 Your Collage</h2>
+                <canvas id="collageCanvas" class="preview-canvas"></canvas>
+                <div>
+                    <button type="button" class="btn btn-success" id="downloadBtn">
+                        💾 Download Collage
+                    </button>
+                </div>
+                <div id="collageInfo"></div>
+            </div>
+
+            <!-- Status Messages -->
+            <div id="statusContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let images = [];
+        const maxImages = 10;
+        let detectedImageType = 'unknown';
+
+        // DOM elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const urlInput = document.getElementById('urlInput');
+        const addUrlBtn = document.getElementById('addUrlBtn');
+        const imageCounter = document.getElementById('imageCounter');
+        const detectionInfo = document.getElementById('detectionInfo');
+        const imagesGrid = document.getElementById('imagesGrid');
+        const generateBtn = document.getElementById('generateBtn');
+        const collagePreview = document.getElementById('collagePreview');
+        const collageCanvas = document.getElementById('collageCanvas');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const statusContainer = document.getElementById('statusContainer');
+
+        // Event listeners
+        uploadArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+        addUrlBtn.addEventListener('click', addImageFromUrl);
+        generateBtn.addEventListener('click', generateCollage);
+        downloadBtn.addEventListener('click', downloadCollage);
+
+        // URL input enter key
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addImageFromUrl();
+            }
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = Array.from(e.dataTransfer.files);
+            const imageFiles = files.filter(file => file.type.startsWith('image/'));
+            
+            if (imageFiles.length > 0) {
+                addImagesFromFiles(imageFiles);
+            } else {
+                showPopupStatus('No image files found in drop.', 'error');
+            }
+        });
+
+        // Paste support
+        document.addEventListener('paste', async (e) => {
+            const items = e.clipboardData.items;
+            
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    e.preventDefault();
+                    const blob = item.getAsFile();
+                    await addImageFromBlob(blob, 'Pasted Image');
+                    break;
+                }
+            }
+        });
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            addImagesFromFiles(files);
+            fileInput.value = ''; // Reset input
+        }
+
+        async function addImagesFromFiles(files) {
+            for (let file of files) {
+                if (images.length >= maxImages) {
+                    showPopupStatus(`Maximum ${maxImages} images allowed!`, 'error');
+                    break;
+                }
+                
+                await addImageFromBlob(file, file.name);
+            }
+        }
+
+        async function addImageFromBlob(blob, filename) {
+            try {
+                const url = URL.createObjectURL(blob);
+                const img = await loadImageFromUrl(url);
+                
+                images.push({
+                    element: img,
+                    filename: filename,
+                    url: url,
+                    aspectRatio: img.width / img.height
+                });
+                
+                updateUI();
+                analyzeImageTypes();
+                showPopupStatus(`✅ Added ${filename}`, 'success');
+                
+            } catch (error) {
+                showPopupStatus(`Failed to add ${filename}: ${error.message}`, 'error');
+            }
+        }
+
+        async function addImageFromUrl() {
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                showPopupStatus('Please enter an image URL!', 'error');
+                return;
+            }
+            
+            if (images.length >= maxImages) {
+                showPopupStatus(`Maximum ${maxImages} images allowed!`, 'error');
+                return;
+            }
+            
+            try {
+                addUrlBtn.innerHTML = '<div class="loading"></div>Loading...';
+                addUrlBtn.disabled = true;
+                
+                const img = await loadImageFromUrl(url);
+                
+                images.push({
+                    element: img,
+                    filename: 'URL Image',
+                    url: url,
+                    aspectRatio: img.width / img.height
+                });
+                
+                updateUI();
+                analyzeImageTypes();
+                urlInput.value = '';
+                showPopupStatus('✅ Image added from URL!', 'success');
+                
+            } catch (error) {
+                showPopupStatus(`Failed to load image: ${error.message}`, 'error');
+            } finally {
+                addUrlBtn.innerHTML = 'Add URL';
+                addUrlBtn.disabled = false;
+            }
+        }
+
+        async function loadImageFromUrl(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                img.onload = () => resolve(img);
+                img.onerror = () => reject(new Error('Failed to load image. Check URL and CORS policy.'));
+                
+                img.src = url;
+                
+                // Timeout after 30 seconds
+                setTimeout(() => reject(new Error('Image load timeout')), 30000);
+            });
+        }
+
+        function analyzeImageTypes() {
+            if (images.length === 0) {
+                detectionInfo.style.display = 'none';
+                return;
+            }
+
+            const aspectRatios = images.map(img => img.aspectRatio);
+            const verticalCount = aspectRatios.filter(ratio => ratio < 0.8).length;
+            const horizontalCount = aspectRatios.filter(ratio => ratio > 1.2).length;
+            const squareCount = aspectRatios.filter(ratio => ratio >= 0.8 && ratio <= 1.2).length;
+
+            let detectionText = '';
+            
+            if (verticalCount > images.length * 0.6) {
+                detectedImageType = 'vertical';
+                detectionText = '📊 Detected: Mostly Vertical Images (Portrait)';
+            } else if (horizontalCount > images.length * 0.6) {
+                detectedImageType = 'horizontal';
+                detectionText = '📊 Detected: Mostly Horizontal Images (Landscape)';
+            } else if (squareCount > images.length * 0.6) {
+                detectedImageType = 'square';
+                detectionText = '📊 Detected: Mostly Square Images';
+            } else {
+                detectedImageType = 'mixed';
+                detectionText = '📊 Detected: Mixed Image Ratios';
+            }
+
+            detectionInfo.textContent = detectionText;
+            detectionInfo.style.display = 'block';
+        }
+
+        function getCellDimensions() {
+            // Return optimal cell dimensions based on detected image type
+            switch (detectedImageType) {
+                case 'vertical':
+                    return { width: 200, height: 300 }; // Portrait cells
+                case 'horizontal':
+                    return { width: 300, height: 200 }; // Landscape cells
+                case 'square':
+                    return { width: 280, height: 280 }; // Square cells
+                case 'mixed':
+                default:
+                    return { width: 280, height: 280 }; // Default square cells
+            }
+        }
+
+        function updateUI() {
+            // Update counter
+            imageCounter.textContent = `${images.length} / ${maxImages} images added`;
+            
+            // Update images grid
+            if (images.length === 0) {
+                imagesGrid.innerHTML = '<div class="empty-state">No images added yet. Start by uploading or dragging images above.</div>';
+            } else {
+                imagesGrid.innerHTML = images.map((img, index) => `
+                    <div class="image-item">
+                        <img src="${img.url}" alt="${img.filename}">
+                        <button class="remove-btn" onclick="removeImage(${index})">×</button>
+                    </div>
+                `).join('');
+            }
+            
+            // Update generate button
+            generateBtn.disabled = images.length === 0;
+        }
+
+        function removeImage(index) {
+            // Revoke object URL if it was created locally
+            if (images[index].url.startsWith('blob:')) {
+                URL.revokeObjectURL(images[index].url);
+            }
+            
+            images.splice(index, 1);
+            updateUI();
+            analyzeImageTypes();
+            showPopupStatus('Image removed', 'info');
+        }
+
+        function calculateOptimalLayout(count) {
+            // Smart layout algorithm for horizontal-oriented collages
+            switch (count) {
+                case 1: return { rows: 1, cols: 1 };
+                case 2: return { rows: 1, cols: 2 };
+                case 3: return { rows: 1, cols: 3 };
+                case 4: return { rows: 2, cols: 2 };
+                case 5: return { rows: 2, cols: 3 }; // 3 top, 2 bottom
+                case 6: return { rows: 2, cols: 3 };
+                case 7: return { rows: 2, cols: 4 }; // 4 top, 3 bottom
+                case 8: return { rows: 2, cols: 4 };
+                case 9: return { rows: 3, cols: 3 };
+                case 10: return { rows: 2, cols: 5 };
+                default: return { rows: 1, cols: count };
+            }
+        }
+
+        async function generateCollage() {
+            if (images.length === 0) {
+                showPopupStatus('Add some images first!', 'error');
+                return;
+            }
+            
+            try {
+                generateBtn.innerHTML = '<div class="loading"></div>Generating...';
+                generateBtn.disabled = true;
+                
+                const layout = calculateOptimalLayout(images.length);
+                const cellDims = getCellDimensions();
+                const canvas = createCollageCanvas(images.map(img => img.element), layout.rows, layout.cols, cellDims);
+                
+                // Update canvas display
+                collageCanvas.width = canvas.width;
+                collageCanvas.height = canvas.height;
+                const ctx = collageCanvas.getContext('2d');
+                ctx.drawImage(canvas, 0, 0);
+                
+                // Show preview section
+                collagePreview.style.display = 'block';
+                collagePreview.scrollIntoView({ behavior: 'smooth' });
+                
+                // Update info
+                document.getElementById('collageInfo').innerHTML = `
+                    <p><strong>Layout:</strong> ${layout.rows}×${layout.cols} grid (${images.length} images)</p>
+                    <p><strong>Canvas size:</strong> ${canvas.width}×${canvas.height}px</p>
+                    <p><strong>Cell type:</strong> ${detectedImageType} optimized (${cellDims.width}×${cellDims.height}px)</p>
+                `;
+                
+                showPopupStatus(`🎉 Collage generated! Layout: ${layout.rows}×${layout.cols}`, 'success');
+                
+            } catch (error) {
+                showPopupStatus(`Failed to generate collage: ${error.message}`, 'error');
+            } finally {
+                generateBtn.innerHTML = '🎨 Generate Collage';
+                generateBtn.disabled = false;
+            }
+        }
+
+        function createCollageCanvas(imageElements, rows, cols, cellDims, spacing = 5) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Calculate compact dimensions with minimal spacing
+            const collageWidth = cols * cellDims.width + (cols - 1) * spacing;
+            const collageHeight = rows * cellDims.height + (rows - 1) * spacing;
+            
+            canvas.width = collageWidth;
+            canvas.height = collageHeight;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, collageWidth, collageHeight);
+            
+            // Place images with centered bottom rows for odd counts
+            for (let i = 0; i < imageElements.length && i < rows * cols; i++) {
+                const img = imageElements[i];
+                
+                // Calculate grid position with centering for odd counts
+                let row, col;
+                let colOffset = 0; // For centering bottom rows
+                
+                if (imageElements.length === 5) {
+                    // Special case: 5 images (3 top, 2 bottom centered)
+                    if (i < 3) {
+                        row = 0;
+                        col = i;
+                    } else {
+                        row = 1;
+                        col = i - 3;
+                        colOffset = (cellDims.width + spacing) / 2; // Center 2 images under 3
+                    }
+                } else if (imageElements.length === 7) {
+                    // Special case: 7 images (4 top, 3 bottom centered)
+                    if (i < 4) {
+                        row = 0;
+                        col = i;
+                    } else {
+                        row = 1;
+                        col = i - 4;
+                        colOffset = (cellDims.width + spacing) / 2; // Center 3 images under 4
+                    }
+                } else {
+                    // Regular grid
+                    row = Math.floor(i / cols);
+                    col = i % cols;
+                }
+                
+                // Resize image to fit cell while maintaining aspect ratio
+                const resizedImg = resizeImageToFit(img, cellDims.width, cellDims.height);
+                
+                // Calculate position (center in cell + any row offset)
+                const x = col * (cellDims.width + spacing) + (cellDims.width - resizedImg.width) / 2 + colOffset;
+                const y = row * (cellDims.height + spacing) + (cellDims.height - resizedImg.height) / 2;
+                
+                ctx.drawImage(resizedImg, x, y);
+            }
+            
+            return canvas;
+        }
+
+        function resizeImageToFit(img, maxWidth, maxHeight) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const widthRatio = maxWidth / img.width;
+            const heightRatio = maxHeight / img.height;
+            const ratio = Math.min(widthRatio, heightRatio);
+            
+            const newWidth = Math.floor(img.width * ratio);
+            const newHeight = Math.floor(img.height * ratio);
+            
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+            
+            ctx.drawImage(img, 0, 0, newWidth, newHeight);
+            
+            return canvas;
+        }
+
+        function downloadCollage() {
+            try {
+                const link = document.createElement('a');
+                link.download = `collage_${images.length}_images_${Date.now()}.png`;
+                link.href = collageCanvas.toDataURL('image/png');
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showPopupStatus('✅ Collage downloaded successfully!', 'success');
+            } catch (error) {
+                showPopupStatus('❌ Failed to download. Try right-clicking the image and saving manually.', 'error');
+            }
+        }
+
+        function showPopupStatus(message, type) {
+            // Create popup notification
+            const popup = document.createElement('div');
+            popup.className = `popup-notification popup-${type}`;
+            popup.textContent = message;
+            
+            document.body.appendChild(popup);
+            
+            // Auto-remove after 3 seconds with fade out animation
+            setTimeout(() => {
+                popup.classList.add('fade-out');
+                setTimeout(() => {
+                    if (popup.parentNode) {
+                        popup.parentNode.removeChild(popup);
+                    }
+                }, 300); // Wait for fade out animation
+            }, 3000);
+        }
+
+        // Initialize
+        updateUI();
+        showPopupStatus('🎨 Simple Collage Creator ready! Add up to 10 images and generate your collage.', 'info');
+    </script>
+</body>
+</html>
+    </script>
+</body>
+</html>
