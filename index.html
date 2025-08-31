@@ -380,6 +380,7 @@
                 <div class="url-input-section">
                     <input type="url" id="urlInput" class="url-input" placeholder="Or paste image URL here...">
                     <button type="button" class="btn" id="addUrlBtn">Add URL</button>
+                    <button type="button" class="btn" id="clearUrlBtn">Clear</button>
                 </div>
 
                 <!-- Image Counter -->
@@ -435,6 +436,7 @@
         const fileInput = document.getElementById('fileInput');
         const urlInput = document.getElementById('urlInput');
         const addUrlBtn = document.getElementById('addUrlBtn');
+        const clearUrlBtn = document.getElementById('clearUrlBtn');
         const imageCounter = document.getElementById('imageCounter');
         const detectionInfo = document.getElementById('detectionInfo');
         const imagesGrid = document.getElementById('imagesGrid');
@@ -448,6 +450,7 @@
         uploadArea.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', handleFileSelect);
         addUrlBtn.addEventListener('click', addImageFromUrl);
+        clearUrlBtn.addEventListener('click', clearUrlInput);
         generateBtn.addEventListener('click', generateCollage);
         downloadBtn.addEventListener('click', downloadCollage);
 
@@ -677,7 +680,7 @@
                 case 6: return { rows: 2, cols: 3 };
                 case 7: return { rows: 2, cols: 4 }; // 4 top, 3 bottom
                 case 8: return { rows: 2, cols: 4 };
-                case 9: return { rows: 3, cols: 3 };
+                case 9: return { rows: 2, cols: 5 }; // 5 top, 4 bottom
                 case 10: return { rows: 2, cols: 5 };
                 default: return { rows: 1, cols: count };
             }
@@ -729,8 +732,15 @@
             const ctx = canvas.getContext('2d');
             
             // Calculate compact dimensions with minimal spacing
-            const collageWidth = cols * cellDims.width + (cols - 1) * spacing;
-            const collageHeight = rows * cellDims.height + (rows - 1) * spacing;
+            // Special handling for 9 images: 5 top, 4 bottom
+            let collageWidth, collageHeight;
+            if (imageElements.length === 9) {
+                collageWidth = 5 * cellDims.width + 4 * spacing;
+                collageHeight = 2 * cellDims.height + spacing;
+            } else {
+                collageWidth = cols * cellDims.width + (cols - 1) * spacing;
+                collageHeight = rows * cellDims.height + (rows - 1) * spacing;
+            }
             
             canvas.width = collageWidth;
             canvas.height = collageHeight;
@@ -738,14 +748,11 @@
             // Clear canvas
             ctx.clearRect(0, 0, collageWidth, collageHeight);
             
-            // Place images with centered bottom rows for odd counts
             for (let i = 0; i < imageElements.length && i < rows * cols; i++) {
                 const img = imageElements[i];
-                
-                // Calculate grid position with centering for odd counts
                 let row, col;
-                let colOffset = 0; // For centering bottom rows
-                
+                let colOffset = 0;
+
                 if (imageElements.length === 5) {
                     // Special case: 5 images (3 top, 2 bottom centered)
                     if (i < 3) {
@@ -765,6 +772,18 @@
                         row = 1;
                         col = i - 4;
                         colOffset = (cellDims.width + spacing) / 2; // Center 3 images under 4
+                    }
+                } else if (imageElements.length === 9) {
+                    // Special case: 9 images (5 top, 4 bottom centered)
+                    if (i < 5) {
+                        row = 0;
+                        col = i;
+                        colOffset = 0;
+                    } else {
+                        row = 1;
+                        col = i - 5;
+                        // Center 4 images under 5: offset by half cell + half spacing
+                        colOffset = ((cellDims.width + spacing) / 2);
                     }
                 } else {
                     // Regular grid
@@ -820,6 +839,11 @@
             }
         }
 
+        function clearUrlInput() {
+            urlInput.value = '';
+            urlInput.focus();
+        }
+
         function showPopupStatus(message, type) {
             // Create popup notification
             const popup = document.createElement('div');
@@ -828,7 +852,7 @@
             
             document.body.appendChild(popup);
             
-            // Auto-remove after 3 seconds with fade out animation
+            // Auto-remove after 2 seconds with fade out animation
             setTimeout(() => {
                 popup.classList.add('fade-out');
                 setTimeout(() => {
@@ -836,15 +860,12 @@
                         popup.parentNode.removeChild(popup);
                     }
                 }, 300); // Wait for fade out animation
-            }, 3000);
+            }, 2000);
         }
 
         // Initialize
         updateUI();
         showPopupStatus('🎨 Simple Collage Creator ready! Add up to 10 images and generate your collage.', 'info');
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>
