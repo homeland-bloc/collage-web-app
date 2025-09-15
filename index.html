@@ -303,17 +303,148 @@
             animation: popupFadeOut 0.3s ease-in forwards;
         }
 
-        /* Image Detection Display */
-        .detection-info {
+        .controls-section {
+            background: #f0f4ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #d6e3ff;
+        }
+
+        .controls-section h3 {
+            margin-bottom: 15px;
+            color: #4a5568;
+            font-size: 1.1em;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4a5568;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            margin-bottom: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-group span {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        }
+
+        .preset-btn:hover {
+            box-shadow: 0 6px 16px rgba(66, 153, 225, 0.3);
+        }
+
+        .layout-preview {
             background: #edf2f7;
             border: 2px solid #cbd5e0;
             border-radius: 8px;
-            padding: 10px 15px;
-            margin: 10px 0;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
             font-size: 14px;
             color: #4a5568;
-            text-align: center;
             font-weight: 500;
+        }
+
+        /* Duplicate confirmation dialog */
+        .duplicate-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .duplicate-dialog h3 {
+            color: #e53e3e;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .duplicate-dialog p {
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .duplicate-dialog .dialog-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
         }
 
         .loading {
@@ -366,7 +497,7 @@
             <!-- Upload Section -->
             <div class="upload-section">
                 <h2>📸 Add Your Images</h2>
-                <p>Upload up to 10 images via drag & drop, file selection, or URL</p>
+                <p>Upload images via drag & drop, file selection, or URL</p>
                 
                 <!-- Drag & Drop Area -->
                 <div class="upload-area" id="uploadArea">
@@ -385,12 +516,34 @@
 
                 <!-- Image Counter -->
                 <div class="image-counter" id="imageCounter">
-                    0 / 10 images added
+                    0 images added
                 </div>
 
-                <!-- Detection Info -->
-                <div class="detection-info" id="detectionInfo" style="display: none;">
-                    📊 Analyzing image types...
+                <!-- Manual Controls -->
+                <div class="controls-section">
+                    <h3>🎛️ Layout Controls</h3>
+                    <div class="controls-grid">
+                        <div class="control-group">
+                            <label for="rowsSlider">Rows:</label>
+                            <input type="range" id="rowsSlider" min="1" max="10" value="2" class="slider">
+                            <span id="rowsValue">2</span>
+                        </div>
+                        <div class="control-group">
+                            <label for="cellWidthSlider">Cell Width:</label>
+                            <input type="range" id="cellWidthSlider" min="50" max="800" value="280" class="slider">
+                            <span id="cellWidthValue">280px</span>
+                        </div>
+                        <div class="control-group">
+                            <label for="cellHeightSlider">Cell Height:</label>
+                            <input type="range" id="cellHeightSlider" min="50" max="800" value="280" class="slider">
+                            <span id="cellHeightValue">280px</span>
+                        </div>
+                    </div>
+                    <div class="preset-buttons">
+                        <button type="button" class="btn preset-btn" onclick="setPreset(280, 280)">Square</button>
+                        <button type="button" class="btn preset-btn" onclick="setPreset(200, 300)">Portrait</button>
+                        <button type="button" class="btn preset-btn" onclick="setPreset(300, 200)">Landscape</button>
+                    </div>
                 </div>
 
                 <!-- Images Grid -->
@@ -428,8 +581,9 @@
     <script>
         // Global state
         let images = [];
-        const maxImages = 10;
-        let detectedImageType = 'unknown';
+        let userRows = 2;
+        let userCellWidth = 280;
+        let userCellHeight = 280;
 
         // DOM elements
         const uploadArea = document.getElementById('uploadArea');
@@ -438,13 +592,20 @@
         const addUrlBtn = document.getElementById('addUrlBtn');
         const clearUrlBtn = document.getElementById('clearUrlBtn');
         const imageCounter = document.getElementById('imageCounter');
-        const detectionInfo = document.getElementById('detectionInfo');
         const imagesGrid = document.getElementById('imagesGrid');
         const generateBtn = document.getElementById('generateBtn');
         const collagePreview = document.getElementById('collagePreview');
         const collageCanvas = document.getElementById('collageCanvas');
         const downloadBtn = document.getElementById('downloadBtn');
         const statusContainer = document.getElementById('statusContainer');
+
+        // Control elements
+        const rowsSlider = document.getElementById('rowsSlider');
+        const cellWidthSlider = document.getElementById('cellWidthSlider');
+        const cellHeightSlider = document.getElementById('cellHeightSlider');
+        const rowsValue = document.getElementById('rowsValue');
+        const cellWidthValue = document.getElementById('cellWidthValue');
+        const cellHeightValue = document.getElementById('cellHeightValue');
 
         // Event listeners
         uploadArea.addEventListener('click', () => fileInput.click());
@@ -453,6 +614,11 @@
         clearUrlBtn.addEventListener('click', clearUrlInput);
         generateBtn.addEventListener('click', generateCollage);
         downloadBtn.addEventListener('click', downloadCollage);
+
+        // Control event listeners
+        rowsSlider.addEventListener('input', updateRows);
+        cellWidthSlider.addEventListener('input', updateCellWidth);
+        cellHeightSlider.addEventListener('input', updateCellHeight);
 
         // URL input enter key
         urlInput.addEventListener('keypress', (e) => {
@@ -507,16 +673,24 @@
 
         async function addImagesFromFiles(files) {
             for (let file of files) {
-                if (images.length >= maxImages) {
-                    showPopupStatus(`Maximum ${maxImages} images allowed!`, 'error');
-                    break;
+                // Check for duplicates
+                const isDuplicate = images.some(img => 
+                    img.filename === file.name && 
+                    img.filesize === file.size
+                );
+                
+                if (isDuplicate) {
+                    const shouldAdd = await showDuplicateDialog(file.name);
+                    if (!shouldAdd) {
+                        continue; // Skip this file
+                    }
                 }
                 
-                await addImageFromBlob(file, file.name);
+                await addImageFromBlob(file, file.name, file.size);
             }
         }
 
-        async function addImageFromBlob(blob, filename) {
+        async function addImageFromBlob(blob, filename, filesize = blob.size) {
             try {
                 const url = URL.createObjectURL(blob);
                 const img = await loadImageFromUrl(url);
@@ -524,12 +698,12 @@
                 images.push({
                     element: img,
                     filename: filename,
+                    filesize: filesize,
                     url: url,
                     aspectRatio: img.width / img.height
                 });
                 
                 updateUI();
-                analyzeImageTypes();
                 showPopupStatus(`✅ Added ${filename}`, 'success');
                 
             } catch (error) {
@@ -545,26 +719,31 @@
                 return;
             }
             
-            if (images.length >= maxImages) {
-                showPopupStatus(`Maximum ${maxImages} images allowed!`, 'error');
-                return;
-            }
-            
             try {
                 addUrlBtn.innerHTML = '<div class="loading"></div>Loading...';
                 addUrlBtn.disabled = true;
                 
                 const img = await loadImageFromUrl(url);
                 
+                // Check for URL duplicates (by URL string)
+                const isDuplicate = images.some(existingImg => existingImg.url === url);
+                
+                if (isDuplicate) {
+                    const shouldAdd = await showDuplicateDialog('URL Image');
+                    if (!shouldAdd) {
+                        return;
+                    }
+                }
+                
                 images.push({
                     element: img,
                     filename: 'URL Image',
+                    filesize: 0, // Unknown for URL images
                     url: url,
                     aspectRatio: img.width / img.height
                 });
                 
                 updateUI();
-                analyzeImageTypes();
                 urlInput.value = '';
                 showPopupStatus('✅ Image added from URL!', 'success');
                 
@@ -591,55 +770,107 @@
             });
         }
 
-        function analyzeImageTypes() {
-            if (images.length === 0) {
-                detectionInfo.style.display = 'none';
-                return;
-            }
+        function showDuplicateDialog(filename) {
+            return new Promise((resolve) => {
+                // Create overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'dialog-overlay';
+                
+                // Create dialog
+                const dialog = document.createElement('div');
+                dialog.className = 'duplicate-dialog';
+                dialog.innerHTML = `
+                    <h3>⚠️ Duplicate Image Detected</h3>
+                    <p>The image "<strong>${filename}</strong>" appears to be a duplicate of an already uploaded image.</p>
+                    <p>Do you want to add it anyway?</p>
+                    <div class="dialog-buttons">
+                        <button class="btn" id="duplicateCancel">Cancel</button>
+                        <button class="btn btn-success" id="duplicateAdd">Add Anyway</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(overlay);
+                document.body.appendChild(dialog);
+                
+                // Event handlers
+                document.getElementById('duplicateCancel').onclick = () => {
+                    document.body.removeChild(overlay);
+                    document.body.removeChild(dialog);
+                    resolve(false);
+                };
+                
+                document.getElementById('duplicateAdd').onclick = () => {
+                    document.body.removeChild(overlay);
+                    document.body.removeChild(dialog);
+                    resolve(true);
+                };
+                
+                // Close on overlay click
+                overlay.onclick = () => {
+                    document.body.removeChild(overlay);
+                    document.body.removeChild(dialog);
+                    resolve(false);
+                };
+            });
+        }
 
-            const aspectRatios = images.map(img => img.aspectRatio);
-            const verticalCount = aspectRatios.filter(ratio => ratio < 0.8).length;
-            const horizontalCount = aspectRatios.filter(ratio => ratio > 1.2).length;
-            const squareCount = aspectRatios.filter(ratio => ratio >= 0.8 && ratio <= 1.2).length;
+        function updateRows() {
+            userRows = parseInt(rowsSlider.value);
+            rowsValue.textContent = userRows;
+            updateLayoutPreview();
+        }
 
-            let detectionText = '';
+        function updateCellWidth() {
+            userCellWidth = parseInt(cellWidthSlider.value);
+            cellWidthValue.textContent = userCellWidth + 'px';
+            updateLayoutPreview();
+        }
+
+        function updateCellHeight() {
+            userCellHeight = parseInt(cellHeightSlider.value);
+            cellHeightValue.textContent = userCellHeight + 'px';
+            updateLayoutPreview();
+        }
+
+        function setPreset(width, height) {
+            userCellWidth = width;
+            userCellHeight = height;
+            cellWidthSlider.value = width;
+            cellHeightSlider.value = height;
+            cellWidthValue.textContent = width + 'px';
+            cellHeightValue.textContent = height + 'px';
+            updateLayoutPreview();
+        }
+
+        function updateLayoutPreview() {
+            if (images.length === 0) return;
             
-            if (verticalCount > images.length * 0.6) {
-                detectedImageType = 'vertical';
-                detectionText = '📊 Detected: Mostly Vertical Images (Portrait)';
-            } else if (horizontalCount > images.length * 0.6) {
-                detectedImageType = 'horizontal';
-                detectionText = '📊 Detected: Mostly Horizontal Images (Landscape)';
-            } else if (squareCount > images.length * 0.6) {
-                detectedImageType = 'square';
-                detectionText = '📊 Detected: Mostly Square Images';
-            } else {
-                detectedImageType = 'mixed';
-                detectionText = '📊 Detected: Mixed Image Ratios';
+            const cols = Math.ceil(images.length / userRows);
+            const totalCells = userRows * cols;
+            const emptyCells = totalCells - images.length;
+            
+            // Create or update layout preview
+            let preview = document.querySelector('.layout-preview');
+            if (!preview) {
+                preview = document.createElement('div');
+                preview.className = 'layout-preview';
+                document.querySelector('.controls-section').appendChild(preview);
             }
-
-            detectionInfo.textContent = detectionText;
-            detectionInfo.style.display = 'block';
+            
+            preview.innerHTML = `
+                📐 Layout Preview: ${userRows}×${cols} grid (${images.length} images)
+                ${emptyCells > 0 ? `<br>⚡ ${emptyCells} empty cell(s) - last row will be centered` : ''}
+                <br>🎯 Canvas size: ~${cols * userCellWidth}×${userRows * userCellHeight}px
+            `;
         }
 
         function getCellDimensions() {
-            // Return optimal cell dimensions based on detected image type
-            switch (detectedImageType) {
-                case 'vertical':
-                    return { width: 200, height: 300 }; // Portrait cells
-                case 'horizontal':
-                    return { width: 300, height: 200 }; // Landscape cells
-                case 'square':
-                    return { width: 280, height: 280 }; // Square cells
-                case 'mixed':
-                default:
-                    return { width: 280, height: 280 }; // Default square cells
-            }
+            return { width: userCellWidth, height: userCellHeight };
         }
 
         function updateUI() {
             // Update counter
-            imageCounter.textContent = `${images.length} / ${maxImages} images added`;
+            imageCounter.textContent = `${images.length} images added`;
             
             // Update images grid
             if (images.length === 0) {
@@ -655,6 +886,9 @@
             
             // Update generate button
             generateBtn.disabled = images.length === 0;
+            
+            // Update layout preview
+            updateLayoutPreview();
         }
 
         function removeImage(index) {
@@ -665,25 +899,12 @@
             
             images.splice(index, 1);
             updateUI();
-            analyzeImageTypes();
             showPopupStatus('Image removed', 'info');
         }
 
         function calculateOptimalLayout(count) {
-            // Smart layout algorithm for horizontal-oriented collages
-            switch (count) {
-                case 1: return { rows: 1, cols: 1 };
-                case 2: return { rows: 1, cols: 2 };
-                case 3: return { rows: 1, cols: 3 };
-                case 4: return { rows: 2, cols: 2 };
-                case 5: return { rows: 2, cols: 3 }; // 3 top, 2 bottom
-                case 6: return { rows: 2, cols: 3 };
-                case 7: return { rows: 2, cols: 4 }; // 4 top, 3 bottom
-                case 8: return { rows: 2, cols: 4 };
-                case 9: return { rows: 2, cols: 5 }; // 5 top, 4 bottom
-                case 10: return { rows: 2, cols: 5 };
-                default: return { rows: 1, cols: count };
-            }
+            const cols = Math.ceil(count / userRows);
+            return { rows: userRows, cols: cols };
         }
 
         async function generateCollage() {
@@ -714,7 +935,7 @@
                 document.getElementById('collageInfo').innerHTML = `
                     <p><strong>Layout:</strong> ${layout.rows}×${layout.cols} grid (${images.length} images)</p>
                     <p><strong>Canvas size:</strong> ${canvas.width}×${canvas.height}px</p>
-                    <p><strong>Cell type:</strong> ${detectedImageType} optimized (${cellDims.width}×${cellDims.height}px)</p>
+                    <p><strong>Cell size:</strong> ${cellDims.width}×${cellDims.height}px</p>
                 `;
                 
                 showPopupStatus(`🎉 Collage generated! Layout: ${layout.rows}×${layout.cols}`, 'success');
@@ -731,16 +952,9 @@
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // Calculate compact dimensions with minimal spacing
-            // Special handling for 9 images: 5 top, 4 bottom
-            let collageWidth, collageHeight;
-            if (imageElements.length === 9) {
-                collageWidth = 5 * cellDims.width + 4 * spacing;
-                collageHeight = 2 * cellDims.height + spacing;
-            } else {
-                collageWidth = cols * cellDims.width + (cols - 1) * spacing;
-                collageHeight = rows * cellDims.height + (rows - 1) * spacing;
-            }
+            // Calculate canvas dimensions
+            const collageWidth = cols * cellDims.width + (cols - 1) * spacing;
+            const collageHeight = rows * cellDims.height + (rows - 1) * spacing;
             
             canvas.width = collageWidth;
             canvas.height = collageHeight;
@@ -748,54 +962,27 @@
             // Clear canvas
             ctx.clearRect(0, 0, collageWidth, collageHeight);
             
-            for (let i = 0; i < imageElements.length && i < rows * cols; i++) {
+            for (let i = 0; i < imageElements.length; i++) {
                 const img = imageElements[i];
-                let row, col;
-                let colOffset = 0;
-
-                if (imageElements.length === 5) {
-                    // Special case: 5 images (3 top, 2 bottom centered)
-                    if (i < 3) {
-                        row = 0;
-                        col = i;
-                    } else {
-                        row = 1;
-                        col = i - 3;
-                        colOffset = (cellDims.width + spacing) / 2; // Center 2 images under 3
-                    }
-                } else if (imageElements.length === 7) {
-                    // Special case: 7 images (4 top, 3 bottom centered)
-                    if (i < 4) {
-                        row = 0;
-                        col = i;
-                    } else {
-                        row = 1;
-                        col = i - 4;
-                        colOffset = (cellDims.width + spacing) / 2; // Center 3 images under 4
-                    }
-                } else if (imageElements.length === 9) {
-                    // Special case: 9 images (5 top, 4 bottom centered)
-                    if (i < 5) {
-                        row = 0;
-                        col = i;
-                        colOffset = 0;
-                    } else {
-                        row = 1;
-                        col = i - 5;
-                        // Center 4 images under 5: offset by half cell + half spacing
-                        colOffset = ((cellDims.width + spacing) / 2);
-                    }
-                } else {
-                    // Regular grid
-                    row = Math.floor(i / cols);
-                    col = i % cols;
+                let row = Math.floor(i / cols);
+                let col = i % cols;
+                let xOffset = 0;
+                
+                // Center the last row if it's incomplete
+                const isLastRow = row === rows - 1;
+                const imagesInThisRow = isLastRow ? imageElements.length - (row * cols) : cols;
+                
+                if (isLastRow && imagesInThisRow < cols) {
+                    // Calculate offset to center the last row
+                    const emptySpaces = cols - imagesInThisRow;
+                    xOffset = (emptySpaces * (cellDims.width + spacing)) / 2;
                 }
                 
                 // Resize image to fit cell while maintaining aspect ratio
                 const resizedImg = resizeImageToFit(img, cellDims.width, cellDims.height);
                 
-                // Calculate position (center in cell + any row offset)
-                const x = col * (cellDims.width + spacing) + (cellDims.width - resizedImg.width) / 2 + colOffset;
+                // Calculate position (center in cell + any centering offset)
+                const x = col * (cellDims.width + spacing) + (cellDims.width - resizedImg.width) / 2 + xOffset;
                 const y = row * (cellDims.height + spacing) + (cellDims.height - resizedImg.height) / 2;
                 
                 ctx.drawImage(resizedImg, x, y);
@@ -865,7 +1052,7 @@
 
         // Initialize
         updateUI();
-        showPopupStatus('🎨 Simple Collage Creator ready! Add up to 10 images and generate your collage.', 'info');
+        showPopupStatus('🎨 Simple Collage Creator ready! Add images and customize your layout.', 'info');
     </script>
 </body>
 </html>
