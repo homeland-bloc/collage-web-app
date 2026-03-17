@@ -43,29 +43,6 @@
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(135deg, #5D4037 0%, #6D4C41 100%);
-            color: #FFF8E1;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .logo-space {
-            display: none;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 300;
-        }
-
-        .header p {
-            opacity: 0.95;
-            font-size: 1em;
-            line-height: 1.5;
-        }
-
         .main-content {
             padding: 40px;
         }
@@ -229,34 +206,6 @@
 
         .empty-cell-item:hover {
             transform: scale(1.05);
-        }
-
-        .reorder-buttons {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            display: flex;
-            gap: 3px;
-        }
-
-        .reorder-btn {
-            background: rgba(109, 76, 65, 0.9);
-            color: #FFF8E1;
-            border: none;
-            border-radius: 4px;
-            width: 25px;
-            height: 25px;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .reorder-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
         }
 
         .remove-btn {
@@ -506,12 +455,6 @@
             transform: scale(0.95);
         }
 
-        .control-group span {
-            font-weight: 600;
-            color: #6D4C41;
-            font-size: 14px;
-        }
-
         .preset-buttons {
             display: flex;
             gap: 10px;
@@ -622,8 +565,6 @@
             .control-group span { font-size: 13px; margin-top: 4px; }
             .preset-buttons { gap: 6px; }
             .preset-btn { padding: 8px 10px; font-size: 12px; }
-            .aspect-ratio-section { padding: 12px; margin: 12px 0; }
-            .aspect-ratio-section label { font-size: 13px; }
             .btn { padding: 10px 16px; font-size: 14px; }
             .url-input { font-size: 16px; }
         }
@@ -678,13 +619,15 @@
         }
 
         .image-item.dragging,
-        .empty-cell-item.dragging {
+        .empty-cell-item.dragging,
+        .text-cell-item.dragging {
             opacity: 0.4;
             transform: scale(0.97);
         }
 
         .image-item.drag-over,
-        .empty-cell-item.drag-over {
+        .empty-cell-item.drag-over,
+        .text-cell-item.drag-over {
             outline: 3px solid #6D4C41;
             outline-offset: -3px;
         }
@@ -756,12 +699,24 @@
             box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
         }
 
-        .sort-buttons {
+        .sort-row {
             display: flex;
-            gap: 5px;
-            justify-content: center;
-            margin: 15px 0;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0 6px;
+            font-size: 13px;
+            color: #6D4C41;
+        }
+
+        .sort-row select {
+            flex: 1;
+            padding: 5px 8px;
+            border: 1px solid #D7CCC8;
+            border-radius: 6px;
+            font-size: 13px;
+            background: #FFFAF0;
+            color: #3E2723;
+            cursor: pointer;
         }
 
         /* Text cell thumbnail */
@@ -1125,27 +1080,27 @@
                     <div class="control-group" id="labelFontStyleControl" style="display: none;">
                         <label for="labelFontSelect">Label Font Style:</label>
                         <select id="labelFontSelect" class="font-select" onchange="updateLabelFontStyle()">
-                            <option value="ARDECODE, monospace">🔤 ARDECODE</option>
-                            <option value="'Lilita One', cursive" selected>Lilita One (Default)</option>
-                            <option value="'Pacifico', cursive">Pacifico</option>
-                            <option value="'Lobster', cursive">Lobster</option>
+                            <option value="ARDECODE, monospace">ARDECODE</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                            <option value="'Courier New', monospace">Courier New</option>
                             <option value="'Dancing Script', cursive">Dancing Script</option>
-                            <option value="'Righteous', cursive">Righteous</option>
-                            <option value="'Playfair Display', serif">Playfair Display</option>
-                            <option value="'Oswald', sans-serif">Oswald</option>
-                            <option value="'Raleway', sans-serif">Raleway</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="Impact, sans-serif">Impact</option>
+                            <option value="'Lilita One', cursive" selected>Lilita One (Default)</option>
+                            <option value="'Lobster', cursive">Lobster</option>
                             <option value="'Merriweather', serif">Merriweather</option>
                             <option value="'Nunito', sans-serif">Nunito</option>
-                            <option value="'Segoe UI', sans-serif">Segoe UI</option>
-                            <option value="Arial, sans-serif">Arial</option>
-                            <option value="Impact, sans-serif">Impact</option>
-                            <option value="Verdana, sans-serif">Verdana</option>
-                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                            <option value="'Times New Roman', serif">Times New Roman</option>
-                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Oswald', sans-serif">Oswald</option>
+                            <option value="'Pacifico', cursive">Pacifico</option>
                             <option value="'Palatino', serif">Palatino</option>
-                            <option value="'Courier New', monospace">Courier New</option>
-                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                            <option value="'Playfair Display', serif">Playfair Display</option>
+                            <option value="'Raleway', sans-serif">Raleway</option>
+                            <option value="'Righteous', cursive">Righteous</option>
+                            <option value="'Segoe UI', sans-serif">Segoe UI</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
                         </select>
                     </div>
 
@@ -1170,11 +1125,15 @@
                     </div>
                 </div>
 
-                <div class="sort-buttons" id="sortButtons" style="display: none;">
-                    <button type="button" class="btn btn-compact" onclick="sortImages('label', 'asc')">🔤 A→Z</button>
-                    <button type="button" class="btn btn-compact" onclick="sortImages('label', 'desc')">🔤 Z→A</button>
-                    <button type="button" class="btn btn-compact" onclick="sortImages('date', 'asc')">📅 Old→New</button>
-                    <button type="button" class="btn btn-compact" onclick="sortImages('date', 'desc')">📅 New→Old</button>
+                <div class="sort-row" id="sortButtons" style="display: none;">
+                    <span>Sort:</span>
+                    <select onchange="if(this.value){const[f,d]=this.value.split('-');sortImages(f,d);this.value=''}">
+                        <option value="">— choose —</option>
+                        <option value="label-asc">Name A → Z</option>
+                        <option value="label-desc">Name Z → A</option>
+                        <option value="date-asc">Date oldest first</option>
+                        <option value="date-desc">Date newest first</option>
+                    </select>
                 </div>
 
                 <div class="images-grid" id="imagesGrid">
@@ -1206,6 +1165,15 @@
     </div>
 
     <script>
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         const state = {
             showAppMenu: false,
         };
@@ -1216,7 +1184,8 @@
             renderHeader();
         }
 
-        function toggleAppMenu() {
+        function toggleAppMenu(event) {
+            event.stopPropagation();
             state.showAppMenu = !state.showAppMenu;
             renderHeader();
         }
@@ -1225,7 +1194,7 @@
             const header = document.getElementById('appHeader');
             header.innerHTML = `
                 <div class="app-header">
-                    <button class="app-header-hamburger" onclick="toggleAppMenu()" aria-label="Menu">&#9776;</button>
+                    <button class="app-header-hamburger" onclick="toggleAppMenu(event)" aria-label="Menu">&#9776;</button>
                     <button class="app-header-logo-btn" onclick="backToHome()" aria-label="Home">☕</button>
                     <span class="app-header-title" onclick="backToHome()" role="button" tabindex="0">Cuppa</span>
                 </div>
@@ -1473,33 +1442,17 @@
             }
             
             try {
-                addUrlBtn.innerHTML = '<div class="loading"></div>Loading...';
-                addUrlBtn.disabled = true;
-                
-                const img = await loadImageFromUrl(url);
-                
                 const isDuplicate = images.some(existingImg => existingImg.url === url);
-                
                 if (isDuplicate) {
                     const shouldAdd = await showDuplicateDialog('URL Image');
-                    if (!shouldAdd) {
-                        return;
-                    }
+                    if (!shouldAdd) return;
                 }
-                
-                // Try to extract filename from URL or use a default
-                let defaultLabel = 'URL Image';
-                /*
-                try {
-                    const urlPath = new URL(url).pathname;
-                    const urlFilename = urlPath.split('/').pop();
-                    if (urlFilename && urlFilename.includes('.')) {
-                        defaultLabel = urlFilename.replace(/\.[^/.]+$/, ''); // Remove extension
-                    }
-                } catch (e) {
-                    // If URL parsing fails, keep default
-                }
-                    */
+
+                addUrlBtn.innerHTML = '<div class="loading"></div>Loading...';
+                addUrlBtn.disabled = true;
+
+                const img = await loadImageFromUrl(url);
+                const defaultLabel = 'URL Image';
 
                 images.push({
                     type: 'image',
@@ -1585,7 +1538,11 @@
                 <div class="cell-modal" id="cellModalBox">
                     <h3>✏️ Edit Text Cell</h3>
                     <label>Text content</label>
-                    <textarea id="tcText" rows="4">${cell.text || ''}</textarea>
+                    <textarea id="tcText" rows="4">${escapeHtml(cell.text)}</textarea>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:10px;padding:7px 10px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
+                        <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41;flex-shrink:0">
+                        <label for="tcAutofill" style="margin:0;font-size:13px;cursor:pointer">🔡 Autofill — shrink font to fit cell</label>
+                    </div>
                     <div class="cell-modal-row">
                         <div>
                             <label>Font size (px)</label>
@@ -1596,14 +1553,12 @@
                             <input type="color" id="tcColor" value="${cell.color || '#ffffff'}" style="width:100%;height:38px;border-radius:7px;border:2px solid #D7CCC8;padding:2px;cursor:pointer">
                         </div>
                     </div>
+                    <label>Background colour</label>
+                    <input type="color" id="tcBgColor" value="${cell.bgColor || '#5d4037'}" style="width:100%;height:38px;border-radius:7px;border:2px solid #D7CCC8;padding:2px;cursor:pointer">
                     <label>Font family</label>
                     <select id="tcFont">
                         ${fontOptions().map(f => `<option value="${f.value}" ${cell.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}
                     </select>
-                    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px 10px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
-                        <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41">
-                        <label for="tcAutofill" style="margin:0;font-size:13px;cursor:pointer">🔡 Autofill — shrink font to fit cell</label>
-                    </div>
                     <label>Horizontal alignment</label>
                     <div class="modal-align-row">
                         <button type="button" class="align-btn ${(cell.align||'center')==='left'?'active':''}" data-align="left">⬛ Left</button>
@@ -1645,6 +1600,7 @@
                 images[index].text = document.getElementById('tcText').value;
                 images[index].fontSize = Math.max(8, parseInt(document.getElementById('tcFontSize').value) || 48);
                 images[index].color = document.getElementById('tcColor').value;
+                images[index].bgColor = document.getElementById('tcBgColor').value;
                 images[index].fontFamily = document.getElementById('tcFont').value;
                 images[index].autofill = document.getElementById('tcAutofill').checked;
                 const activeAlign = overlay.querySelector('[data-align].active');
@@ -1707,31 +1663,27 @@
 
         function fontOptions() {
             return [
-                // Local
-                { value: "ARDECODE, monospace", label: '🔤 ARDECODE' },
-                // Google Fonts — decorative
-                { value: "'Lilita One', cursive", label: 'Lilita One' },
-                { value: "'Pacifico', cursive", label: 'Pacifico' },
-                { value: "'Lobster', cursive", label: 'Lobster' },
-                { value: "'Dancing Script', cursive", label: 'Dancing Script' },
-                { value: "'Righteous', cursive", label: 'Righteous' },
-                // Google Fonts — display/heading
-                { value: "'Playfair Display', serif", label: 'Playfair Display' },
-                { value: "'Oswald', sans-serif", label: 'Oswald' },
-                { value: "'Raleway', sans-serif", label: 'Raleway' },
-                { value: "'Merriweather', serif", label: 'Merriweather' },
-                { value: "'Nunito', sans-serif", label: 'Nunito' },
-                // System fonts
-                { value: "'Segoe UI', sans-serif", label: 'Segoe UI' },
-                { value: "Arial, sans-serif", label: 'Arial' },
-                { value: "Impact, sans-serif", label: 'Impact' },
-                { value: "Verdana, sans-serif", label: 'Verdana' },
-                { value: "'Trebuchet MS', sans-serif", label: 'Trebuchet MS' },
-                { value: "'Times New Roman', serif", label: 'Times New Roman' },
-                { value: "Georgia, serif", label: 'Georgia' },
-                { value: "'Palatino', serif", label: 'Palatino' },
-                { value: "'Courier New', monospace", label: 'Courier New' },
-                { value: "'Comic Sans MS', cursive", label: 'Comic Sans' },
+                { value: "ARDECODE, monospace",          label: 'ARDECODE' },
+                { value: "Arial, sans-serif",             label: 'Arial' },
+                { value: "'Comic Sans MS', cursive",      label: 'Comic Sans' },
+                { value: "'Courier New', monospace",      label: 'Courier New' },
+                { value: "'Dancing Script', cursive",     label: 'Dancing Script' },
+                { value: "Georgia, serif",                label: 'Georgia' },
+                { value: "Impact, sans-serif",            label: 'Impact' },
+                { value: "'Lilita One', cursive",         label: 'Lilita One' },
+                { value: "'Lobster', cursive",            label: 'Lobster' },
+                { value: "'Merriweather', serif",         label: 'Merriweather' },
+                { value: "'Nunito', sans-serif",          label: 'Nunito' },
+                { value: "'Oswald', sans-serif",          label: 'Oswald' },
+                { value: "'Pacifico', cursive",           label: 'Pacifico' },
+                { value: "'Palatino', serif",             label: 'Palatino' },
+                { value: "'Playfair Display', serif",     label: 'Playfair Display' },
+                { value: "'Raleway', sans-serif",         label: 'Raleway' },
+                { value: "'Righteous', cursive",          label: 'Righteous' },
+                { value: "'Segoe UI', sans-serif",        label: 'Segoe UI' },
+                { value: "'Times New Roman', serif",      label: 'Times New Roman' },
+                { value: "'Trebuchet MS', sans-serif",    label: 'Trebuchet MS' },
+                { value: "Verdana, sans-serif",           label: 'Verdana' },
             ];
         }
 
@@ -1758,7 +1710,7 @@
                 dialog.className = 'duplicate-dialog';
                 dialog.innerHTML = `
                     <h3>⚠️ Duplicate Image Detected</h3>
-                    <p>The image "<strong>${filename}</strong>" appears to be a duplicate of an already uploaded image.</p>
+                    <p>The image "<strong>${escapeHtml(filename)}</strong>" appears to be a duplicate of an already uploaded image.</p>
                     <p>Do you want to add it anyway?</p>
                     <div class="dialog-buttons">
                         <button class="btn" id="duplicateCancel">Cancel</button>
@@ -1802,8 +1754,8 @@
                 const dialog = document.createElement('div');
                 dialog.className = 'duplicate-dialog';
                 dialog.innerHTML = `
-                    <h3>🗑️ Delete ${filename}?</h3>
-                    <p>Are you sure you want to remove "<strong>${filename}</strong>" from the collage?</p>
+                    <h3>🗑️ Delete ${escapeHtml(filename)}?</h3>
+                    <p>Are you sure you want to remove "<strong>${escapeHtml(filename)}</strong>" from the collage?</p>
                     <div class="dialog-buttons">
                         <button class="btn" id="deleteCancel">Cancel</button>
                         <button class="btn btn-success" id="deleteConfirm" style="background: linear-gradient(135deg, #e53e3e, #c53030);">Delete</button>
@@ -1929,26 +1881,29 @@
 
         function updateLayoutPreview() {
             if (images.length === 0) return;
-            
+
             const cols = Math.ceil(images.length / userRows);
-            const totalCells = userRows * cols;
-            const emptyCells = totalCells - images.length;
-            
+            const imageCells = images.filter(c => c.type === 'image').length;
+            const textCells  = images.filter(c => c.type === 'text').length;
+            const emptyCells = images.filter(c => c.type === 'empty').length;
+
             let preview = document.querySelector('.layout-preview');
             if (!preview) {
                 preview = document.createElement('div');
                 preview.className = 'layout-preview';
                 document.querySelector('.controls-section').appendChild(preview);
             }
-            
-            const estimatedWidth = cols * userCellWidth + (cols - 1) * userCellSpacing;
+
+            const estimatedWidth  = cols * userCellWidth  + (cols - 1)     * userCellSpacing;
             const estimatedHeight = userRows * userCellHeight + (userRows - 1) * userCellSpacing;
-            
+
+            const parts = [`${imageCells} image${imageCells !== 1 ? 's' : ''}`];
+            if (textCells  > 0) parts.push(`${textCells} text`);
+            if (emptyCells > 0) parts.push(`${emptyCells} empty`);
+
             preview.innerHTML = `
-                📐 Layout Preview: ${userRows}×${cols} grid (${images.length} images)
-                ${emptyCells > 0 ? `<br>⚡ ${emptyCells} empty cell(s) - last row will be centered` : ''}
-                <br>🎯 Canvas size: ~${estimatedWidth}×${estimatedHeight}px
-                <br>📏 Cell spacing: ${userCellSpacing}px
+                📐 ${userRows}×${cols} grid — ${parts.join(', ')}
+                <br>🎯 Canvas: ~${estimatedWidth}×${estimatedHeight}px &nbsp;·&nbsp; spacing: ${userCellSpacing}px
             `;
         }
 
@@ -1993,7 +1948,7 @@
                         const previewBg = img.bgColor || '#5D4037';
                         const previewColor = img.color || '#FFFFFF';
                         const previewFont = `${img.italic ? 'italic ' : ''}${img.bold ? 'bold ' : ''}13px ${img.fontFamily || 'sans-serif'}`;
-                        const safeText = (img.text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        const safeText = escapeHtml(img.text);
                         return `
                             <div class="text-cell-item" draggable="true" data-index="${index}" style="background:${previewBg}">
                                 <div class="text-cell-preview" style="color:${previewColor};font:${previewFont};text-align:${img.align||'center'}">${safeText || '<em style="opacity:.5">No text</em>'}</div>
@@ -2007,12 +1962,12 @@
                     } else {
                         return `
                             <div class="image-item" draggable="true" data-index="${index}">
-                                <img src="${img.url}" alt="${img.filename}">
+                                <img src="${img.url}" alt="${escapeHtml(img.filename)}">
                                 ${mergeBadge}
                                 <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
                                 <div class="drag-handle" title="Drag to reorder">⠿</div>
                                 ${mergeBtn}
-                                ${showLabels ? `<input type="text" class="image-label-input" value="${img.label || ''}" placeholder="Add label..." maxlength="40" onchange="updateImageLabel(${index}, this.value)">` : ''}
+                                ${showLabels ? `<input type="text" class="image-label-input" value="${escapeHtml(img.label)}" placeholder="Add label..." maxlength="40" onchange="updateImageLabel(${index}, this.value)">` : ''}
                             </div>
                         `;
                     }
@@ -2121,21 +2076,24 @@
             return { placements, totalRows };
         }
 
-        // Shrinks fontSize until all wrapped lines fit within maxWidth × maxHeight.
-        // Returns the adjusted fontSize.
+        // Binary-searches for the largest fontSize where all wrapped lines fit.
         function fitFontSize(ctx, text, fontTemplate, maxWidth, maxHeight, startSize) {
-            let size = startSize;
             const minSize = 6;
-            while (size >= minSize) {
-                ctx.font = fontTemplate.replace('__SIZE__', size);
+            let lo = minSize, hi = startSize, best = minSize;
+            while (lo <= hi) {
+                const mid = (lo + hi) >> 1;
+                ctx.font = fontTemplate.replace('__SIZE__', mid);
                 const lines = wrapTextLines(ctx, text, maxWidth - 20);
-                const lineH = size * 1.25;
-                const totalH = lines.length * lineH;
+                const totalH = lines.length * mid * 1.25;
                 const maxLineW = Math.max(...lines.map(l => ctx.measureText(l).width));
-                if (totalH <= maxHeight - 20 && maxLineW <= maxWidth - 20) break;
-                size -= 1;
+                if (totalH <= maxHeight - 20 && maxLineW <= maxWidth - 20) {
+                    best = mid;
+                    lo = mid + 1;
+                } else {
+                    hi = mid - 1;
+                }
             }
-            return Math.max(size, minSize);
+            return best;
         }
 
         function wrapTextLines(ctx, text, maxWidth) {
