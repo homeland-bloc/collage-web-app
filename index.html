@@ -805,6 +805,34 @@
 
         .edit-cell-btn:hover { background: rgba(62, 39, 35, 1); }
 
+        .merge-btn {
+            position: absolute;
+            bottom: 5px;
+            left: 30px;
+            background: rgba(93, 64, 55, 0.88);
+            color: #FFF8E1;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .merge-btn:hover { background: rgba(62, 39, 35, 1); }
+
+        .merge-badge {
+            position: absolute;
+            top: 5px;
+            right: 30px;
+            background: rgba(93,64,55,0.85);
+            color: #FFF8E1;
+            font-size: 10px;
+            border-radius: 3px;
+            padding: 1px 5px;
+            pointer-events: none;
+        }
+
         /* Cell customisation modal */
         .cell-modal-overlay {
             position: fixed;
@@ -1254,6 +1282,8 @@
                     url: url,
                     aspectRatio: img.width / img.height,
                     label: filename.replace(/\.[^/.]+$/, ''),
+                    colspan: 1,
+                    rowspan: 1,
                     dateAdded: Date.now()
                 });
                 
@@ -1317,6 +1347,8 @@
                     url: url,
                     aspectRatio: img.width / img.height,
                     label: defaultLabel,
+                    colspan: 1,
+                    rowspan: 1,
                     dateAdded: Date.now()
                 });
                 
@@ -1347,6 +1379,8 @@
                 url: null,
                 aspectRatio: 1,
                 label: '',
+                colspan: 1,
+                rowspan: 1,
                 dateAdded: Date.now()
             });
             
@@ -1371,6 +1405,8 @@
                 url: null,
                 aspectRatio: 1,
                 label: '',
+                colspan: 1,
+                rowspan: 1,
                 dateAdded: Date.now()
             });
             updateUI();
@@ -1447,6 +1483,44 @@
                 const activeValign = overlay.querySelector('[data-valign].active');
                 if (activeAlign) images[index].align = activeAlign.dataset.align;
                 if (activeValign) images[index].valign = activeValign.dataset.valign;
+                document.body.removeChild(overlay);
+                updateUI();
+            };
+        }
+
+        function openMergeModal(index) {
+            const cell = images[index];
+            const cols = Math.ceil(images.length / userRows);
+            const overlay = document.createElement('div');
+            overlay.className = 'cell-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cell-modal" style="max-width:320px">
+                    <h3>⊞ Merge Cell</h3>
+                    <p style="font-size:13px;color:#5D4037;margin-bottom:12px">
+                        Set how many columns and rows this cell should span in the collage grid.
+                    </p>
+                    <div class="cell-modal-row">
+                        <div>
+                            <label>Colspan (columns)</label>
+                            <input type="number" id="mcColspan" min="1" max="${cols}" value="${cell.colspan || 1}">
+                        </div>
+                        <div>
+                            <label>Rowspan (rows)</label>
+                            <input type="number" id="mcRowspan" min="1" max="10" value="${cell.rowspan || 1}">
+                        </div>
+                    </div>
+                    <div class="cell-modal-actions">
+                        <button type="button" class="btn" id="mcCancel">Cancel</button>
+                        <button type="button" class="btn btn-success" id="mcSave">Apply</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            document.getElementById('mcCancel').onclick = () => document.body.removeChild(overlay);
+            overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+            document.getElementById('mcSave').onclick = () => {
+                images[index].colspan = Math.max(1, parseInt(document.getElementById('mcColspan').value) || 1);
+                images[index].rowspan = Math.max(1, parseInt(document.getElementById('mcRowspan').value) || 1);
                 document.body.removeChild(overlay);
                 updateUI();
             };
@@ -1707,12 +1781,19 @@
                 imagesGrid.innerHTML = '<div class="empty-state">No images added yet. Start by uploading or dragging images above.</div>';
             } else {
                 imagesGrid.innerHTML = images.map((img, index) => {
+                    const cs = img.colspan || 1;
+                    const rs = img.rowspan || 1;
+                    const mergeBadge = (cs > 1 || rs > 1) ? `<span class="merge-badge">${cs}×${rs}</span>` : '';
+                    const mergeBtn = `<button class="merge-btn" onclick="openMergeModal(${index})" title="Set colspan/rowspan">⊞</button>`;
+
                     if (img.type === 'empty') {
                         return `
                             <div class="empty-cell-item" draggable="true" data-index="${index}">
                                 ⬜
+                                ${mergeBadge}
                                 <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
                                 <div class="drag-handle" title="Drag to reorder">⠿</div>
+                                ${mergeBtn}
                             </div>
                         `;
                     } else if (img.type === 'text') {
@@ -1723,17 +1804,21 @@
                         return `
                             <div class="text-cell-item" draggable="true" data-index="${index}" style="background:${previewBg}">
                                 <div class="text-cell-preview" style="color:${previewColor};font:${previewFont};text-align:${img.align||'center'}">${safeText || '<em style="opacity:.5">No text</em>'}</div>
+                                ${mergeBadge}
                                 <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
                                 <div class="drag-handle" title="Drag to reorder">⠿</div>
                                 <button class="edit-cell-btn" onclick="openTextCellModal(${index})">✏️ Edit</button>
+                                ${mergeBtn}
                             </div>
                         `;
                     } else {
                         return `
                             <div class="image-item" draggable="true" data-index="${index}">
                                 <img src="${img.url}" alt="${img.filename}">
+                                ${mergeBadge}
                                 <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
                                 <div class="drag-handle" title="Drag to reorder">⠿</div>
+                                ${mergeBtn}
                                 ${showLabels ? `<input type="text" class="image-label-input" value="${img.label || ''}" placeholder="Add label..." maxlength="40" onchange="updateImageLabel(${index}, this.value)">` : ''}
                             </div>
                         `;
@@ -1801,6 +1886,48 @@
             }
         }
 
+        // Returns [{item, row, col, colspan, rowspan}, ...] and total rows used
+        function placeItemsInGrid(items, cols) {
+            const placements = [];
+            // occupied[r][c] = true means that slot is taken
+            const occupied = [];
+            const ensureRow = r => { while (occupied.length <= r) occupied.push(new Array(cols).fill(false)); };
+
+            let cursor = 0; // flat slot index
+            for (const item of items) {
+                const cs = Math.min(item.colspan || 1, cols);
+                const rs = item.rowspan || 1;
+                // find first top-left where cs×rs block fits
+                let placed = false;
+                while (!placed) {
+                    const r = Math.floor(cursor / cols);
+                    const c = cursor % cols;
+                    ensureRow(r + rs - 1);
+                    // check all slots in the block
+                    if (c + cs <= cols) {
+                        let fits = true;
+                        outer: for (let dr = 0; dr < rs; dr++) {
+                            ensureRow(r + dr);
+                            for (let dc = 0; dc < cs; dc++) {
+                                if (occupied[r + dr][c + dc]) { fits = false; break outer; }
+                            }
+                        }
+                        if (fits) {
+                            for (let dr = 0; dr < rs; dr++) {
+                                ensureRow(r + dr);
+                                for (let dc = 0; dc < cs; dc++) occupied[r + dr][c + dc] = true;
+                            }
+                            placements.push({ item, row: r, col: c, colspan: cs, rowspan: rs });
+                            placed = true;
+                        }
+                    }
+                    cursor++;
+                }
+            }
+            const totalRows = occupied.length;
+            return { placements, totalRows };
+        }
+
         function wrapTextLines(ctx, text, maxWidth) {
             const words = text.split(' ');
             const lines = [];
@@ -1821,37 +1948,29 @@
         function createCollageCanvas(imageItems, rows, cols, cellDims, spacing = 5) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            
+
+            const { placements, totalRows } = placeItemsInGrid(imageItems, cols);
+            const usedRows = Math.max(rows, totalRows);
+
             const collageWidth = cols * cellDims.width + (cols - 1) * spacing;
-            const collageHeight = rows * cellDims.height + (rows - 1) * spacing;
-            
+            const collageHeight = usedRows * cellDims.height + (usedRows - 1) * spacing;
+
             canvas.width = collageWidth;
             canvas.height = collageHeight;
-            
             ctx.clearRect(0, 0, collageWidth, collageHeight);
-            
-            for (let i = 0; i < imageItems.length; i++) {
-                const item = imageItems[i];
-                
-                if (item.type === 'empty') {
-                    continue;
-                }
 
-                let row = Math.floor(i / cols);
-                let col = i % cols;
-                let xOffset = 0;
-                const isLastRowCheck = row === rows - 1;
-                const itemsInThisRowCheck = isLastRowCheck ? imageItems.length - (row * cols) : cols;
-                if (isLastRowCheck && itemsInThisRowCheck < cols) {
-                    xOffset = ((cols - itemsInThisRowCheck) * (cellDims.width + spacing)) / 2;
-                }
+            for (const { item, row, col, colspan, rowspan } of placements) {
+                if (item.type === 'empty') continue;
+
+                const cellW = colspan * cellDims.width + (colspan - 1) * spacing;
+                const cellH = rowspan * cellDims.height + (rowspan - 1) * spacing;
+                const tx = col * (cellDims.width + spacing);
+                const ty = row * (cellDims.height + spacing);
 
                 if (item.type === 'text') {
-                    const tx = col * (cellDims.width + spacing) + xOffset;
-                    const ty = row * (cellDims.height + spacing);
                     ctx.save();
                     ctx.fillStyle = item.bgColor || '#5D4037';
-                    ctx.fillRect(tx, ty, cellDims.width, cellDims.height);
+                    ctx.fillRect(tx, ty, cellW, cellH);
                     const textContent = item.text || '';
                     if (textContent) {
                         const fStyle = `${item.italic ? 'italic ' : ''}${item.bold ? 'bold ' : ''}${item.fontSize || 48}px ${item.fontFamily || 'sans-serif'}`;
@@ -1859,72 +1978,53 @@
                         ctx.fillStyle = item.color || '#FFFFFF';
                         ctx.textAlign = item.align || 'center';
                         ctx.textBaseline = 'middle';
-                        const lines = wrapTextLines(ctx, textContent, cellDims.width - 20);
+                        const lines = wrapTextLines(ctx, textContent, cellW - 20);
                         const lineH = (item.fontSize || 48) * 1.25;
                         const totalH = lines.length * lineH;
                         let startY;
                         if ((item.valign || 'middle') === 'top') startY = ty + lineH / 2 + 10;
-                        else if (item.valign === 'bottom') startY = ty + cellDims.height - totalH + lineH / 2 - 10;
-                        else startY = ty + (cellDims.height - totalH) / 2 + lineH / 2;
-                        let lx = tx + cellDims.width / 2;
+                        else if (item.valign === 'bottom') startY = ty + cellH - totalH + lineH / 2 - 10;
+                        else startY = ty + (cellH - totalH) / 2 + lineH / 2;
+                        let lx = tx + cellW / 2;
                         if (item.align === 'left') lx = tx + 10;
-                        else if (item.align === 'right') lx = tx + cellDims.width - 10;
+                        else if (item.align === 'right') lx = tx + cellW - 10;
                         lines.forEach((line, li) => ctx.fillText(line, lx, startY + li * lineH));
                     }
                     ctx.restore();
                     continue;
                 }
 
+                // image cell
                 const img = item.element;
-                
-                // Calculate positioning with label space if needed
                 const labelHeight = showLabels && item.label ? 20 : 0;
-                const availableHeight = cellDims.height - labelHeight;
+                const availableHeight = cellH - labelHeight;
+                const resized = resizeImageToFit(img, cellW, availableHeight);
+                const x = tx + (cellW - resized.width) / 2;
+                const y = ty + (availableHeight - resized.height) / 2;
+                ctx.drawImage(resized, x, y);
 
-                const resizedImgWithLabel = resizeImageToFit(img, cellDims.width, availableHeight);
-
-                const x = col * (cellDims.width + spacing) + (cellDims.width - resizedImgWithLabel.width) / 2 + xOffset;
-                const y = row * (cellDims.height + spacing) + (availableHeight - resizedImgWithLabel.height) / 2;
-
-                ctx.drawImage(resizedImgWithLabel, x, y);
-
-                // Draw label if enabled and present
                 if (showLabels && item.label) {
                     ctx.save();
-                    
-                    // Set font with selected style
                     ctx.font = `bold ${labelFontSize}px ${labelFontStyle}`;
                     ctx.textAlign = 'center';
-                    
-                    const labelX = col * (cellDims.width + spacing) + cellDims.width / 2 + xOffset;
-                    const labelY = row * (cellDims.height + spacing) + cellDims.height - Math.max(8, labelFontSize / 4);
-                    
-                    // Truncate label if too long for cell width
+                    const labelX = tx + cellW / 2;
+                    const labelY = ty + cellH - Math.max(8, labelFontSize / 4);
                     let displayLabel = item.label;
-                    const maxWidth = cellDims.width - 10;
-                    
-                    while (ctx.measureText(displayLabel).width > maxWidth && displayLabel.length > 0) {
+                    const maxW = cellW - 10;
+                    while (ctx.measureText(displayLabel).width > maxW && displayLabel.length > 0) {
                         displayLabel = displayLabel.slice(0, -1);
                     }
-                    
-                    if (displayLabel.length < item.label.length) {
-                        displayLabel = displayLabel.trim() + '...';
-                    }
-                    
-                    // Draw black outline (multiple passes for better coverage)
+                    if (displayLabel.length < item.label.length) displayLabel = displayLabel.trim() + '...';
                     ctx.strokeStyle = '#000000';
                     ctx.lineWidth = labelOutlineWidth;
                     ctx.lineJoin = 'round';
                     ctx.strokeText(displayLabel, labelX, labelY);
-                    
-                    // Draw white fill text
                     ctx.fillStyle = '#FFFFFF';
                     ctx.fillText(displayLabel, labelX, labelY);
-                    
                     ctx.restore();
                 }
             }
-            
+
             return canvas;
         }
 
