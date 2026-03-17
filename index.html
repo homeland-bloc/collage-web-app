@@ -649,37 +649,38 @@
             box-shadow: 0 0 0 2px rgba(109, 76, 65, 0.1);
         }
 
-        .move-buttons {
+        .drag-handle {
             position: absolute;
             top: 5px;
             left: 5px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2px;
-        }
-
-        .move-btn {
-            background: rgba(109, 76, 65, 0.9);
+            background: rgba(109, 76, 65, 0.85);
             color: #FFF8E1;
-            border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             width: 22px;
             height: 22px;
-            cursor: pointer;
-            font-size: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
+            font-size: 14px;
+            cursor: grab;
+            user-select: none;
+            line-height: 1;
         }
 
-        .move-btn:hover {
-            background: rgba(93, 64, 55, 1);
+        .drag-handle:active {
+            cursor: grabbing;
         }
 
-        .move-btn:disabled {
+        .image-item.dragging,
+        .empty-cell-item.dragging {
             opacity: 0.4;
-            cursor: not-allowed;
+            transform: scale(0.97);
+        }
+
+        .image-item.drag-over,
+        .empty-cell-item.drag-over {
+            outline: 3px solid #6D4C41;
+            outline-offset: -3px;
         }
 
         .label-font-control {
@@ -1306,15 +1307,39 @@
             });
         }
 
-        function moveImage(index, direction) {
-            const newIndex = index + direction;
-            
-            if (newIndex < 0 || newIndex >= images.length) return;
-            
-            [images[index], images[newIndex]] = [images[newIndex], images[index]];
-            
-            updateUI();
-            showPopupStatus('Image moved', 'info');
+        let dragSrcIndex = null;
+
+        function attachDragHandlers() {
+            const cells = imagesGrid.querySelectorAll('[draggable="true"]');
+            cells.forEach(cell => {
+                cell.addEventListener('dragstart', e => {
+                    dragSrcIndex = parseInt(cell.dataset.index);
+                    cell.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                cell.addEventListener('dragend', () => {
+                    cell.classList.remove('dragging');
+                    imagesGrid.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+                });
+                cell.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    imagesGrid.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+                    cell.classList.add('drag-over');
+                });
+                cell.addEventListener('dragleave', () => {
+                    cell.classList.remove('drag-over');
+                });
+                cell.addEventListener('drop', e => {
+                    e.preventDefault();
+                    const destIndex = parseInt(cell.dataset.index);
+                    if (dragSrcIndex === null || dragSrcIndex === destIndex) return;
+                    const [moved] = images.splice(dragSrcIndex, 1);
+                    images.splice(destIndex, 0, moved);
+                    dragSrcIndex = null;
+                    updateUI();
+                });
+            });
         }
 
         function updateRows() {
@@ -1420,33 +1445,24 @@
                 imagesGrid.innerHTML = images.map((img, index) => {
                     if (img.isEmpty) {
                         return `
-                            <div class="empty-cell-item">
+                            <div class="empty-cell-item" draggable="true" data-index="${index}">
                                 ⬜
                                 <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
-                                <div class="move-buttons">
-                                    <button class="move-btn" onclick="jumpToStart(${index})" ${index === 0 ? 'disabled' : ''} title="Jump to start">⏮️</button>
-                                    <button class="move-btn" onclick="moveImage(${index}, -1)" ${index === 0 ? 'disabled' : ''} title="Move left">⬅️</button>
-                                    <button class="move-btn" onclick="moveImage(${index}, 1)" ${index === images.length - 1 ? 'disabled' : ''} title="Move right">➡️</button>
-                                    <button class="move-btn" onclick="jumpToEnd(${index})" ${index === images.length - 1 ? 'disabled' : ''} title="Jump to end">⏭️</button>
-                                </div>
+                                <div class="drag-handle" title="Drag to reorder">⠿</div>
                             </div>
                         `;
                     } else {
                         return `
-                            <div class="image-item">
+                            <div class="image-item" draggable="true" data-index="${index}">
                                 <img src="${img.url}" alt="${img.filename}">
                                 <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
-                                <div class="move-buttons">
-                                    <button class="move-btn" onclick="jumpToStart(${index})" ${index === 0 ? 'disabled' : ''} title="Jump to start">⏮️</button>
-                                    <button class="move-btn" onclick="moveImage(${index}, -1)" ${index === 0 ? 'disabled' : ''} title="Move left">⬅️</button>
-                                    <button class="move-btn" onclick="moveImage(${index}, 1)" ${index === images.length - 1 ? 'disabled' : ''} title="Move right">➡️</button>
-                                    <button class="move-btn" onclick="jumpToEnd(${index})" ${index === images.length - 1 ? 'disabled' : ''} title="Jump to end">⏭️</button>
-                                </div>
+                                <div class="drag-handle" title="Drag to reorder">⠿</div>
                                 ${showLabels ? `<input type="text" class="image-label-input" value="${img.label || ''}" placeholder="Add label..." maxlength="40" onchange="updateImageLabel(${index}, this.value)">` : ''}
                             </div>
                         `;
                     }
                 }).join('');
+                attachDragHandlers();
             }
             
             generateBtn.disabled = images.length === 0;
@@ -1689,21 +1705,6 @@
             images[index].label = value.slice(0, 40);
         }
 
-        function jumpToStart(index) {
-            if (index === 0) return;
-            const [item] = images.splice(index, 1);
-            images.unshift(item);
-            updateUI();
-            showPopupStatus('Moved to start', 'info');
-        }
-
-        function jumpToEnd(index) {
-            if (index === images.length - 1) return;
-            const [item] = images.splice(index, 1);
-            images.push(item);
-            updateUI();
-            showPopupStatus('Moved to end', 'info');
-        }
 
         function updateLabelFontStyle() {
             const select = document.getElementById('labelFontSelect');
