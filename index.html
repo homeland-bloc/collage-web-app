@@ -9,11 +9,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Pacifico&family=Lobster&family=Dancing+Script:wght@700&family=Playfair+Display:wght@700&family=Oswald:wght@700&family=Raleway:wght@700&family=Merriweather:wght@700&family=Nunito:wght@700&family=Righteous&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <style>
+        @font-face {
+            font-family: 'ARDECODE';
+            src: url('ARDECODE.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -649,37 +655,38 @@
             box-shadow: 0 0 0 2px rgba(109, 76, 65, 0.1);
         }
 
-        .move-buttons {
+        .drag-handle {
             position: absolute;
             top: 5px;
             left: 5px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2px;
-        }
-
-        .move-btn {
-            background: rgba(109, 76, 65, 0.9);
+            background: rgba(109, 76, 65, 0.85);
             color: #FFF8E1;
-            border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             width: 22px;
             height: 22px;
-            cursor: pointer;
-            font-size: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
+            font-size: 14px;
+            cursor: grab;
+            user-select: none;
+            line-height: 1;
         }
 
-        .move-btn:hover {
-            background: rgba(93, 64, 55, 1);
+        .drag-handle:active {
+            cursor: grabbing;
         }
 
-        .move-btn:disabled {
+        .image-item.dragging,
+        .empty-cell-item.dragging {
             opacity: 0.4;
-            cursor: not-allowed;
+            transform: scale(0.97);
+        }
+
+        .image-item.drag-over,
+        .empty-cell-item.drag-over {
+            outline: 3px solid #6D4C41;
+            outline-offset: -3px;
         }
 
         .label-font-control {
@@ -756,17 +763,282 @@
             margin: 15px 0;
             flex-wrap: wrap;
         }
+
+        /* Text cell thumbnail */
+        .text-cell-item {
+            position: relative;
+            border-radius: 8px;
+            background: #5D4037;
+            box-shadow: 0 4px 15px rgba(62, 39, 35, 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .text-cell-item:hover { transform: scale(1.05); }
+
+        .text-cell-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            overflow: hidden;
+            word-break: break-word;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.3;
+        }
+
+        .edit-cell-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(109, 76, 65, 0.92);
+            color: #FFF8E1;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .edit-cell-btn:hover { background: rgba(62, 39, 35, 1); }
+
+        .merge-btn {
+            position: absolute;
+            bottom: 5px;
+            left: 30px;
+            background: rgba(93, 64, 55, 0.88);
+            color: #FFF8E1;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .merge-btn:hover { background: rgba(62, 39, 35, 1); }
+
+        .merge-badge {
+            position: absolute;
+            top: 5px;
+            right: 30px;
+            background: rgba(93,64,55,0.85);
+            color: #FFF8E1;
+            font-size: 10px;
+            border-radius: 3px;
+            padding: 1px 5px;
+            pointer-events: none;
+        }
+
+        /* Cell customisation modal */
+        .cell-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell-modal {
+            background: #FFFAF0;
+            border-radius: 16px;
+            padding: 28px 24px 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            width: min(480px, 95vw);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .cell-modal h3 {
+            color: #5D4037;
+            margin-bottom: 16px;
+            font-size: 1.2em;
+        }
+
+        .cell-modal label {
+            display: block;
+            font-weight: 600;
+            color: #5D4037;
+            font-size: 13px;
+            margin-bottom: 4px;
+            margin-top: 12px;
+        }
+
+        .cell-modal label:first-of-type { margin-top: 0; }
+
+        .cell-modal textarea,
+        .cell-modal input[type="text"],
+        .cell-modal input[type="number"],
+        .cell-modal select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px solid #D7CCC8;
+            border-radius: 7px;
+            font-size: 14px;
+            background: #FFFAF0;
+            color: #3E2723;
+            box-sizing: border-box;
+        }
+
+        .cell-modal textarea { resize: vertical; min-height: 80px; }
+
+        .cell-modal textarea:focus,
+        .cell-modal input:focus,
+        .cell-modal select:focus {
+            outline: none;
+            border-color: #6D4C41;
+            box-shadow: 0 0 0 3px rgba(109,76,65,0.12);
+        }
+
+        .cell-modal-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .cell-modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-align-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .align-btn {
+            flex: 1;
+            padding: 6px;
+            border: 2px solid #D7CCC8;
+            border-radius: 6px;
+            background: #FFFAF0;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.15s;
+        }
+
+        .align-btn.active {
+            border-color: #6D4C41;
+            background: #EFE5DC;
+        }
+
+        /* App header */
+        .app-header {
+            background: linear-gradient(90deg, #3E2723 0%, #5D4037 60%, #8D6E63 100%);
+            color: #fff;
+            padding: 0 16px;
+            padding-top: env(safe-area-inset-top, 0px);
+            display: flex;
+            align-items: center;
+            height: calc(56px + env(safe-area-inset-top, 0px));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            position: relative;
+            z-index: 100;
+            gap: 10px;
+        }
+
+        .app-header-hamburger {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 8px;
+            line-height: 1;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+        .app-header-hamburger:hover { background: rgba(255,255,255,0.15); }
+
+        .app-header-logo-btn {
+            background: rgba(255,255,255,0.18);
+            border: none;
+            color: #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+        .app-header-logo-btn:hover { background: rgba(255,255,255,0.28); }
+
+        .app-header-title {
+            font-size: 1.25em;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            flex: 1;
+            white-space: nowrap;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .app-header-title:hover { text-decoration: underline; }
+
+        .app-menu-dropdown {
+            position: absolute;
+            top: calc(56px + env(safe-area-inset-top, 0px));
+            right: 12px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.22);
+            min-width: 180px;
+            z-index: 200;
+            overflow: hidden;
+            animation: menuSlideIn 0.15s ease-out;
+        }
+
+        @keyframes menuSlideIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 13px 18px;
+            background: none;
+            border: none;
+            font-size: 15px;
+            color: #3E2723;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.12s;
+        }
+
+        .app-menu-item:hover { background: #FFF8E1; }
+
+        .app-menu-item .menu-emoji { font-size: 18px; }
+        .app-menu-item .menu-name { font-weight: 700; }
+        .app-menu-divider { height: 1px; background: #EEE; margin: 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo-space"></div>
-            <h1>☕ Cuppa</h1>
-            <p>Simple and minimalistic collage creator for your photos. Upload images, adjust layout 
-                controls, and generate your collage. Discord CDN links are 
-                automatically converted to media.discordapp.net for compatibility.</p>
-        </div>
+        <header safe-header id="appHeader"></header>
 
         <div class="main-content">
             <div class="upload-section">
@@ -785,6 +1057,7 @@
                     <div class="button-row">
                         <button type="button" class="btn btn-compact" id="addUrlBtn">Add URL</button>
                         <button type="button" class="btn btn-compact" id="clearUrlBtn">Clear</button>
+                        <button type="button" class="btn btn-compact" id="addTextCellBtn">Add Text Cell</button>
                         <button type="button" class="btn btn-compact" id="addEmptyCellBtn">Add Empty Cell</button>
                     </div>
                 </div>
@@ -852,17 +1125,27 @@
                     <div class="control-group" id="labelFontStyleControl" style="display: none;">
                         <label for="labelFontSelect">Label Font Style:</label>
                         <select id="labelFontSelect" class="font-select" onchange="updateLabelFontStyle()">
-                            <option value="'Lilita One', cursive">Lilita One (Default)</option>
+                            <option value="ARDECODE, monospace">🔤 ARDECODE</option>
+                            <option value="'Lilita One', cursive" selected>Lilita One (Default)</option>
+                            <option value="'Pacifico', cursive">Pacifico</option>
+                            <option value="'Lobster', cursive">Lobster</option>
+                            <option value="'Dancing Script', cursive">Dancing Script</option>
+                            <option value="'Righteous', cursive">Righteous</option>
+                            <option value="'Playfair Display', serif">Playfair Display</option>
+                            <option value="'Oswald', sans-serif">Oswald</option>
+                            <option value="'Raleway', sans-serif">Raleway</option>
+                            <option value="'Merriweather', serif">Merriweather</option>
+                            <option value="'Nunito', sans-serif">Nunito</option>
                             <option value="'Segoe UI', sans-serif">Segoe UI</option>
                             <option value="Arial, sans-serif">Arial</option>
-                            <option value="'Times New Roman', serif">Times New Roman</option>
-                            <option value="Georgia, serif">Georgia</option>
-                            <option value="'Courier New', monospace">Courier New</option>
                             <option value="Impact, sans-serif">Impact</option>
-                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
                             <option value="Verdana, sans-serif">Verdana</option>
                             <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="Georgia, serif">Georgia</option>
                             <option value="'Palatino', serif">Palatino</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
                         </select>
                     </div>
 
@@ -879,6 +1162,11 @@
                         <button type="button" class="btn preset-btn" onclick="setPreset(1000, 1000)">Square</button>
                         <button type="button" class="btn preset-btn" onclick="setPreset(500, 800)">Portrait</button>
                         <button type="button" class="btn preset-btn" onclick="setPreset(800, 500)">Landscape</button>
+                    </div>
+
+                    <div class="toggle-section" style="justify-content:space-between">
+                        <label for="collageBgColor" style="font-weight:600;color:#5D4037;margin:0;cursor:pointer">🎨 Collage Background Colour</label>
+                        <input type="color" id="collageBgColor" value="#ffffff" style="width:44px;height:32px;border:2px solid #D7CCC8;border-radius:6px;padding:2px;cursor:pointer;background:none" onchange="updateCollageBg()">
                     </div>
                 </div>
 
@@ -918,6 +1206,52 @@
     </div>
 
     <script>
+        const state = {
+            showAppMenu: false,
+        };
+
+        function backToHome() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            state.showAppMenu = false;
+            renderHeader();
+        }
+
+        function toggleAppMenu() {
+            state.showAppMenu = !state.showAppMenu;
+            renderHeader();
+        }
+
+        function renderHeader() {
+            const header = document.getElementById('appHeader');
+            header.innerHTML = `
+                <div class="app-header">
+                    <button class="app-header-hamburger" onclick="toggleAppMenu()" aria-label="Menu">&#9776;</button>
+                    <button class="app-header-logo-btn" onclick="backToHome()" aria-label="Home">☕</button>
+                    <span class="app-header-title" onclick="backToHome()" role="button" tabindex="0">Cuppa</span>
+                </div>
+                ${state.showAppMenu ? `
+                <div class="app-menu-dropdown" id="appMenuDropdown">
+                    <button class="app-menu-item" onclick="backToHome()">
+                        <span class="menu-emoji">☕</span><span class="menu-name">Cuppa</span>
+                    </button>
+                    <div class="app-menu-divider"></div>
+                    <button class="app-menu-item" onclick="window.location.href='https://bicipikay.github.io/peony/'">
+                        <span class="menu-emoji">🌺</span><span class="menu-name">Peony</span>
+                    </button>
+                </div>` : ''}
+            `;
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', e => {
+            if (!state.showAppMenu) return;
+            const header = document.getElementById('appHeader');
+            if (header && !header.contains(e.target)) {
+                state.showAppMenu = false;
+                renderHeader();
+            }
+        });
+
         let images = [];
         let userRows = 5;
         let userCellWidth = 500;
@@ -927,14 +1261,16 @@
         let currentAspectRatio = 500 / 800;
         let showLabels = false;
         let labelFontSize = 48;
-        let labelFontStyle = "'Lilita One', cursive"; // Default font
-        let labelOutlineWidth = 20; // Default outline width
+        let labelFontStyle = "'Lilita One', cursive";
+        let labelOutlineWidth = 20;
+        let collageBgColor = '#ffffff';
 
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const urlInput = document.getElementById('urlInput');
         const addUrlBtn = document.getElementById('addUrlBtn');
         const clearUrlBtn = document.getElementById('clearUrlBtn');
+        const addTextCellBtn = document.getElementById('addTextCellBtn');
         const addEmptyCellBtn = document.getElementById('addEmptyCellBtn');
         const imageCounter = document.getElementById('imageCounter');
         const imagesGrid = document.getElementById('imagesGrid');
@@ -966,6 +1302,7 @@
         fileInput.addEventListener('change', handleFileSelect);
         addUrlBtn.addEventListener('click', addImageFromUrl);
         clearUrlBtn.addEventListener('click', clearUrlInput);
+        addTextCellBtn.addEventListener('click', addTextCell);
         addEmptyCellBtn.addEventListener('click', addEmptyCell);
         generateBtn.addEventListener('click', generateCollage);
         downloadBtn.addEventListener('click', downloadCollage);
@@ -1100,14 +1437,16 @@
                 const img = await loadImageFromUrl(url);
                 
                 images.push({
+                    type: 'image',
                     element: img,
                     filename: filename,
                     filesize: filesize,
                     url: url,
                     aspectRatio: img.width / img.height,
-                    isEmpty: false,
-                    label: filename.replace(/\.[^/.]+$/, ''), // Remove file extension
-                    dateAdded: Date.now() // Add timestamp for sorting
+                    label: filename.replace(/\.[^/.]+$/, ''),
+                    colspan: 1,
+                    rowspan: 1,
+                    dateAdded: Date.now()
                 });
                 
                 updateUI();
@@ -1163,13 +1502,15 @@
                     */
 
                 images.push({
+                    type: 'image',
                     element: img,
                     filename: 'URL Image',
                     filesize: 0,
                     url: url,
                     aspectRatio: img.width / img.height,
-                    isEmpty: false,
                     label: defaultLabel,
+                    colspan: 1,
+                    rowspan: 1,
                     dateAdded: Date.now()
                 });
                 
@@ -1193,18 +1534,205 @@
 
         function addEmptyCell() {
             images.push({
-            element: null,
-            filename: 'Empty Cell',
-            filesize: 0,
-            url: null,
-            aspectRatio: 1,
-            isEmpty: true,
-            label: '', // Empty cells don't need labels
-            dateAdded: Date.now()
-        });
+                type: 'empty',
+                element: null,
+                filename: 'Empty Cell',
+                filesize: 0,
+                url: null,
+                aspectRatio: 1,
+                label: '',
+                colspan: 1,
+                rowspan: 1,
+                dateAdded: Date.now()
+            });
             
             updateUI();
             showPopupStatus('✅ Empty cell added!', 'success');
+        }
+
+        function addTextCell() {
+            images.push({
+                type: 'text',
+                text: '',
+                fontFamily: "'Lilita One', cursive",
+                fontSize: 48,
+                bold: false,
+                italic: false,
+                color: '#FFFFFF',
+                bgColor: '#5D4037',
+                align: 'center',
+                valign: 'middle',
+                autofill: false,
+                filename: 'Text Cell',
+                filesize: 0,
+                url: null,
+                aspectRatio: 1,
+                label: '',
+                colspan: 1,
+                rowspan: 1,
+                dateAdded: Date.now()
+            });
+            updateUI();
+            const newIndex = images.length - 1;
+            openTextCellModal(newIndex);
+        }
+
+        function openTextCellModal(index) {
+            const cell = images[index];
+            const overlay = document.createElement('div');
+            overlay.className = 'cell-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cell-modal" id="cellModalBox">
+                    <h3>✏️ Edit Text Cell</h3>
+                    <label>Text content</label>
+                    <textarea id="tcText" rows="4">${cell.text || ''}</textarea>
+                    <div class="cell-modal-row">
+                        <div>
+                            <label>Font size (px)</label>
+                            <input type="number" id="tcFontSize" min="8" max="500" value="${cell.fontSize || 48}">
+                        </div>
+                        <div>
+                            <label>Text colour</label>
+                            <input type="color" id="tcColor" value="${cell.color || '#ffffff'}" style="width:100%;height:38px;border-radius:7px;border:2px solid #D7CCC8;padding:2px;cursor:pointer">
+                        </div>
+                    </div>
+                    <label>Font family</label>
+                    <select id="tcFont">
+                        ${fontOptions().map(f => `<option value="${f.value}" ${cell.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}
+                    </select>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px 10px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
+                        <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41">
+                        <label for="tcAutofill" style="margin:0;font-size:13px;cursor:pointer">🔡 Autofill — shrink font to fit cell</label>
+                    </div>
+                    <label>Horizontal alignment</label>
+                    <div class="modal-align-row">
+                        <button type="button" class="align-btn ${(cell.align||'center')==='left'?'active':''}" data-align="left">⬛ Left</button>
+                        <button type="button" class="align-btn ${(cell.align||'center')==='center'?'active':''}" data-align="center">▣ Centre</button>
+                        <button type="button" class="align-btn ${(cell.align||'center')==='right'?'active':''}" data-align="right">⬛ Right</button>
+                    </div>
+                    <label>Vertical alignment</label>
+                    <div class="modal-align-row">
+                        <button type="button" class="align-btn ${(cell.valign||'middle')==='top'?'active':''}" data-valign="top">⬆ Top</button>
+                        <button type="button" class="align-btn ${(cell.valign||'middle')==='middle'?'active':''}" data-valign="middle">↕ Middle</button>
+                        <button type="button" class="align-btn ${(cell.valign||'middle')==='bottom'?'active':''}" data-valign="bottom">⬇ Bottom</button>
+                    </div>
+                    <div class="cell-modal-actions">
+                        <button type="button" class="btn" id="tcCancel">Cancel</button>
+                        <button type="button" class="btn btn-success" id="tcSave">Save</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            // Align button toggles
+            overlay.querySelectorAll('[data-align]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    overlay.querySelectorAll('[data-align]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+            overlay.querySelectorAll('[data-valign]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    overlay.querySelectorAll('[data-valign]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+
+            document.getElementById('tcCancel').onclick = () => document.body.removeChild(overlay);
+            overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+
+            document.getElementById('tcSave').onclick = () => {
+                images[index].text = document.getElementById('tcText').value;
+                images[index].fontSize = Math.max(8, parseInt(document.getElementById('tcFontSize').value) || 48);
+                images[index].color = document.getElementById('tcColor').value;
+                images[index].fontFamily = document.getElementById('tcFont').value;
+                images[index].autofill = document.getElementById('tcAutofill').checked;
+                const activeAlign = overlay.querySelector('[data-align].active');
+                const activeValign = overlay.querySelector('[data-valign].active');
+                if (activeAlign) images[index].align = activeAlign.dataset.align;
+                if (activeValign) images[index].valign = activeValign.dataset.valign;
+                document.body.removeChild(overlay);
+                updateUI();
+            };
+        }
+
+        function openMergeModal(index) {
+            const cell = images[index];
+            const cols = Math.ceil(images.length / userRows);
+            const showBg = cell.type === 'image' || cell.type === 'empty';
+            const overlay = document.createElement('div');
+            overlay.className = 'cell-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cell-modal" style="max-width:340px">
+                    <h3>⊞ Cell Options</h3>
+                    <div class="cell-modal-row">
+                        <div>
+                            <label>Colspan (columns)</label>
+                            <input type="number" id="mcColspan" min="1" max="${cols}" value="${cell.colspan || 1}">
+                        </div>
+                        <div>
+                            <label>Rowspan (rows)</label>
+                            <input type="number" id="mcRowspan" min="1" max="10" value="${cell.rowspan || 1}">
+                        </div>
+                    </div>
+                    ${showBg ? `
+                    <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+                        <label style="margin:0">Cell background colour</label>
+                        <input type="color" id="mcBgColor" value="${cell.bgColor || '#ffffff'}" style="width:44px;height:32px;border:2px solid #D7CCC8;border-radius:6px;padding:2px;cursor:pointer">
+                        <button type="button" id="mcBgClear" style="font-size:12px;padding:4px 8px;border:1px solid #D7CCC8;border-radius:5px;background:#FFFAF0;cursor:pointer">Clear</button>
+                    </div>` : ''}
+                    <div class="cell-modal-actions">
+                        <button type="button" class="btn" id="mcCancel">Cancel</button>
+                        <button type="button" class="btn btn-success" id="mcSave">Apply</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            document.getElementById('mcCancel').onclick = () => document.body.removeChild(overlay);
+            overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+            if (showBg && document.getElementById('mcBgClear')) {
+                document.getElementById('mcBgClear').onclick = () => { document.getElementById('mcBgColor').value = '#ffffff'; };
+            }
+            document.getElementById('mcSave').onclick = () => {
+                images[index].colspan = Math.max(1, parseInt(document.getElementById('mcColspan').value) || 1);
+                images[index].rowspan = Math.max(1, parseInt(document.getElementById('mcRowspan').value) || 1);
+                if (showBg) {
+                    const bg = document.getElementById('mcBgColor').value;
+                    images[index].bgColor = bg === '#ffffff' ? null : bg;
+                }
+                document.body.removeChild(overlay);
+                updateUI();
+            };
+        }
+
+        function fontOptions() {
+            return [
+                // Local
+                { value: "ARDECODE, monospace", label: '🔤 ARDECODE' },
+                // Google Fonts — decorative
+                { value: "'Lilita One', cursive", label: 'Lilita One' },
+                { value: "'Pacifico', cursive", label: 'Pacifico' },
+                { value: "'Lobster', cursive", label: 'Lobster' },
+                { value: "'Dancing Script', cursive", label: 'Dancing Script' },
+                { value: "'Righteous', cursive", label: 'Righteous' },
+                // Google Fonts — display/heading
+                { value: "'Playfair Display', serif", label: 'Playfair Display' },
+                { value: "'Oswald', sans-serif", label: 'Oswald' },
+                { value: "'Raleway', sans-serif", label: 'Raleway' },
+                { value: "'Merriweather', serif", label: 'Merriweather' },
+                { value: "'Nunito', sans-serif", label: 'Nunito' },
+                // System fonts
+                { value: "'Segoe UI', sans-serif", label: 'Segoe UI' },
+                { value: "Arial, sans-serif", label: 'Arial' },
+                { value: "Impact, sans-serif", label: 'Impact' },
+                { value: "Verdana, sans-serif", label: 'Verdana' },
+                { value: "'Trebuchet MS', sans-serif", label: 'Trebuchet MS' },
+                { value: "'Times New Roman', serif", label: 'Times New Roman' },
+                { value: "Georgia, serif", label: 'Georgia' },
+                { value: "'Palatino', serif", label: 'Palatino' },
+                { value: "'Courier New', monospace", label: 'Courier New' },
+                { value: "'Comic Sans MS', cursive", label: 'Comic Sans' },
+            ];
         }
 
         async function loadImageFromUrl(url) {
@@ -1306,15 +1834,39 @@
             });
         }
 
-        function moveImage(index, direction) {
-            const newIndex = index + direction;
-            
-            if (newIndex < 0 || newIndex >= images.length) return;
-            
-            [images[index], images[newIndex]] = [images[newIndex], images[index]];
-            
-            updateUI();
-            showPopupStatus('Image moved', 'info');
+        let dragSrcIndex = null;
+
+        function attachDragHandlers() {
+            const cells = imagesGrid.querySelectorAll('[draggable="true"]');
+            cells.forEach(cell => {
+                cell.addEventListener('dragstart', e => {
+                    dragSrcIndex = parseInt(cell.dataset.index);
+                    cell.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                cell.addEventListener('dragend', () => {
+                    cell.classList.remove('dragging');
+                    imagesGrid.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+                });
+                cell.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    imagesGrid.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+                    cell.classList.add('drag-over');
+                });
+                cell.addEventListener('dragleave', () => {
+                    cell.classList.remove('drag-over');
+                });
+                cell.addEventListener('drop', e => {
+                    e.preventDefault();
+                    const destIndex = parseInt(cell.dataset.index);
+                    if (dragSrcIndex === null || dragSrcIndex === destIndex) return;
+                    const [moved] = images.splice(dragSrcIndex, 1);
+                    images.splice(destIndex, 0, moved);
+                    dragSrcIndex = null;
+                    updateUI();
+                });
+            });
         }
 
         function updateRows() {
@@ -1405,9 +1957,13 @@
         }
 
         function updateUI() {
-            const realImages = images.filter(img => !img.isEmpty).length;
-            const emptyCells = images.filter(img => img.isEmpty).length;
-            imageCounter.textContent = `${realImages} images${emptyCells > 0 ? ` + ${emptyCells} empty cells` : ''} added`;
+            const realImages = images.filter(c => c.type === 'image').length;
+            const textCells = images.filter(c => c.type === 'text').length;
+            const emptyCells = images.filter(c => c.type === 'empty').length;
+            const parts = [`${realImages} image${realImages !== 1 ? 's' : ''}`];
+            if (textCells > 0) parts.push(`${textCells} text cell${textCells !== 1 ? 's' : ''}`);
+            if (emptyCells > 0) parts.push(`${emptyCells} empty cell${emptyCells !== 1 ? 's' : ''}`);
+            imageCounter.textContent = parts.join(' + ') + ' added';
             
             const sortButtons = document.getElementById('sortButtons');
             if (sortButtons) {
@@ -1418,35 +1974,50 @@
                 imagesGrid.innerHTML = '<div class="empty-state">No images added yet. Start by uploading or dragging images above.</div>';
             } else {
                 imagesGrid.innerHTML = images.map((img, index) => {
-                    if (img.isEmpty) {
+                    const cs = img.colspan || 1;
+                    const rs = img.rowspan || 1;
+                    const mergeBadge = (cs > 1 || rs > 1) ? `<span class="merge-badge">${cs}×${rs}</span>` : '';
+                    const mergeBtn = `<button class="merge-btn" onclick="openMergeModal(${index})" title="Set colspan/rowspan">⊞</button>`;
+
+                    if (img.type === 'empty') {
                         return `
-                            <div class="empty-cell-item">
+                            <div class="empty-cell-item" draggable="true" data-index="${index}">
                                 ⬜
+                                ${mergeBadge}
                                 <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
-                                <div class="move-buttons">
-                                    <button class="move-btn" onclick="jumpToStart(${index})" ${index === 0 ? 'disabled' : ''} title="Jump to start">⏮️</button>
-                                    <button class="move-btn" onclick="moveImage(${index}, -1)" ${index === 0 ? 'disabled' : ''} title="Move left">⬅️</button>
-                                    <button class="move-btn" onclick="moveImage(${index}, 1)" ${index === images.length - 1 ? 'disabled' : ''} title="Move right">➡️</button>
-                                    <button class="move-btn" onclick="jumpToEnd(${index})" ${index === images.length - 1 ? 'disabled' : ''} title="Jump to end">⏭️</button>
-                                </div>
+                                <div class="drag-handle" title="Drag to reorder">⠿</div>
+                                ${mergeBtn}
+                            </div>
+                        `;
+                    } else if (img.type === 'text') {
+                        const previewBg = img.bgColor || '#5D4037';
+                        const previewColor = img.color || '#FFFFFF';
+                        const previewFont = `${img.italic ? 'italic ' : ''}${img.bold ? 'bold ' : ''}13px ${img.fontFamily || 'sans-serif'}`;
+                        const safeText = (img.text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return `
+                            <div class="text-cell-item" draggable="true" data-index="${index}" style="background:${previewBg}">
+                                <div class="text-cell-preview" style="color:${previewColor};font:${previewFont};text-align:${img.align||'center'}">${safeText || '<em style="opacity:.5">No text</em>'}</div>
+                                ${mergeBadge}
+                                <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
+                                <div class="drag-handle" title="Drag to reorder">⠿</div>
+                                <button class="edit-cell-btn" onclick="openTextCellModal(${index})">✏️ Edit</button>
+                                ${mergeBtn}
                             </div>
                         `;
                     } else {
                         return `
-                            <div class="image-item">
+                            <div class="image-item" draggable="true" data-index="${index}">
                                 <img src="${img.url}" alt="${img.filename}">
+                                ${mergeBadge}
                                 <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
-                                <div class="move-buttons">
-                                    <button class="move-btn" onclick="jumpToStart(${index})" ${index === 0 ? 'disabled' : ''} title="Jump to start">⏮️</button>
-                                    <button class="move-btn" onclick="moveImage(${index}, -1)" ${index === 0 ? 'disabled' : ''} title="Move left">⬅️</button>
-                                    <button class="move-btn" onclick="moveImage(${index}, 1)" ${index === images.length - 1 ? 'disabled' : ''} title="Move right">➡️</button>
-                                    <button class="move-btn" onclick="jumpToEnd(${index})" ${index === images.length - 1 ? 'disabled' : ''} title="Jump to end">⏭️</button>
-                                </div>
+                                <div class="drag-handle" title="Drag to reorder">⠿</div>
+                                ${mergeBtn}
                                 ${showLabels ? `<input type="text" class="image-label-input" value="${img.label || ''}" placeholder="Add label..." maxlength="40" onchange="updateImageLabel(${index}, this.value)">` : ''}
                             </div>
                         `;
                     }
                 }).join('');
+                attachDragHandlers();
             }
             
             generateBtn.disabled = images.length === 0;
@@ -1455,7 +2026,7 @@
         }
 
         function removeImage(index) {
-            if (images[index].url && images[index].url.startsWith('blob:')) {
+            if (images[index].type === 'image' && images[index].url && images[index].url.startsWith('blob:')) {
                 URL.revokeObjectURL(images[index].url);
             }
             
@@ -1508,88 +2079,173 @@
             }
         }
 
+        // Returns [{item, row, col, colspan, rowspan}, ...] and total rows used
+        function placeItemsInGrid(items, cols) {
+            const placements = [];
+            // occupied[r][c] = true means that slot is taken
+            const occupied = [];
+            const ensureRow = r => { while (occupied.length <= r) occupied.push(new Array(cols).fill(false)); };
+
+            let cursor = 0; // flat slot index
+            for (const item of items) {
+                const cs = Math.min(item.colspan || 1, cols);
+                const rs = item.rowspan || 1;
+                // find first top-left where cs×rs block fits
+                let placed = false;
+                while (!placed) {
+                    const r = Math.floor(cursor / cols);
+                    const c = cursor % cols;
+                    ensureRow(r + rs - 1);
+                    // check all slots in the block
+                    if (c + cs <= cols) {
+                        let fits = true;
+                        outer: for (let dr = 0; dr < rs; dr++) {
+                            ensureRow(r + dr);
+                            for (let dc = 0; dc < cs; dc++) {
+                                if (occupied[r + dr][c + dc]) { fits = false; break outer; }
+                            }
+                        }
+                        if (fits) {
+                            for (let dr = 0; dr < rs; dr++) {
+                                ensureRow(r + dr);
+                                for (let dc = 0; dc < cs; dc++) occupied[r + dr][c + dc] = true;
+                            }
+                            placements.push({ item, row: r, col: c, colspan: cs, rowspan: rs });
+                            placed = true;
+                        }
+                    }
+                    cursor++;
+                }
+            }
+            const totalRows = occupied.length;
+            return { placements, totalRows };
+        }
+
+        // Shrinks fontSize until all wrapped lines fit within maxWidth × maxHeight.
+        // Returns the adjusted fontSize.
+        function fitFontSize(ctx, text, fontTemplate, maxWidth, maxHeight, startSize) {
+            let size = startSize;
+            const minSize = 6;
+            while (size >= minSize) {
+                ctx.font = fontTemplate.replace('__SIZE__', size);
+                const lines = wrapTextLines(ctx, text, maxWidth - 20);
+                const lineH = size * 1.25;
+                const totalH = lines.length * lineH;
+                const maxLineW = Math.max(...lines.map(l => ctx.measureText(l).width));
+                if (totalH <= maxHeight - 20 && maxLineW <= maxWidth - 20) break;
+                size -= 1;
+            }
+            return Math.max(size, minSize);
+        }
+
+        function wrapTextLines(ctx, text, maxWidth) {
+            const words = text.split(' ');
+            const lines = [];
+            let current = '';
+            for (const word of words) {
+                const test = current ? current + ' ' + word : word;
+                if (ctx.measureText(test).width > maxWidth && current) {
+                    lines.push(current);
+                    current = word;
+                } else {
+                    current = test;
+                }
+            }
+            if (current) lines.push(current);
+            return lines.length ? lines : [''];
+        }
+
         function createCollageCanvas(imageItems, rows, cols, cellDims, spacing = 5) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            
+
+            const { placements, totalRows } = placeItemsInGrid(imageItems, cols);
+            const usedRows = Math.max(rows, totalRows);
+
             const collageWidth = cols * cellDims.width + (cols - 1) * spacing;
-            const collageHeight = rows * cellDims.height + (rows - 1) * spacing;
-            
+            const collageHeight = usedRows * cellDims.height + (usedRows - 1) * spacing;
+
             canvas.width = collageWidth;
             canvas.height = collageHeight;
-            
-            ctx.clearRect(0, 0, collageWidth, collageHeight);
-            
-            for (let i = 0; i < imageItems.length; i++) {
-                const item = imageItems[i];
-                
-                if (item.isEmpty) {
+            ctx.fillStyle = collageBgColor;
+            ctx.fillRect(0, 0, collageWidth, collageHeight);
+
+            for (const { item, row, col, colspan, rowspan } of placements) {
+                if (item.type === 'empty') continue;
+
+                const cellW = colspan * cellDims.width + (colspan - 1) * spacing;
+                const cellH = rowspan * cellDims.height + (rowspan - 1) * spacing;
+                const tx = col * (cellDims.width + spacing);
+                const ty = row * (cellDims.height + spacing);
+
+                if (item.type === 'text') {
+                    ctx.save();
+                    ctx.fillStyle = item.bgColor || '#5D4037';
+                    ctx.fillRect(tx, ty, cellW, cellH);
+                    const textContent = item.text || '';
+                    if (textContent) {
+                        const prefix = `${item.italic ? 'italic ' : ''}${item.bold ? 'bold ' : ''}`;
+                        const family = item.fontFamily || 'sans-serif';
+                        const baseSize = item.fontSize || 48;
+                        let fontSize = baseSize;
+                        if (item.autofill) {
+                            fontSize = fitFontSize(ctx, textContent, `${prefix}__SIZE__px ${family}`, cellW, cellH, baseSize);
+                        }
+                        ctx.font = `${prefix}${fontSize}px ${family}`;
+                        ctx.fillStyle = item.color || '#FFFFFF';
+                        ctx.textAlign = item.align || 'center';
+                        ctx.textBaseline = 'middle';
+                        const lines = wrapTextLines(ctx, textContent, cellW - 20);
+                        const lineH = fontSize * 1.25;
+                        const totalH = lines.length * lineH;
+                        let startY;
+                        if ((item.valign || 'middle') === 'top') startY = ty + lineH / 2 + 10;
+                        else if (item.valign === 'bottom') startY = ty + cellH - totalH + lineH / 2 - 10;
+                        else startY = ty + (cellH - totalH) / 2 + lineH / 2;
+                        let lx = tx + cellW / 2;
+                        if (item.align === 'left') lx = tx + 10;
+                        else if (item.align === 'right') lx = tx + cellW - 10;
+                        lines.forEach((line, li) => ctx.fillText(line, lx, startY + li * lineH));
+                    }
+                    ctx.restore();
                     continue;
                 }
-                
+
+                // image cell
                 const img = item.element;
-                let row = Math.floor(i / cols);
-                let col = i % cols;
-                let xOffset = 0;
-                
-                const isLastRow = row === rows - 1;
-                const itemsInThisRow = isLastRow ? imageItems.length - (row * cols) : cols;
-                
-                if (isLastRow && itemsInThisRow < cols) {
-                    const emptySpaces = cols - itemsInThisRow;
-                    xOffset = (emptySpaces * (cellDims.width + spacing)) / 2;
+                if (item.bgColor) {
+                    ctx.fillStyle = item.bgColor;
+                    ctx.fillRect(tx, ty, cellW, cellH);
                 }
-                
-                const resizedImg = resizeImageToFit(img, cellDims.width, cellDims.height);
-                
-                // Calculate positioning with label space if needed
                 const labelHeight = showLabels && item.label ? 20 : 0;
-                const availableHeight = cellDims.height - labelHeight;
+                const availableHeight = cellH - labelHeight;
+                const resized = resizeImageToFit(img, cellW, availableHeight);
+                const x = tx + (cellW - resized.width) / 2;
+                const y = ty + (availableHeight - resized.height) / 2;
+                ctx.drawImage(resized, x, y);
 
-                const resizedImgWithLabel = resizeImageToFit(img, cellDims.width, availableHeight);
-
-                const x = col * (cellDims.width + spacing) + (cellDims.width - resizedImgWithLabel.width) / 2 + xOffset;
-                const y = row * (cellDims.height + spacing) + (availableHeight - resizedImgWithLabel.height) / 2;
-
-                ctx.drawImage(resizedImgWithLabel, x, y);
-
-                // Draw label if enabled and present
                 if (showLabels && item.label) {
                     ctx.save();
-                    
-                    // Set font with selected style
                     ctx.font = `bold ${labelFontSize}px ${labelFontStyle}`;
                     ctx.textAlign = 'center';
-                    
-                    const labelX = col * (cellDims.width + spacing) + cellDims.width / 2 + xOffset;
-                    const labelY = row * (cellDims.height + spacing) + cellDims.height - Math.max(8, labelFontSize / 4);
-                    
-                    // Truncate label if too long for cell width
+                    const labelX = tx + cellW / 2;
+                    const labelY = ty + cellH - Math.max(8, labelFontSize / 4);
                     let displayLabel = item.label;
-                    const maxWidth = cellDims.width - 10;
-                    
-                    while (ctx.measureText(displayLabel).width > maxWidth && displayLabel.length > 0) {
+                    const maxW = cellW - 10;
+                    while (ctx.measureText(displayLabel).width > maxW && displayLabel.length > 0) {
                         displayLabel = displayLabel.slice(0, -1);
                     }
-                    
-                    if (displayLabel.length < item.label.length) {
-                        displayLabel = displayLabel.trim() + '...';
-                    }
-                    
-                    // Draw black outline (multiple passes for better coverage)
+                    if (displayLabel.length < item.label.length) displayLabel = displayLabel.trim() + '...';
                     ctx.strokeStyle = '#000000';
                     ctx.lineWidth = labelOutlineWidth;
                     ctx.lineJoin = 'round';
                     ctx.strokeText(displayLabel, labelX, labelY);
-                    
-                    // Draw white fill text
                     ctx.fillStyle = '#FFFFFF';
                     ctx.fillText(displayLabel, labelX, labelY);
-                    
                     ctx.restore();
                 }
             }
-            
+
             return canvas;
         }
 
@@ -1689,21 +2345,6 @@
             images[index].label = value.slice(0, 40);
         }
 
-        function jumpToStart(index) {
-            if (index === 0) return;
-            const [item] = images.splice(index, 1);
-            images.unshift(item);
-            updateUI();
-            showPopupStatus('Moved to start', 'info');
-        }
-
-        function jumpToEnd(index) {
-            if (index === images.length - 1) return;
-            const [item] = images.splice(index, 1);
-            images.push(item);
-            updateUI();
-            showPopupStatus('Moved to end', 'info');
-        }
 
         function updateLabelFontStyle() {
             const select = document.getElementById('labelFontSelect');
@@ -1721,6 +2362,10 @@
             const slider = document.getElementById('labelOutlineSlider');
             labelOutlineWidth = parseInt(slider.value);
             document.getElementById('labelOutlineValue').textContent = labelOutlineWidth + 'px';
+        }
+
+        function updateCollageBg() {
+            collageBgColor = document.getElementById('collageBgColor').value;
         }
 
         function sortImages(by, direction) {
@@ -1757,14 +2402,19 @@
             showPopupStatus(`Sorted by ${by} (${direction === 'asc' ? 'ascending' : 'descending'})`, 'info');
         }
 
+        renderHeader();
         updateUI();
         updateAspectRatioLabel();
         showPopupStatus('☕ Cuppa ready! Add images and customize your layout.', 'info');
         // Force load the font on page load
         window.addEventListener('load', () => {
-            document.fonts.load("bold 16px 'Lilita One'").then(() => {
-                console.log('Lilita One font loaded');
-            });
+            const fontsToLoad = [
+                "bold 16px 'Lilita One'", "bold 16px 'Pacifico'", "bold 16px 'Lobster'",
+                "bold 16px 'Dancing Script'", "bold 16px 'Righteous'",
+                "bold 16px 'Playfair Display'", "bold 16px 'Oswald'", "bold 16px 'Raleway'",
+                "bold 16px 'Merriweather'", "bold 16px 'Nunito'", "16px ARDECODE"
+            ];
+            fontsToLoad.forEach(f => document.fonts.load(f));
         });
     </script>
 </body>
