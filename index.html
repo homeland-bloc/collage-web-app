@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Collage Creator</title>
+    <title>Cuppa - Simple Collage Creator</title>
+    <meta name="apple-mobile-web-app-title" content="Cuppa">
+    <meta name="application-name" content="Cuppa">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <style>
@@ -16,8 +22,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: yellow;
-            color: #333;
+            background: linear-gradient(135deg, #1A0F0A 0%, #5D4037 50%, #BCAAA4 100%);
+            color: #3E2723;
             min-height: 100vh;
             padding: 20px;
         }
@@ -25,17 +31,21 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background: white;
+            background: #FFFAF0;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #5D4037 0%, #6D4C41 100%);
+            color: #FFF8E1;
             padding: 30px;
             text-align: center;
+        }
+
+        .logo-space {
+            display: none;
         }
 
         .header h1 {
@@ -45,8 +55,9 @@
         }
 
         .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
+            opacity: 0.95;
+            font-size: 1em;
+            line-height: 1.5;
         }
 
         .main-content {
@@ -54,38 +65,38 @@
         }
 
         .upload-section {
-            background: #f8f9ff;
+            background: #FFF8E1;
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 30px;
-            border: 2px solid #e1e5f7;
+            border: 2px solid #D7CCC8;
             text-align: center;
         }
 
         .upload-area {
-            border: 3px dashed #cbd5e0;
+            border: 3px dashed #A1887F;
             border-radius: 15px;
             padding: 40px;
             margin: 20px 0;
-            background: #f7fafc;
+            background: #FFFAF0;
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .upload-area:hover {
-            border-color: #667eea;
-            background: #edf2f7;
+            border-color: #6D4C41;
+            background: #FFF8E1;
         }
 
         .upload-area.dragover {
-            border-color: #48bb78;
-            background: #f0fff4;
+            border-color: #8D6E63;
+            background: #FFEAA7;
             transform: scale(1.02);
         }
 
         .upload-icon {
             font-size: 48px;
-            color: #a0aec0;
+            color: #8D6E63;
             margin-bottom: 15px;
         }
 
@@ -96,21 +107,45 @@
         .url-input {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #D7CCC8;
             border-radius: 8px;
             font-size: 16px;
             margin-bottom: 10px;
+            background: #FFFAF0;
         }
 
         .url-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #6D4C41;
+            box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-compact {
+            padding: 10px 20px;
+            font-size: 14px;
+            margin: 2px;
+            flex: 1 1 0;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .btn-compact {
+                padding: 10px 14px;
+                font-size: 13px;
+                flex: 1 1 0;
+            }
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #6D4C41 0%, #5D4037 100%);
+            color: #FFF8E1;
             border: none;
             cursor: pointer;
             font-weight: 600;
@@ -123,7 +158,7 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(93, 64, 55, 0.3);
         }
 
         .btn:disabled {
@@ -133,11 +168,12 @@
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            background: linear-gradient(135deg, #E8C9A1 0%, #D4A574 100%);
+            color: #3E2723;
         }
 
         .btn-success:hover {
-            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+            box-shadow: 0 10px 20px rgba(212, 165, 116, 0.3);
         }
 
         .images-grid {
@@ -146,7 +182,7 @@
             gap: 15px;
             margin: 30px 0;
             padding: 20px;
-            background: #f7fafc;
+            background: #FFFAF0;
             border-radius: 10px;
             min-height: 80px;
         }
@@ -156,7 +192,7 @@
             border-radius: 8px;
             overflow: hidden;
             background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(62, 39, 35, 0.1);
             transition: transform 0.3s ease;
         }
 
@@ -168,6 +204,53 @@
             width: 100%;
             height: 120px;
             object-fit: cover;
+        }
+
+        .empty-cell-item {
+            position: relative;
+            border-radius: 8px;
+            background: #FFF8E1;
+            border: 2px dashed #A1887F;
+            box-shadow: 0 4px 15px rgba(62, 39, 35, 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            font-size: 36px;
+            color: #A1887F;
+        }
+
+        .empty-cell-item:hover {
+            transform: scale(1.05);
+        }
+
+        .reorder-buttons {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            display: flex;
+            gap: 3px;
+        }
+
+        .reorder-btn {
+            background: rgba(109, 76, 65, 0.9);
+            color: #FFF8E1;
+            border: none;
+            border-radius: 4px;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .reorder-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
 
         .remove-btn {
@@ -188,8 +271,8 @@
         }
 
         .image-counter {
-            background: #667eea;
-            color: white;
+            background: #6D4C41;
+            color: #FFF8E1;
             padding: 8px 16px;
             border-radius: 20px;
             font-weight: 600;
@@ -203,20 +286,20 @@
         }
 
         .collage-preview {
-            background: white;
+            background: #FFFAF0;
             border-radius: 15px;
             padding: 30px;
             margin-top: 30px;
             text-align: center;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #D7CCC8;
         }
 
         .preview-canvas {
-            border: 1px solid #e2e8f0;
+            border: 1px solid #D7CCC8;
             border-radius: 8px;
             max-width: 100%;
             margin: 20px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(62, 39, 35, 0.2);
         }
 
         .status-message {
@@ -227,24 +310,23 @@
         }
 
         .status-success {
-            background: #c6f6d5;
+            background: #D4E9D6;
             color: #22543d;
-            border: 1px solid #9ae6b4;
+            border: 1px solid #9AE6B4;
         }
 
         .status-error {
-            background: #fed7d7;
+            background: #FED7D7;
             color: #742a2a;
-            border: 1px solid #fc8181;
+            border: 1px solid #FC8181;
         }
 
         .status-info {
-            background: #bee3f8;
+            background: #D4E4F7;
             color: #2a4365;
-            border: 1px solid #90cdf4;
+            border: 1px solid #90CDF4;
         }
 
-        /* Popup Notification Styles */
         .popup-notification {
             position: fixed;
             top: 50%;
@@ -263,8 +345,8 @@
         }
 
         .popup-success {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-            color: white;
+            background: linear-gradient(135deg, #D4A574, #C19A6B);
+            color: #3E2723;
         }
 
         .popup-error {
@@ -273,8 +355,8 @@
         }
 
         .popup-info {
-            background: linear-gradient(135deg, #4299e1, #3182ce);
-            color: white;
+            background: linear-gradient(135deg, #8D6E63, #6D4C41);
+            color: #FFF8E1;
         }
 
         @keyframes popupFadeIn {
@@ -304,24 +386,30 @@
         }
 
         .controls-section {
-            background: #f0f4ff;
+            background: #FFF8E1;
             border-radius: 12px;
             padding: 20px;
             margin: 20px 0;
-            border: 2px solid #d6e3ff;
+            border: 2px solid #D7CCC8;
         }
 
         .controls-section h3 {
             margin-bottom: 15px;
-            color: #4a5568;
+            color: #5D4037;
             font-size: 1.1em;
         }
 
         .controls-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .control-group {
@@ -333,8 +421,19 @@
 
         .control-group label {
             font-weight: 600;
-            margin-bottom: 8px;
-            color: #4a5568;
+            margin-bottom: 4px;
+            color: #5D4037;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+        }
+
+        .control-group span {
+            font-weight: 600;
+            color: #6D4C41;
+            font-size: 14px;
+            margin: 0;
         }
 
         .slider-container {
@@ -349,7 +448,7 @@
             flex: 1;
             height: 6px;
             border-radius: 3px;
-            background: #e2e8f0;
+            background: #D7CCC8;
             outline: none;
             -webkit-appearance: none;
             appearance: none;
@@ -361,24 +460,24 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6D4C41 0%, #5D4037 100%);
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 6px rgba(109, 76, 65, 0.3);
         }
 
         .slider::-moz-range-thumb {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6D4C41 0%, #5D4037 100%);
             cursor: pointer;
             border: none;
-            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 6px rgba(109, 76, 65, 0.3);
         }
 
         .increment-btn {
-            background: #4299e1;
-            color: white;
+            background: #8D6E63;
+            color: #FFF8E1;
             border: none;
             border-radius: 4px;
             width: 30px;
@@ -393,7 +492,7 @@
         }
 
         .increment-btn:hover {
-            background: #3182ce;
+            background: #6D4C41;
             transform: scale(1.05);
         }
 
@@ -403,33 +502,8 @@
 
         .control-group span {
             font-weight: 600;
-            color: #667eea;
+            color: #6D4C41;
             font-size: 14px;
-        }
-
-        .aspect-ratio-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 15px 0;
-            padding: 10px;
-            background: #e6f3ff;
-            border-radius: 8px;
-            border: 1px solid #b3d9ff;
-        }
-
-        .aspect-ratio-section input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #667eea;
-        }
-
-        .aspect-ratio-section label {
-            font-weight: 600;
-            color: #4a5568;
-            margin: 0;
-            cursor: pointer;
         }
 
         .preset-buttons {
@@ -440,35 +514,34 @@
         }
 
         .preset-btn {
-            padding: 8px 16px;
-            font-size: 14px;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            padding: 6px 12px;
+            font-size: 13px;
+            background: linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%);
         }
 
         .preset-btn:hover {
-            box-shadow: 0 6px 16px rgba(66, 153, 225, 0.3);
+            box-shadow: 0 6px 16px rgba(141, 110, 99, 0.3);
         }
 
         .layout-preview {
-            background: #edf2f7;
-            border: 2px solid #cbd5e0;
+            background: #FFFAF0;
+            border: 2px solid #D7CCC8;
             border-radius: 8px;
             padding: 15px;
             margin: 15px 0;
             text-align: center;
             font-size: 14px;
-            color: #4a5568;
+            color: #5D4037;
             font-weight: 500;
         }
 
-        /* Duplicate confirmation dialog */
         .duplicate-dialog {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2000;
-            background: white;
+            background: #FFFAF0;
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -483,7 +556,7 @@
         }
 
         .duplicate-dialog p {
-            color: #4a5568;
+            color: #5D4037;
             margin-bottom: 20px;
             line-height: 1.5;
         }
@@ -508,8 +581,8 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+            border: 3px solid #D7CCC8;
+            border-top: 3px solid #6D4C41;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-right: 10px;
@@ -522,141 +595,184 @@
 
         .empty-state {
             text-align: center;
-            color: #a0aec0;
+            color: #A1887F;
             padding: 40px;
             font-style: italic;
         }
 
         @media (max-width: 768px) {
-            .main-content {
-                padding: 15px;
-            }
-            
-            .upload-area {
-                padding: 20px 15px;
-            }
-            
-            .images-grid {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-                gap: 8px;
-                padding: 15px;
-            }
+            .main-content { padding: 15px; }
+            .upload-area { padding: 20px 15px; }
+            .images-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; padding: 15px; }
+            .controls-grid { grid-template-columns: 1fr; gap: 15px; }
+            .controls-section { padding: 15px; }
+            .slider-container { flex-direction: row; gap: 8px; align-items: center; }
+            .slider { height: 8px; flex: 1; }
+            .slider::-webkit-slider-thumb { width: 24px; height: 24px; }
+            .slider::-moz-range-thumb { width: 24px; height: 24px; }
+            .increment-btn { width: 36px; height: 36px; font-size: 16px; flex-shrink: 0; }
+            .control-group { gap: 8px; }
+            .control-group label { font-size: 14px; margin-bottom: 6px; }
+            .control-group span { font-size: 13px; margin-top: 4px; }
+            .preset-buttons { gap: 6px; }
+            .preset-btn { padding: 8px 10px; font-size: 12px; }
+            .aspect-ratio-section { padding: 12px; margin: 12px 0; }
+            .aspect-ratio-section label { font-size: 13px; }
+            .btn { padding: 10px 16px; font-size: 14px; }
+            .url-input { font-size: 16px; }
+        }
 
-            .controls-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
+        @media (max-width: 480px) {
+            .header h1 { font-size: 2em; }
+            .header p { font-size: 0.9em; }
+            .controls-section h3 { font-size: 1em; }
+            .increment-btn { width: 32px; height: 32px; font-size: 14px; }
+            .preset-btn { padding: 7px 9px; font-size: 11px; }
+        }
 
-            .controls-section {
-                padding: 15px;
-            }
+        /* Add these new styles for text labels */
 
-            .slider-container {
-                flex-direction: row;
-                gap: 8px;
-                align-items: center;
-            }
+        .image-label-input {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #D7CCC8;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-top: 4px;
+            background: #FFFAF0;
+            text-align: center;
+        }
 
-            .slider {
-                height: 8px;
-                flex: 1;
-            }
+        .image-label-input:focus {
+            outline: none;
+            border-color: #6D4C41;
+            box-shadow: 0 0 0 2px rgba(109, 76, 65, 0.1);
+        }
 
-            .slider::-webkit-slider-thumb {
-                width: 24px;
-                height: 24px;
-            }
+        .move-buttons {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+        }
 
-            .slider::-moz-range-thumb {
-                width: 24px;
-                height: 24px;
-            }
+        .move-btn {
+            background: rgba(109, 76, 65, 0.9);
+            color: #FFF8E1;
+            border: none;
+            border-radius: 3px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
 
-            .increment-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
-                flex-shrink: 0;
-            }
+        .move-btn:hover {
+            background: rgba(93, 64, 55, 1);
+        }
 
-            .control-group {
-                gap: 8px;
-            }
+        .move-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
 
-            .control-group label {
-                font-size: 14px;
-                margin-bottom: 6px;
-            }
+        .label-font-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            background: #FFFAF0;
+            border-radius: 8px;
+            border: 1px solid #D7CCC8;
+        }
 
-            .control-group span {
-                font-size: 13px;
-                margin-top: 4px;
-            }
+        .toggle-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 10px;
+            background: #FFFAF0;
+            border-radius: 8px;
+            border: 1px solid #D7CCC8;
+        }
 
-            .preset-buttons {
-                gap: 8px;
-            }
+        .toggle-section input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6D4C41;
+            flex-shrink: 0; /* Prevent checkbox from shrinking */
+        }
 
-            .preset-btn {
-                padding: 10px 14px;
-                font-size: 13px;
-            }
+        .toggle-section label {
+            font-weight: 600;
+            color: #5D4037;
+            margin: 0;
+            cursor: pointer;
+            font-size: 14px; /* Consistent font size */
+        }
 
-            .aspect-ratio-section {
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .toggle-section {
                 padding: 12px;
                 margin: 12px 0;
             }
-
-            .aspect-ratio-section label {
-                font-size: 14px;
-            }
-
-            .btn {
-                padding: 12px 20px;
-                font-size: 15px;
-            }
-
-            .url-input {
-                font-size: 16px; /* Prevents zoom on iOS */
+            
+            .toggle-section label {
+                font-size: 13px;
             }
         }
 
-        /* Additional mobile refinements */
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .header p {
-                font-size: 1em;
-            }
-            
-            .controls-section h3 {
-                font-size: 1em;
-            }
-            
-            .increment-btn {
-                width: 32px;
-                height: 32px;
-                font-size: 14px;
-            }
+        .font-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #D7CCC8;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #FFFAF0;
+            color: #5D4037;
+            cursor: pointer;
+        }
+
+        .font-select:focus {
+            outline: none;
+            border-color: #6D4C41;
+            box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+        }
+
+        .sort-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>✨ Simple Collage Creator</h1>
-            <p>Upload images and generate compact, beautiful collages automatically</p>
+            <div class="logo-space"></div>
+            <h1>☕ Cuppa</h1>
+            <p>Simple and minimalistic collage creator for your photos. Upload images, adjust layout 
+                controls, and generate your collage. Discord CDN links are 
+                automatically converted to media.discordapp.net for compatibility.</p>
         </div>
 
         <div class="main-content">
-            <!-- Upload Section -->
             <div class="upload-section">
                 <h2>📸 Add Your Images</h2>
                 <p>Upload images via drag & drop, file selection, or URL</p>
                 
-                <!-- Drag & Drop Area -->
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-icon">🖼️</div>
                     <h3>Drag & Drop Images Here</h3>
@@ -664,73 +780,121 @@
                     <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
                 </div>
 
-                <!-- URL Input -->
                 <div class="url-input-section">
-                    <input type="url" id="urlInput" class="url-input" placeholder="Or paste image URL here... (Discord CDN links auto-converted)">
-                    <button type="button" class="btn" id="addUrlBtn">Add URL</button>
-                    <button type="button" class="btn" id="clearUrlBtn">Clear</button>
+                    <input type="url" id="urlInput" class="url-input" placeholder="Paste image URL here...">
+                    <div class="button-row">
+                        <button type="button" class="btn btn-compact" id="addUrlBtn">Add URL</button>
+                        <button type="button" class="btn btn-compact" id="clearUrlBtn">Clear</button>
+                        <button type="button" class="btn btn-compact" id="addEmptyCellBtn">Add Empty Cell</button>
+                    </div>
                 </div>
 
-                <!-- Image Counter -->
                 <div class="image-counter" id="imageCounter">
                     0 images added
                 </div>
 
-                <!-- Manual Controls -->
                 <div class="controls-section">
                     <h3>🎛️ Layout Controls</h3>
                     <div class="controls-grid">
                         <div class="control-group">
-                            <label for="rowsSlider">Rows:</label>
+                            <label for="rowsSlider">Rows: <span id="rowsValue">5</span></label>
                             <div class="slider-container">
                                 <button class="increment-btn" onclick="adjustRows(-1)">-</button>
-                                <input type="range" id="rowsSlider" min="1" max="10" value="2" class="slider">
+                                <input type="range" id="rowsSlider" min="1" max="10" value="5" class="slider">
                                 <button class="increment-btn" onclick="adjustRows(1)">+</button>
                             </div>
-                            <span id="rowsValue">2</span>
                         </div>
                         <div class="control-group">
-                            <label for="cellWidthSlider">Cell Width:</label>
+                            <label for="cellWidthSlider">Cell Width: <span id="cellWidthValue">500px</span></label>
                             <div class="slider-container">
                                 <button class="increment-btn" onclick="adjustCellWidth(-1)">-</button>
                                 <input type="range" id="cellWidthSlider" min="50" max="1000" value="500" class="slider">
                                 <button class="increment-btn" onclick="adjustCellWidth(1)">+</button>
                             </div>
-                            <span id="cellWidthValue">500px</span>
                         </div>
                         <div class="control-group">
-                            <label for="cellHeightSlider">Cell Height:</label>
+                            <label for="cellHeightSlider">Cell Height: <span id="cellHeightValue">800px</span></label>
                             <div class="slider-container">
                                 <button class="increment-btn" onclick="adjustCellHeight(-1)">-</button>
                                 <input type="range" id="cellHeightSlider" min="50" max="1000" value="800" class="slider">
                                 <button class="increment-btn" onclick="adjustCellHeight(1)">+</button>
                             </div>
-                            <span id="cellHeightValue">800px</span>
+                        </div>
+                        <div class="control-group">
+                            <label for="cellSpacingSlider">Cell Spacing: <span id="cellSpacingValue">5px</span></label>
+                            <div class="slider-container">
+                                <button class="increment-btn" onclick="adjustCellSpacing(-1)">-</button>
+                                <input type="range" id="cellSpacingSlider" min="0" max="50" value="5" class="slider">
+                                <button class="increment-btn" onclick="adjustCellSpacing(1)">+</button>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Aspect Ratio Lock -->
-                    <div class="aspect-ratio-section">
+                    <div class="toggle-section">
                         <input type="checkbox" id="aspectRatioLock" onchange="toggleAspectRatioLock()">
                         <label for="aspectRatioLock">🔒 Lock Aspect Ratio (5:8)</label>
                     </div>
+
+                    <div class="toggle-section">
+                        <input type="checkbox" id="showLabelsToggle" onchange="toggleShowLabels()">
+                        <label for="showLabelsToggle">🏷️ Enable Image Labels</label>
+                    </div>
+
+                    <div class="control-group" id="labelFontSizeControl" style="display: none;">
+                        <label for="labelFontSlider">Label Font Size: <span id="labelFontValue">48px</span></label>
+                        <div class="slider-container">
+                            <button class="increment-btn" onclick="adjustLabelFont(-1)">-</button>
+                            <input type="range" id="labelFontSlider" min="10" max="240" value="48" class="slider">
+                            <button class="increment-btn" onclick="adjustLabelFont(1)">+</button>
+                        </div>
+                    </div>
                     
+                    <div class="control-group" id="labelFontStyleControl" style="display: none;">
+                        <label for="labelFontSelect">Label Font Style:</label>
+                        <select id="labelFontSelect" class="font-select" onchange="updateLabelFontStyle()">
+                            <option value="'Lilita One', cursive">Lilita One (Default)</option>
+                            <option value="'Segoe UI', sans-serif">Segoe UI</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="Impact, sans-serif">Impact</option>
+                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                            <option value="'Palatino', serif">Palatino</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group" id="labelOutlineControl" style="display: none;">
+                        <label for="labelOutlineSlider">Label Outline Width: <span id="labelOutlineValue">20px</span></label>
+                        <div class="slider-container">
+                            <button class="increment-btn" onclick="adjustLabelOutline(-1)">-</button>
+                            <input type="range" id="labelOutlineSlider" min="0" max="40" value="20" class="slider">
+                            <button class="increment-btn" onclick="adjustLabelOutline(1)">+</button>
+                        </div>
+                    </div>
+
                     <div class="preset-buttons">
-                        <button type="button" class="btn preset-btn" onclick="setPreset(280, 280)">Square</button>
-                        <button type="button" class="btn preset-btn" onclick="setPreset(200, 300)">Portrait</button>
-                        <button type="button" class="btn preset-btn" onclick="setPreset(300, 200)">Landscape</button>
-                        <button type="button" class="btn preset-btn" onclick="setPreset(500, 800)">Tall (Default)</button>
+                        <button type="button" class="btn preset-btn" onclick="setPreset(1000, 1000)">Square</button>
+                        <button type="button" class="btn preset-btn" onclick="setPreset(500, 800)">Portrait</button>
+                        <button type="button" class="btn preset-btn" onclick="setPreset(800, 500)">Landscape</button>
                     </div>
                 </div>
 
-                <!-- Images Grid -->
+                <div class="sort-buttons" id="sortButtons" style="display: none;">
+                    <button type="button" class="btn btn-compact" onclick="sortImages('label', 'asc')">🔤 A→Z</button>
+                    <button type="button" class="btn btn-compact" onclick="sortImages('label', 'desc')">🔤 Z→A</button>
+                    <button type="button" class="btn btn-compact" onclick="sortImages('date', 'asc')">📅 Old→New</button>
+                    <button type="button" class="btn btn-compact" onclick="sortImages('date', 'desc')">📅 New→Old</button>
+                </div>
+
                 <div class="images-grid" id="imagesGrid">
                     <div class="empty-state">
                         No images added yet. Start by uploading or dragging images above.
                     </div>
                 </div>
 
-                <!-- Generate Button -->
                 <div class="generate-section">
                     <button type="button" class="btn btn-success" id="generateBtn" disabled>
                         🎨 Generate Collage
@@ -738,7 +902,6 @@
                 </div>
             </div>
 
-            <!-- Collage Preview -->
             <div class="collage-preview" id="collagePreview" style="display: none;">
                 <h2>🎉 Your Collage</h2>
                 <canvas id="collageCanvas" class="preview-canvas"></canvas>
@@ -750,64 +913,72 @@
                 <div id="collageInfo"></div>
             </div>
 
-            <!-- Status Messages -->
             <div id="statusContainer"></div>
         </div>
     </div>
 
     <script>
-        // Global state
         let images = [];
-        let userRows = 2;
+        let userRows = 5;
         let userCellWidth = 500;
         let userCellHeight = 800;
+        let userCellSpacing = 5;
         let aspectRatioLocked = false;
-        let currentAspectRatio = 500 / 800; // width / height
+        let currentAspectRatio = 500 / 800;
+        let showLabels = false;
+        let labelFontSize = 48;
+        let labelFontStyle = "'Lilita One', cursive"; // Default font
+        let labelOutlineWidth = 20; // Default outline width
 
-        // DOM elements
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const urlInput = document.getElementById('urlInput');
         const addUrlBtn = document.getElementById('addUrlBtn');
         const clearUrlBtn = document.getElementById('clearUrlBtn');
+        const addEmptyCellBtn = document.getElementById('addEmptyCellBtn');
         const imageCounter = document.getElementById('imageCounter');
         const imagesGrid = document.getElementById('imagesGrid');
         const generateBtn = document.getElementById('generateBtn');
         const collagePreview = document.getElementById('collagePreview');
         const collageCanvas = document.getElementById('collageCanvas');
         const downloadBtn = document.getElementById('downloadBtn');
-        const statusContainer = document.getElementById('statusContainer');
 
-        // Control elements
         const rowsSlider = document.getElementById('rowsSlider');
         const cellWidthSlider = document.getElementById('cellWidthSlider');
         const cellHeightSlider = document.getElementById('cellHeightSlider');
+        const cellSpacingSlider = document.getElementById('cellSpacingSlider');
         const rowsValue = document.getElementById('rowsValue');
         const cellWidthValue = document.getElementById('cellWidthValue');
         const cellHeightValue = document.getElementById('cellHeightValue');
+        const cellSpacingValue = document.getElementById('cellSpacingValue');
         const aspectRatioLock = document.getElementById('aspectRatioLock');
 
-        // Event listeners
+        const labelFontSlider = document.getElementById('labelFontSlider');
+        const labelOutlineSlider = document.getElementById('labelOutlineSlider');
+        if (labelFontSlider) {
+            labelFontSlider.addEventListener('input', updateLabelFont);
+        }
+        if (labelOutlineSlider) {
+            labelOutlineSlider.addEventListener('input', updateLabelOutline);
+        }
+
         uploadArea.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', handleFileSelect);
         addUrlBtn.addEventListener('click', addImageFromUrl);
         clearUrlBtn.addEventListener('click', clearUrlInput);
+        addEmptyCellBtn.addEventListener('click', addEmptyCell);
         generateBtn.addEventListener('click', generateCollage);
         downloadBtn.addEventListener('click', downloadCollage);
 
-        // Control event listeners
         rowsSlider.addEventListener('input', updateRows);
         cellWidthSlider.addEventListener('input', updateCellWidth);
         cellHeightSlider.addEventListener('input', updateCellHeight);
+        cellSpacingSlider.addEventListener('input', updateCellSpacing);
 
-        // URL input enter key
         urlInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                addImageFromUrl();
-            }
+            if (e.key === 'Enter') addImageFromUrl();
         });
 
-        // Drag and drop
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
@@ -831,7 +1002,6 @@
             }
         });
 
-        // Paste support
         document.addEventListener('paste', async (e) => {
             const items = e.clipboardData.items;
             
@@ -845,7 +1015,6 @@
             }
         });
 
-        // Precision control functions
         function adjustRows(delta) {
             const newValue = Math.max(1, Math.min(10, userRows + delta));
             rowsSlider.value = newValue;
@@ -864,10 +1033,15 @@
             updateCellHeight();
         }
 
+        function adjustCellSpacing(delta) {
+            const newValue = Math.max(0, Math.min(50, userCellSpacing + delta));
+            cellSpacingSlider.value = newValue;
+            updateCellSpacing();
+        }
+
         function toggleAspectRatioLock() {
             aspectRatioLocked = aspectRatioLock.checked;
             if (aspectRatioLocked) {
-                // Lock current ratio
                 currentAspectRatio = userCellWidth / userCellHeight;
                 updateAspectRatioLabel();
             }
@@ -884,7 +1058,6 @@
         }
 
         function convertDiscordUrl(url) {
-            // Convert Discord CDN URLs to media URLs
             if (url.includes('cdn.discordapp.com')) {
                 return url.replace('cdn.discordapp.com', 'media.discordapp.net');
             }
@@ -894,29 +1067,34 @@
         function handleFileSelect(e) {
             const files = Array.from(e.target.files);
             addImagesFromFiles(files);
-            fileInput.value = ''; // Reset input
+            fileInput.value = '';
         }
 
         async function addImagesFromFiles(files) {
-            for (let file of files) {
-                // Check for duplicates
-                const isDuplicate = images.some(img => 
-                    img.filename === file.name && 
-                    img.filesize === file.size
-                );
-                
-                if (isDuplicate) {
-                    const shouldAdd = await showDuplicateDialog(file.name);
-                    if (!shouldAdd) {
-                        continue; // Skip this file
-                    }
-                }
-                
+            // Sort files alphabetically with natural number ordering
+            const sortedFiles = Array.from(files).sort((a, b) => 
+                a.name.localeCompare(b.name, undefined, {numeric: true, sensitivity: 'base'})
+            );
+            
+            for (let file of sortedFiles) {
                 await addImageFromBlob(file, file.name, file.size);
             }
         }
 
         async function addImageFromBlob(blob, filename, filesize = blob.size) {
+            // Add duplicate check for files
+            const isDuplicate = images.some(img => 
+                img.filename === filename && 
+                img.filesize === filesize
+            );
+            
+            if (isDuplicate) {
+                const shouldAdd = await showDuplicateDialog(filename);
+                if (!shouldAdd) {
+                    return;
+                }
+            }
+            
             try {
                 const url = URL.createObjectURL(blob);
                 const img = await loadImageFromUrl(url);
@@ -926,7 +1104,10 @@
                     filename: filename,
                     filesize: filesize,
                     url: url,
-                    aspectRatio: img.width / img.height
+                    aspectRatio: img.width / img.height,
+                    isEmpty: false,
+                    label: filename.replace(/\.[^/.]+$/, ''), // Remove file extension
+                    dateAdded: Date.now() // Add timestamp for sorting
                 });
                 
                 updateUI();
@@ -945,7 +1126,6 @@
                 return;
             }
             
-            // Auto-convert Discord CDN URLs
             const originalUrl = url;
             url = convertDiscordUrl(url);
             
@@ -959,7 +1139,6 @@
                 
                 const img = await loadImageFromUrl(url);
                 
-                // Check for URL duplicates (by converted URL string)
                 const isDuplicate = images.some(existingImg => existingImg.url === url);
                 
                 if (isDuplicate) {
@@ -969,12 +1148,29 @@
                     }
                 }
                 
+                // Try to extract filename from URL or use a default
+                let defaultLabel = 'URL Image';
+                /*
+                try {
+                    const urlPath = new URL(url).pathname;
+                    const urlFilename = urlPath.split('/').pop();
+                    if (urlFilename && urlFilename.includes('.')) {
+                        defaultLabel = urlFilename.replace(/\.[^/.]+$/, ''); // Remove extension
+                    }
+                } catch (e) {
+                    // If URL parsing fails, keep default
+                }
+                    */
+
                 images.push({
                     element: img,
                     filename: 'URL Image',
-                    filesize: 0, // Unknown for URL images
+                    filesize: 0,
                     url: url,
-                    aspectRatio: img.width / img.height
+                    aspectRatio: img.width / img.height,
+                    isEmpty: false,
+                    label: defaultLabel,
+                    dateAdded: Date.now()
                 });
                 
                 updateUI();
@@ -984,7 +1180,6 @@
             } catch (error) {
                 let errorMessage = `Failed to load image: ${error.message}`;
                 
-                // If it was a Discord URL that failed, suggest the conversion
                 if (originalUrl.includes('cdn.discordapp.com') && url === originalUrl) {
                     errorMessage += '. Try using media.discordapp.net instead of cdn.discordapp.com';
                 }
@@ -994,6 +1189,22 @@
                 addUrlBtn.innerHTML = 'Add URL';
                 addUrlBtn.disabled = false;
             }
+        }
+
+        function addEmptyCell() {
+            images.push({
+            element: null,
+            filename: 'Empty Cell',
+            filesize: 0,
+            url: null,
+            aspectRatio: 1,
+            isEmpty: true,
+            label: '', // Empty cells don't need labels
+            dateAdded: Date.now()
+        });
+            
+            updateUI();
+            showPopupStatus('✅ Empty cell added!', 'success');
         }
 
         async function loadImageFromUrl(url) {
@@ -1006,18 +1217,15 @@
                 
                 img.src = url;
                 
-                // Timeout after 30 seconds
                 setTimeout(() => reject(new Error('Image load timeout')), 30000);
             });
         }
 
         function showDuplicateDialog(filename) {
             return new Promise((resolve) => {
-                // Create overlay
                 const overlay = document.createElement('div');
                 overlay.className = 'dialog-overlay';
                 
-                // Create dialog
                 const dialog = document.createElement('div');
                 dialog.className = 'duplicate-dialog';
                 dialog.innerHTML = `
@@ -1033,7 +1241,6 @@
                 document.body.appendChild(overlay);
                 document.body.appendChild(dialog);
                 
-                // Event handlers
                 document.getElementById('duplicateCancel').onclick = () => {
                     document.body.removeChild(overlay);
                     document.body.removeChild(dialog);
@@ -1046,13 +1253,68 @@
                     resolve(true);
                 };
                 
-                // Close on overlay click
                 overlay.onclick = () => {
                     document.body.removeChild(overlay);
                     document.body.removeChild(dialog);
                     resolve(false);
                 };
             });
+        }
+
+        function confirmRemoveImage(index) {
+            const img = images[index];
+            showDeleteDialog(img.filename, index);
+        }
+
+        function showDeleteDialog(filename, index) {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.className = 'dialog-overlay';
+                
+                const dialog = document.createElement('div');
+                dialog.className = 'duplicate-dialog';
+                dialog.innerHTML = `
+                    <h3>🗑️ Delete ${filename}?</h3>
+                    <p>Are you sure you want to remove "<strong>${filename}</strong>" from the collage?</p>
+                    <div class="dialog-buttons">
+                        <button class="btn" id="deleteCancel">Cancel</button>
+                        <button class="btn btn-success" id="deleteConfirm" style="background: linear-gradient(135deg, #e53e3e, #c53030);">Delete</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(overlay);
+                document.body.appendChild(dialog);
+                
+                document.getElementById('deleteCancel').onclick = () => {
+                    document.body.removeChild(overlay);
+                    document.body.removeChild(dialog);
+                    resolve(false);
+                };
+                
+                document.getElementById('deleteConfirm').onclick = () => {
+                    document.body.removeChild(overlay);
+                    document.body.removeChild(dialog);
+                    removeImage(index);
+                    resolve(true);
+                };
+                
+                overlay.onclick = () => {
+                    document.body.removeChild(overlay);
+                    document.body.removeChild(dialog);
+                    resolve(false);
+                };
+            });
+        }
+
+        function moveImage(index, direction) {
+            const newIndex = index + direction;
+            
+            if (newIndex < 0 || newIndex >= images.length) return;
+            
+            [images[index], images[newIndex]] = [images[newIndex], images[index]];
+            
+            updateUI();
+            showPopupStatus('Image moved', 'info');
         }
 
         function updateRows() {
@@ -1065,7 +1327,6 @@
             userCellWidth = parseInt(cellWidthSlider.value);
             cellWidthValue.textContent = userCellWidth + 'px';
             
-            // Update aspect ratio if locked
             if (aspectRatioLocked) {
                 userCellHeight = Math.round(userCellWidth / currentAspectRatio);
                 userCellHeight = Math.max(50, Math.min(1000, userCellHeight));
@@ -1081,7 +1342,6 @@
             userCellHeight = parseInt(cellHeightSlider.value);
             cellHeightValue.textContent = userCellHeight + 'px';
             
-            // Update aspect ratio if locked
             if (aspectRatioLocked) {
                 userCellWidth = Math.round(userCellHeight * currentAspectRatio);
                 userCellWidth = Math.max(50, Math.min(1000, userCellWidth));
@@ -1093,6 +1353,12 @@
             updateLayoutPreview();
         }
 
+        function updateCellSpacing() {
+            userCellSpacing = parseInt(cellSpacingSlider.value);
+            cellSpacingValue.textContent = userCellSpacing + 'px';
+            updateLayoutPreview();
+        }
+
         function setPreset(width, height) {
             userCellWidth = width;
             userCellHeight = height;
@@ -1101,7 +1367,6 @@
             cellWidthValue.textContent = width + 'px';
             cellHeightValue.textContent = height + 'px';
             
-            // Update aspect ratio if locked
             if (aspectRatioLocked) {
                 currentAspectRatio = width / height;
             }
@@ -1117,7 +1382,6 @@
             const totalCells = userRows * cols;
             const emptyCells = totalCells - images.length;
             
-            // Create or update layout preview
             let preview = document.querySelector('.layout-preview');
             if (!preview) {
                 preview = document.createElement('div');
@@ -1125,10 +1389,14 @@
                 document.querySelector('.controls-section').appendChild(preview);
             }
             
+            const estimatedWidth = cols * userCellWidth + (cols - 1) * userCellSpacing;
+            const estimatedHeight = userRows * userCellHeight + (userRows - 1) * userCellSpacing;
+            
             preview.innerHTML = `
                 📐 Layout Preview: ${userRows}×${cols} grid (${images.length} images)
                 ${emptyCells > 0 ? `<br>⚡ ${emptyCells} empty cell(s) - last row will be centered` : ''}
-                <br>🎯 Canvas size: ~${cols * userCellWidth}×${userRows * userCellHeight}px
+                <br>🎯 Canvas size: ~${estimatedWidth}×${estimatedHeight}px
+                <br>📏 Cell spacing: ${userCellSpacing}px
             `;
         }
 
@@ -1137,31 +1405,57 @@
         }
 
         function updateUI() {
-            // Update counter
-            imageCounter.textContent = `${images.length} images added`;
+            const realImages = images.filter(img => !img.isEmpty).length;
+            const emptyCells = images.filter(img => img.isEmpty).length;
+            imageCounter.textContent = `${realImages} images${emptyCells > 0 ? ` + ${emptyCells} empty cells` : ''} added`;
             
-            // Update images grid
+            const sortButtons = document.getElementById('sortButtons');
+            if (sortButtons) {
+                sortButtons.style.display = images.length > 1 ? 'flex' : 'none';
+            }
+            
             if (images.length === 0) {
                 imagesGrid.innerHTML = '<div class="empty-state">No images added yet. Start by uploading or dragging images above.</div>';
             } else {
-                imagesGrid.innerHTML = images.map((img, index) => `
-                    <div class="image-item">
-                        <img src="${img.url}" alt="${img.filename}">
-                        <button class="remove-btn" onclick="removeImage(${index})">×</button>
-                    </div>
-                `).join('');
+                imagesGrid.innerHTML = images.map((img, index) => {
+                    if (img.isEmpty) {
+                        return `
+                            <div class="empty-cell-item">
+                                ⬜
+                                <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
+                                <div class="move-buttons">
+                                    <button class="move-btn" onclick="jumpToStart(${index})" ${index === 0 ? 'disabled' : ''} title="Jump to start">⏮️</button>
+                                    <button class="move-btn" onclick="moveImage(${index}, -1)" ${index === 0 ? 'disabled' : ''} title="Move left">⬅️</button>
+                                    <button class="move-btn" onclick="moveImage(${index}, 1)" ${index === images.length - 1 ? 'disabled' : ''} title="Move right">➡️</button>
+                                    <button class="move-btn" onclick="jumpToEnd(${index})" ${index === images.length - 1 ? 'disabled' : ''} title="Jump to end">⏭️</button>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="image-item">
+                                <img src="${img.url}" alt="${img.filename}">
+                                <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
+                                <div class="move-buttons">
+                                    <button class="move-btn" onclick="jumpToStart(${index})" ${index === 0 ? 'disabled' : ''} title="Jump to start">⏮️</button>
+                                    <button class="move-btn" onclick="moveImage(${index}, -1)" ${index === 0 ? 'disabled' : ''} title="Move left">⬅️</button>
+                                    <button class="move-btn" onclick="moveImage(${index}, 1)" ${index === images.length - 1 ? 'disabled' : ''} title="Move right">➡️</button>
+                                    <button class="move-btn" onclick="jumpToEnd(${index})" ${index === images.length - 1 ? 'disabled' : ''} title="Jump to end">⏭️</button>
+                                </div>
+                                ${showLabels ? `<input type="text" class="image-label-input" value="${img.label || ''}" placeholder="Add label..." maxlength="40" onchange="updateImageLabel(${index}, this.value)">` : ''}
+                            </div>
+                        `;
+                    }
+                }).join('');
             }
             
-            // Update generate button
             generateBtn.disabled = images.length === 0;
             
-            // Update layout preview
             updateLayoutPreview();
         }
 
         function removeImage(index) {
-            // Revoke object URL if it was created locally
-            if (images[index].url.startsWith('blob:')) {
+            if (images[index].url && images[index].url.startsWith('blob:')) {
                 URL.revokeObjectURL(images[index].url);
             }
             
@@ -1187,23 +1481,21 @@
                 
                 const layout = calculateOptimalLayout(images.length);
                 const cellDims = getCellDimensions();
-                const canvas = createCollageCanvas(images.map(img => img.element), layout.rows, layout.cols, cellDims);
+                const canvas = createCollageCanvas(images, layout.rows, layout.cols, cellDims, userCellSpacing);
                 
-                // Update canvas display
                 collageCanvas.width = canvas.width;
                 collageCanvas.height = canvas.height;
                 const ctx = collageCanvas.getContext('2d');
                 ctx.drawImage(canvas, 0, 0);
                 
-                // Show preview section
                 collagePreview.style.display = 'block';
                 collagePreview.scrollIntoView({ behavior: 'smooth' });
                 
-                // Update info
                 document.getElementById('collageInfo').innerHTML = `
-                    <p><strong>Layout:</strong> ${layout.rows}×${layout.cols} grid (${images.length} images)</p>
+                    <p><strong>Layout:</strong> ${layout.rows}×${layout.cols} grid (${images.length} items)</p>
                     <p><strong>Canvas size:</strong> ${canvas.width}×${canvas.height}px</p>
                     <p><strong>Cell size:</strong> ${cellDims.width}×${cellDims.height}px</p>
+                    <p><strong>Cell spacing:</strong> ${userCellSpacing}px</p>
                 `;
                 
                 showPopupStatus(`🎉 Collage generated! Layout: ${layout.rows}×${layout.cols}`, 'success');
@@ -1216,44 +1508,86 @@
             }
         }
 
-        function createCollageCanvas(imageElements, rows, cols, cellDims, spacing = 5) {
+        function createCollageCanvas(imageItems, rows, cols, cellDims, spacing = 5) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // Calculate canvas dimensions
             const collageWidth = cols * cellDims.width + (cols - 1) * spacing;
             const collageHeight = rows * cellDims.height + (rows - 1) * spacing;
             
             canvas.width = collageWidth;
             canvas.height = collageHeight;
             
-            // Clear canvas
             ctx.clearRect(0, 0, collageWidth, collageHeight);
             
-            for (let i = 0; i < imageElements.length; i++) {
-                const img = imageElements[i];
+            for (let i = 0; i < imageItems.length; i++) {
+                const item = imageItems[i];
+                
+                if (item.isEmpty) {
+                    continue;
+                }
+                
+                const img = item.element;
                 let row = Math.floor(i / cols);
                 let col = i % cols;
                 let xOffset = 0;
                 
-                // Center the last row if it's incomplete
                 const isLastRow = row === rows - 1;
-                const imagesInThisRow = isLastRow ? imageElements.length - (row * cols) : cols;
+                const itemsInThisRow = isLastRow ? imageItems.length - (row * cols) : cols;
                 
-                if (isLastRow && imagesInThisRow < cols) {
-                    // Calculate offset to center the last row
-                    const emptySpaces = cols - imagesInThisRow;
+                if (isLastRow && itemsInThisRow < cols) {
+                    const emptySpaces = cols - itemsInThisRow;
                     xOffset = (emptySpaces * (cellDims.width + spacing)) / 2;
                 }
                 
-                // Resize image to fit cell while maintaining aspect ratio
                 const resizedImg = resizeImageToFit(img, cellDims.width, cellDims.height);
                 
-                // Calculate position (center in cell + any centering offset)
-                const x = col * (cellDims.width + spacing) + (cellDims.width - resizedImg.width) / 2 + xOffset;
-                const y = row * (cellDims.height + spacing) + (cellDims.height - resizedImg.height) / 2;
-                
-                ctx.drawImage(resizedImg, x, y);
+                // Calculate positioning with label space if needed
+                const labelHeight = showLabels && item.label ? 20 : 0;
+                const availableHeight = cellDims.height - labelHeight;
+
+                const resizedImgWithLabel = resizeImageToFit(img, cellDims.width, availableHeight);
+
+                const x = col * (cellDims.width + spacing) + (cellDims.width - resizedImgWithLabel.width) / 2 + xOffset;
+                const y = row * (cellDims.height + spacing) + (availableHeight - resizedImgWithLabel.height) / 2;
+
+                ctx.drawImage(resizedImgWithLabel, x, y);
+
+                // Draw label if enabled and present
+                if (showLabels && item.label) {
+                    ctx.save();
+                    
+                    // Set font with selected style
+                    ctx.font = `bold ${labelFontSize}px ${labelFontStyle}`;
+                    ctx.textAlign = 'center';
+                    
+                    const labelX = col * (cellDims.width + spacing) + cellDims.width / 2 + xOffset;
+                    const labelY = row * (cellDims.height + spacing) + cellDims.height - Math.max(8, labelFontSize / 4);
+                    
+                    // Truncate label if too long for cell width
+                    let displayLabel = item.label;
+                    const maxWidth = cellDims.width - 10;
+                    
+                    while (ctx.measureText(displayLabel).width > maxWidth && displayLabel.length > 0) {
+                        displayLabel = displayLabel.slice(0, -1);
+                    }
+                    
+                    if (displayLabel.length < item.label.length) {
+                        displayLabel = displayLabel.trim() + '...';
+                    }
+                    
+                    // Draw black outline (multiple passes for better coverage)
+                    ctx.strokeStyle = '#000000';
+                    ctx.lineWidth = labelOutlineWidth;
+                    ctx.lineJoin = 'round';
+                    ctx.strokeText(displayLabel, labelX, labelY);
+                    
+                    // Draw white fill text
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillText(displayLabel, labelX, labelY);
+                    
+                    ctx.restore();
+                }
             }
             
             return canvas;
@@ -1300,28 +1634,138 @@
         }
 
         function showPopupStatus(message, type) {
-            // Create popup notification
             const popup = document.createElement('div');
             popup.className = `popup-notification popup-${type}`;
             popup.textContent = message;
             
             document.body.appendChild(popup);
             
-            // Auto-remove after 2 seconds with fade out animation
             setTimeout(() => {
                 popup.classList.add('fade-out');
                 setTimeout(() => {
                     if (popup.parentNode) {
                         popup.parentNode.removeChild(popup);
                     }
-                }, 300); // Wait for fade out animation
+                }, 300);
             }, 2000);
         }
 
-        // Initialize
+        function toggleShowLabels() {
+            const toggle = document.getElementById('showLabelsToggle');
+            showLabels = toggle.checked;
+            
+            // Show/hide font controls
+            const fontSizeControl = document.getElementById('labelFontSizeControl');
+            const fontStyleControl = document.getElementById('labelFontStyleControl');
+            if (fontSizeControl) {
+                fontSizeControl.style.display = showLabels ? 'block' : 'none';
+            }
+            if (fontStyleControl) {
+                fontStyleControl.style.display = showLabels ? 'block' : 'none';
+            }
+
+            const fontOutlineControl = document.getElementById('labelOutlineControl');
+            if (fontOutlineControl) {
+                fontOutlineControl.style.display = showLabels ? 'block' : 'none';
+            }
+            
+            updateUI();
+        }
+
+        function adjustLabelFont(delta) {
+            const newValue = Math.max(10, Math.min(240, labelFontSize + delta));
+            const slider = document.getElementById('labelFontSlider');
+            slider.value = newValue;
+            updateLabelFont();
+        }
+
+        function updateLabelFont() {
+            const slider = document.getElementById('labelFontSlider');
+            labelFontSize = parseInt(slider.value);
+            document.getElementById('labelFontValue').textContent = labelFontSize + 'px';
+        }
+
+        function updateImageLabel(index, value) {
+            images[index].label = value.slice(0, 40);
+        }
+
+        function jumpToStart(index) {
+            if (index === 0) return;
+            const [item] = images.splice(index, 1);
+            images.unshift(item);
+            updateUI();
+            showPopupStatus('Moved to start', 'info');
+        }
+
+        function jumpToEnd(index) {
+            if (index === images.length - 1) return;
+            const [item] = images.splice(index, 1);
+            images.push(item);
+            updateUI();
+            showPopupStatus('Moved to end', 'info');
+        }
+
+        function updateLabelFontStyle() {
+            const select = document.getElementById('labelFontSelect');
+            labelFontStyle = select.value;
+        }
+
+        function adjustLabelOutline(delta) {
+            const newValue = Math.max(0, Math.min(40, labelOutlineWidth + delta));
+            const slider = document.getElementById('labelOutlineSlider');
+            slider.value = newValue;
+            updateLabelOutline();
+        }
+
+        function updateLabelOutline() {
+            const slider = document.getElementById('labelOutlineSlider');
+            labelOutlineWidth = parseInt(slider.value);
+            document.getElementById('labelOutlineValue').textContent = labelOutlineWidth + 'px';
+        }
+
+        function sortImages(by, direction) {
+            if (images.length === 0) return;
+            
+            const sortedImages = [...images];
+            
+            if (by === 'label') {
+                sortedImages.sort((a, b) => {
+                    const labelA = (a.label || a.filename || '').toLowerCase();
+                    const labelB = (b.label || b.filename || '').toLowerCase();
+                    
+                    if (direction === 'asc') {
+                        return labelA.localeCompare(labelB, undefined, {numeric: true, sensitivity: 'base'});
+                    } else {
+                        return labelB.localeCompare(labelA, undefined, {numeric: true, sensitivity: 'base'});
+                    }
+                });
+            } else if (by === 'date') {
+                sortedImages.sort((a, b) => {
+                    const dateA = a.dateAdded || 0;
+                    const dateB = b.dateAdded || 0;
+                    
+                    if (direction === 'asc') {
+                        return dateA - dateB;
+                    } else {
+                        return dateB - dateA;
+                    }
+                });
+            }
+            
+            images = sortedImages;
+            updateUI();
+            showPopupStatus(`Sorted by ${by} (${direction === 'asc' ? 'ascending' : 'descending'})`, 'info');
+        }
+
         updateUI();
         updateAspectRatioLabel();
-        showPopupStatus('🎨 Simple Collage Creator ready! Add images and customize your layout.', 'info');
+        showPopupStatus('☕ Cuppa ready! Add images and customize your layout.', 'info');
+        // Force load the font on page load
+        window.addEventListener('load', () => {
+            document.fonts.load("bold 16px 'Lilita One'").then(() => {
+                console.log('Lilita One font loaded');
+            });
+        });
     </script>
 </body>
 </html>
