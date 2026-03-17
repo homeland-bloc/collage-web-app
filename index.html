@@ -1101,14 +1101,14 @@
                 const img = await loadImageFromUrl(url);
                 
                 images.push({
+                    type: 'image',
                     element: img,
                     filename: filename,
                     filesize: filesize,
                     url: url,
                     aspectRatio: img.width / img.height,
-                    isEmpty: false,
-                    label: filename.replace(/\.[^/.]+$/, ''), // Remove file extension
-                    dateAdded: Date.now() // Add timestamp for sorting
+                    label: filename.replace(/\.[^/.]+$/, ''),
+                    dateAdded: Date.now()
                 });
                 
                 updateUI();
@@ -1164,12 +1164,12 @@
                     */
 
                 images.push({
+                    type: 'image',
                     element: img,
                     filename: 'URL Image',
                     filesize: 0,
                     url: url,
                     aspectRatio: img.width / img.height,
-                    isEmpty: false,
                     label: defaultLabel,
                     dateAdded: Date.now()
                 });
@@ -1194,15 +1194,15 @@
 
         function addEmptyCell() {
             images.push({
-            element: null,
-            filename: 'Empty Cell',
-            filesize: 0,
-            url: null,
-            aspectRatio: 1,
-            isEmpty: true,
-            label: '', // Empty cells don't need labels
-            dateAdded: Date.now()
-        });
+                type: 'empty',
+                element: null,
+                filename: 'Empty Cell',
+                filesize: 0,
+                url: null,
+                aspectRatio: 1,
+                label: '',
+                dateAdded: Date.now()
+            });
             
             updateUI();
             showPopupStatus('✅ Empty cell added!', 'success');
@@ -1430,9 +1430,13 @@
         }
 
         function updateUI() {
-            const realImages = images.filter(img => !img.isEmpty).length;
-            const emptyCells = images.filter(img => img.isEmpty).length;
-            imageCounter.textContent = `${realImages} images${emptyCells > 0 ? ` + ${emptyCells} empty cells` : ''} added`;
+            const realImages = images.filter(c => c.type === 'image').length;
+            const textCells = images.filter(c => c.type === 'text').length;
+            const emptyCells = images.filter(c => c.type === 'empty').length;
+            const parts = [`${realImages} image${realImages !== 1 ? 's' : ''}`];
+            if (textCells > 0) parts.push(`${textCells} text cell${textCells !== 1 ? 's' : ''}`);
+            if (emptyCells > 0) parts.push(`${emptyCells} empty cell${emptyCells !== 1 ? 's' : ''}`);
+            imageCounter.textContent = parts.join(' + ') + ' added';
             
             const sortButtons = document.getElementById('sortButtons');
             if (sortButtons) {
@@ -1443,7 +1447,7 @@
                 imagesGrid.innerHTML = '<div class="empty-state">No images added yet. Start by uploading or dragging images above.</div>';
             } else {
                 imagesGrid.innerHTML = images.map((img, index) => {
-                    if (img.isEmpty) {
+                    if (img.type === 'empty') {
                         return `
                             <div class="empty-cell-item" draggable="true" data-index="${index}">
                                 ⬜
@@ -1471,7 +1475,7 @@
         }
 
         function removeImage(index) {
-            if (images[index].url && images[index].url.startsWith('blob:')) {
+            if (images[index].type === 'image' && images[index].url && images[index].url.startsWith('blob:')) {
                 URL.revokeObjectURL(images[index].url);
             }
             
@@ -1539,7 +1543,7 @@
             for (let i = 0; i < imageItems.length; i++) {
                 const item = imageItems[i];
                 
-                if (item.isEmpty) {
+                if (item.type === 'empty') {
                     continue;
                 }
                 
