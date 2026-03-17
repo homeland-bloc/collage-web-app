@@ -1422,6 +1422,7 @@
                 bgColor: '#5D4037',
                 align: 'center',
                 valign: 'middle',
+                autofill: false,
                 filename: 'Text Cell',
                 filesize: 0,
                 url: null,
@@ -1459,6 +1460,10 @@
                     <select id="tcFont">
                         ${fontOptions().map(f => `<option value="${f.value}" ${cell.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}
                     </select>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px 10px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
+                        <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41">
+                        <label for="tcAutofill" style="margin:0;font-size:13px;cursor:pointer">🔡 Autofill — shrink font to fit cell</label>
+                    </div>
                     <label>Horizontal alignment</label>
                     <div class="modal-align-row">
                         <button type="button" class="align-btn ${(cell.align||'center')==='left'?'active':''}" data-align="left">⬛ Left</button>
@@ -1501,6 +1506,7 @@
                 images[index].fontSize = Math.max(8, parseInt(document.getElementById('tcFontSize').value) || 48);
                 images[index].color = document.getElementById('tcColor').value;
                 images[index].fontFamily = document.getElementById('tcFont').value;
+                images[index].autofill = document.getElementById('tcAutofill').checked;
                 const activeAlign = overlay.querySelector('[data-align].active');
                 const activeValign = overlay.querySelector('[data-valign].active');
                 if (activeAlign) images[index].align = activeAlign.dataset.align;
@@ -1975,6 +1981,23 @@
             return { placements, totalRows };
         }
 
+        // Shrinks fontSize until all wrapped lines fit within maxWidth × maxHeight.
+        // Returns the adjusted fontSize.
+        function fitFontSize(ctx, text, fontTemplate, maxWidth, maxHeight, startSize) {
+            let size = startSize;
+            const minSize = 6;
+            while (size >= minSize) {
+                ctx.font = fontTemplate.replace('__SIZE__', size);
+                const lines = wrapTextLines(ctx, text, maxWidth - 20);
+                const lineH = size * 1.25;
+                const totalH = lines.length * lineH;
+                const maxLineW = Math.max(...lines.map(l => ctx.measureText(l).width));
+                if (totalH <= maxHeight - 20 && maxLineW <= maxWidth - 20) break;
+                size -= 1;
+            }
+            return Math.max(size, minSize);
+        }
+
         function wrapTextLines(ctx, text, maxWidth) {
             const words = text.split(' ');
             const lines = [];
@@ -2021,13 +2044,19 @@
                     ctx.fillRect(tx, ty, cellW, cellH);
                     const textContent = item.text || '';
                     if (textContent) {
-                        const fStyle = `${item.italic ? 'italic ' : ''}${item.bold ? 'bold ' : ''}${item.fontSize || 48}px ${item.fontFamily || 'sans-serif'}`;
-                        ctx.font = fStyle;
+                        const prefix = `${item.italic ? 'italic ' : ''}${item.bold ? 'bold ' : ''}`;
+                        const family = item.fontFamily || 'sans-serif';
+                        const baseSize = item.fontSize || 48;
+                        let fontSize = baseSize;
+                        if (item.autofill) {
+                            fontSize = fitFontSize(ctx, textContent, `${prefix}__SIZE__px ${family}`, cellW, cellH, baseSize);
+                        }
+                        ctx.font = `${prefix}${fontSize}px ${family}`;
                         ctx.fillStyle = item.color || '#FFFFFF';
                         ctx.textAlign = item.align || 'center';
                         ctx.textBaseline = 'middle';
                         const lines = wrapTextLines(ctx, textContent, cellW - 20);
-                        const lineH = (item.fontSize || 48) * 1.25;
+                        const lineH = fontSize * 1.25;
                         const totalH = lines.length * lineH;
                         let startY;
                         if ((item.valign || 'middle') === 'top') startY = ty + lineH / 2 + 10;
