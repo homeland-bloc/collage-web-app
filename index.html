@@ -1069,6 +1069,11 @@
                         <button type="button" class="btn preset-btn" onclick="setPreset(500, 800)">Portrait</button>
                         <button type="button" class="btn preset-btn" onclick="setPreset(800, 500)">Landscape</button>
                     </div>
+
+                    <div class="toggle-section" style="justify-content:space-between">
+                        <label for="collageBgColor" style="font-weight:600;color:#5D4037;margin:0;cursor:pointer">🎨 Collage Background Colour</label>
+                        <input type="color" id="collageBgColor" value="#ffffff" style="width:44px;height:32px;border:2px solid #D7CCC8;border-radius:6px;padding:2px;cursor:pointer;background:none" onchange="updateCollageBg()">
+                    </div>
                 </div>
 
                 <div class="sort-buttons" id="sortButtons" style="display: none;">
@@ -1116,8 +1121,9 @@
         let currentAspectRatio = 500 / 800;
         let showLabels = false;
         let labelFontSize = 48;
-        let labelFontStyle = "'Lilita One', cursive"; // Default font
-        let labelOutlineWidth = 20; // Default outline width
+        let labelFontStyle = "'Lilita One', cursive";
+        let labelOutlineWidth = 20;
+        let collageBgColor = '#ffffff';
 
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
@@ -1507,14 +1513,12 @@
         function openMergeModal(index) {
             const cell = images[index];
             const cols = Math.ceil(images.length / userRows);
+            const showBg = cell.type === 'image' || cell.type === 'empty';
             const overlay = document.createElement('div');
             overlay.className = 'cell-modal-overlay';
             overlay.innerHTML = `
-                <div class="cell-modal" style="max-width:320px">
-                    <h3>⊞ Merge Cell</h3>
-                    <p style="font-size:13px;color:#5D4037;margin-bottom:12px">
-                        Set how many columns and rows this cell should span in the collage grid.
-                    </p>
+                <div class="cell-modal" style="max-width:340px">
+                    <h3>⊞ Cell Options</h3>
                     <div class="cell-modal-row">
                         <div>
                             <label>Colspan (columns)</label>
@@ -1525,6 +1529,12 @@
                             <input type="number" id="mcRowspan" min="1" max="10" value="${cell.rowspan || 1}">
                         </div>
                     </div>
+                    ${showBg ? `
+                    <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+                        <label style="margin:0">Cell background colour</label>
+                        <input type="color" id="mcBgColor" value="${cell.bgColor || '#ffffff'}" style="width:44px;height:32px;border:2px solid #D7CCC8;border-radius:6px;padding:2px;cursor:pointer">
+                        <button type="button" id="mcBgClear" style="font-size:12px;padding:4px 8px;border:1px solid #D7CCC8;border-radius:5px;background:#FFFAF0;cursor:pointer">Clear</button>
+                    </div>` : ''}
                     <div class="cell-modal-actions">
                         <button type="button" class="btn" id="mcCancel">Cancel</button>
                         <button type="button" class="btn btn-success" id="mcSave">Apply</button>
@@ -1534,9 +1544,16 @@
             document.body.appendChild(overlay);
             document.getElementById('mcCancel').onclick = () => document.body.removeChild(overlay);
             overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+            if (showBg && document.getElementById('mcBgClear')) {
+                document.getElementById('mcBgClear').onclick = () => { document.getElementById('mcBgColor').value = '#ffffff'; };
+            }
             document.getElementById('mcSave').onclick = () => {
                 images[index].colspan = Math.max(1, parseInt(document.getElementById('mcColspan').value) || 1);
                 images[index].rowspan = Math.max(1, parseInt(document.getElementById('mcRowspan').value) || 1);
+                if (showBg) {
+                    const bg = document.getElementById('mcBgColor').value;
+                    images[index].bgColor = bg === '#ffffff' ? null : bg;
+                }
                 document.body.removeChild(overlay);
                 updateUI();
             };
@@ -1987,7 +2004,8 @@
 
             canvas.width = collageWidth;
             canvas.height = collageHeight;
-            ctx.clearRect(0, 0, collageWidth, collageHeight);
+            ctx.fillStyle = collageBgColor;
+            ctx.fillRect(0, 0, collageWidth, collageHeight);
 
             for (const { item, row, col, colspan, rowspan } of placements) {
                 if (item.type === 'empty') continue;
@@ -2026,6 +2044,10 @@
 
                 // image cell
                 const img = item.element;
+                if (item.bgColor) {
+                    ctx.fillStyle = item.bgColor;
+                    ctx.fillRect(tx, ty, cellW, cellH);
+                }
                 const labelHeight = showLabels && item.label ? 20 : 0;
                 const availableHeight = cellH - labelHeight;
                 const resized = resizeImageToFit(img, cellW, availableHeight);
@@ -2171,6 +2193,10 @@
             const slider = document.getElementById('labelOutlineSlider');
             labelOutlineWidth = parseInt(slider.value);
             document.getElementById('labelOutlineValue').textContent = labelOutlineWidth + 'px';
+        }
+
+        function updateCollageBg() {
+            collageBgColor = document.getElementById('collageBgColor').value;
         }
 
         function sortImages(by, direction) {
