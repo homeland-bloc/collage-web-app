@@ -756,12 +756,24 @@
             box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
         }
 
-        .sort-buttons {
+        .sort-row {
             display: flex;
-            gap: 5px;
-            justify-content: center;
-            margin: 15px 0;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0 6px;
+            font-size: 13px;
+            color: #6D4C41;
+        }
+
+        .sort-row select {
+            flex: 1;
+            padding: 5px 8px;
+            border: 1px solid #D7CCC8;
+            border-radius: 6px;
+            font-size: 13px;
+            background: #FFFAF0;
+            color: #3E2723;
+            cursor: pointer;
         }
 
         /* Text cell thumbnail */
@@ -1125,27 +1137,27 @@
                     <div class="control-group" id="labelFontStyleControl" style="display: none;">
                         <label for="labelFontSelect">Label Font Style:</label>
                         <select id="labelFontSelect" class="font-select" onchange="updateLabelFontStyle()">
-                            <option value="ARDECODE, monospace">🔤 ARDECODE</option>
-                            <option value="'Lilita One', cursive" selected>Lilita One (Default)</option>
-                            <option value="'Pacifico', cursive">Pacifico</option>
-                            <option value="'Lobster', cursive">Lobster</option>
+                            <option value="ARDECODE, monospace">ARDECODE</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                            <option value="'Courier New', monospace">Courier New</option>
                             <option value="'Dancing Script', cursive">Dancing Script</option>
-                            <option value="'Righteous', cursive">Righteous</option>
-                            <option value="'Playfair Display', serif">Playfair Display</option>
-                            <option value="'Oswald', sans-serif">Oswald</option>
-                            <option value="'Raleway', sans-serif">Raleway</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="Impact, sans-serif">Impact</option>
+                            <option value="'Lilita One', cursive" selected>Lilita One (Default)</option>
+                            <option value="'Lobster', cursive">Lobster</option>
                             <option value="'Merriweather', serif">Merriweather</option>
                             <option value="'Nunito', sans-serif">Nunito</option>
-                            <option value="'Segoe UI', sans-serif">Segoe UI</option>
-                            <option value="Arial, sans-serif">Arial</option>
-                            <option value="Impact, sans-serif">Impact</option>
-                            <option value="Verdana, sans-serif">Verdana</option>
-                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                            <option value="'Times New Roman', serif">Times New Roman</option>
-                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Oswald', sans-serif">Oswald</option>
+                            <option value="'Pacifico', cursive">Pacifico</option>
                             <option value="'Palatino', serif">Palatino</option>
-                            <option value="'Courier New', monospace">Courier New</option>
-                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                            <option value="'Playfair Display', serif">Playfair Display</option>
+                            <option value="'Raleway', sans-serif">Raleway</option>
+                            <option value="'Righteous', cursive">Righteous</option>
+                            <option value="'Segoe UI', sans-serif">Segoe UI</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
                         </select>
                     </div>
 
@@ -1170,11 +1182,15 @@
                     </div>
                 </div>
 
-                <div class="sort-buttons" id="sortButtons" style="display: none;">
-                    <button type="button" class="btn btn-compact" onclick="sortImages('label', 'asc')">🔤 A→Z</button>
-                    <button type="button" class="btn btn-compact" onclick="sortImages('label', 'desc')">🔤 Z→A</button>
-                    <button type="button" class="btn btn-compact" onclick="sortImages('date', 'asc')">📅 Old→New</button>
-                    <button type="button" class="btn btn-compact" onclick="sortImages('date', 'desc')">📅 New→Old</button>
+                <div class="sort-row" id="sortButtons" style="display: none;">
+                    <span>Sort:</span>
+                    <select onchange="if(this.value){const[f,d]=this.value.split('-');sortImages(f,d);this.value=''}">
+                        <option value="">— choose —</option>
+                        <option value="label-asc">Name A → Z</option>
+                        <option value="label-desc">Name Z → A</option>
+                        <option value="date-asc">Date oldest first</option>
+                        <option value="date-desc">Date newest first</option>
+                    </select>
                 </div>
 
                 <div class="images-grid" id="imagesGrid">
@@ -1216,7 +1232,8 @@
             renderHeader();
         }
 
-        function toggleAppMenu() {
+        function toggleAppMenu(event) {
+            event.stopPropagation();
             state.showAppMenu = !state.showAppMenu;
             renderHeader();
         }
@@ -1225,7 +1242,7 @@
             const header = document.getElementById('appHeader');
             header.innerHTML = `
                 <div class="app-header">
-                    <button class="app-header-hamburger" onclick="toggleAppMenu()" aria-label="Menu">&#9776;</button>
+                    <button class="app-header-hamburger" onclick="toggleAppMenu(event)" aria-label="Menu">&#9776;</button>
                     <button class="app-header-logo-btn" onclick="backToHome()" aria-label="Home">☕</button>
                     <span class="app-header-title" onclick="backToHome()" role="button" tabindex="0">Cuppa</span>
                 </div>
@@ -1586,6 +1603,10 @@
                     <h3>✏️ Edit Text Cell</h3>
                     <label>Text content</label>
                     <textarea id="tcText" rows="4">${cell.text || ''}</textarea>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:10px;padding:7px 10px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
+                        <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41;flex-shrink:0">
+                        <label for="tcAutofill" style="margin:0;font-size:13px;cursor:pointer">🔡 Autofill — shrink font to fit cell</label>
+                    </div>
                     <div class="cell-modal-row">
                         <div>
                             <label>Font size (px)</label>
@@ -1600,10 +1621,6 @@
                     <select id="tcFont">
                         ${fontOptions().map(f => `<option value="${f.value}" ${cell.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}
                     </select>
-                    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px 10px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
-                        <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41">
-                        <label for="tcAutofill" style="margin:0;font-size:13px;cursor:pointer">🔡 Autofill — shrink font to fit cell</label>
-                    </div>
                     <label>Horizontal alignment</label>
                     <div class="modal-align-row">
                         <button type="button" class="align-btn ${(cell.align||'center')==='left'?'active':''}" data-align="left">⬛ Left</button>
@@ -1707,31 +1724,27 @@
 
         function fontOptions() {
             return [
-                // Local
-                { value: "ARDECODE, monospace", label: '🔤 ARDECODE' },
-                // Google Fonts — decorative
-                { value: "'Lilita One', cursive", label: 'Lilita One' },
-                { value: "'Pacifico', cursive", label: 'Pacifico' },
-                { value: "'Lobster', cursive", label: 'Lobster' },
-                { value: "'Dancing Script', cursive", label: 'Dancing Script' },
-                { value: "'Righteous', cursive", label: 'Righteous' },
-                // Google Fonts — display/heading
-                { value: "'Playfair Display', serif", label: 'Playfair Display' },
-                { value: "'Oswald', sans-serif", label: 'Oswald' },
-                { value: "'Raleway', sans-serif", label: 'Raleway' },
-                { value: "'Merriweather', serif", label: 'Merriweather' },
-                { value: "'Nunito', sans-serif", label: 'Nunito' },
-                // System fonts
-                { value: "'Segoe UI', sans-serif", label: 'Segoe UI' },
-                { value: "Arial, sans-serif", label: 'Arial' },
-                { value: "Impact, sans-serif", label: 'Impact' },
-                { value: "Verdana, sans-serif", label: 'Verdana' },
-                { value: "'Trebuchet MS', sans-serif", label: 'Trebuchet MS' },
-                { value: "'Times New Roman', serif", label: 'Times New Roman' },
-                { value: "Georgia, serif", label: 'Georgia' },
-                { value: "'Palatino', serif", label: 'Palatino' },
-                { value: "'Courier New', monospace", label: 'Courier New' },
-                { value: "'Comic Sans MS', cursive", label: 'Comic Sans' },
+                { value: "ARDECODE, monospace",          label: 'ARDECODE' },
+                { value: "Arial, sans-serif",             label: 'Arial' },
+                { value: "'Comic Sans MS', cursive",      label: 'Comic Sans' },
+                { value: "'Courier New', monospace",      label: 'Courier New' },
+                { value: "'Dancing Script', cursive",     label: 'Dancing Script' },
+                { value: "Georgia, serif",                label: 'Georgia' },
+                { value: "Impact, sans-serif",            label: 'Impact' },
+                { value: "'Lilita One', cursive",         label: 'Lilita One' },
+                { value: "'Lobster', cursive",            label: 'Lobster' },
+                { value: "'Merriweather', serif",         label: 'Merriweather' },
+                { value: "'Nunito', sans-serif",          label: 'Nunito' },
+                { value: "'Oswald', sans-serif",          label: 'Oswald' },
+                { value: "'Pacifico', cursive",           label: 'Pacifico' },
+                { value: "'Palatino', serif",             label: 'Palatino' },
+                { value: "'Playfair Display', serif",     label: 'Playfair Display' },
+                { value: "'Raleway', sans-serif",         label: 'Raleway' },
+                { value: "'Righteous', cursive",          label: 'Righteous' },
+                { value: "'Segoe UI', sans-serif",        label: 'Segoe UI' },
+                { value: "'Times New Roman', serif",      label: 'Times New Roman' },
+                { value: "'Trebuchet MS', sans-serif",    label: 'Trebuchet MS' },
+                { value: "Verdana, sans-serif",           label: 'Verdana' },
             ];
         }
 
