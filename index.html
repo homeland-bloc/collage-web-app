@@ -9,11 +9,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Pacifico&family=Lobster&family=Dancing+Script:wght@700&family=Playfair+Display:wght@700&family=Oswald:wght@700&family=Raleway:wght@700&family=Merriweather:wght@700&family=Nunito:wght@700&family=Righteous&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <style>
+        @font-face {
+            font-family: 'ARDECODE';
+            src: url('ARDECODE.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -1025,17 +1031,27 @@
                     <div class="control-group" id="labelFontStyleControl" style="display: none;">
                         <label for="labelFontSelect">Label Font Style:</label>
                         <select id="labelFontSelect" class="font-select" onchange="updateLabelFontStyle()">
-                            <option value="'Lilita One', cursive">Lilita One (Default)</option>
+                            <option value="ARDECODE, monospace">🔤 ARDECODE</option>
+                            <option value="'Lilita One', cursive" selected>Lilita One (Default)</option>
+                            <option value="'Pacifico', cursive">Pacifico</option>
+                            <option value="'Lobster', cursive">Lobster</option>
+                            <option value="'Dancing Script', cursive">Dancing Script</option>
+                            <option value="'Righteous', cursive">Righteous</option>
+                            <option value="'Playfair Display', serif">Playfair Display</option>
+                            <option value="'Oswald', sans-serif">Oswald</option>
+                            <option value="'Raleway', sans-serif">Raleway</option>
+                            <option value="'Merriweather', serif">Merriweather</option>
+                            <option value="'Nunito', sans-serif">Nunito</option>
                             <option value="'Segoe UI', sans-serif">Segoe UI</option>
                             <option value="Arial, sans-serif">Arial</option>
-                            <option value="'Times New Roman', serif">Times New Roman</option>
-                            <option value="Georgia, serif">Georgia</option>
-                            <option value="'Courier New', monospace">Courier New</option>
                             <option value="Impact, sans-serif">Impact</option>
-                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
                             <option value="Verdana, sans-serif">Verdana</option>
                             <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="Georgia, serif">Georgia</option>
                             <option value="'Palatino', serif">Palatino</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
                         </select>
                     </div>
 
@@ -1528,17 +1544,31 @@
 
         function fontOptions() {
             return [
+                // Local
+                { value: "ARDECODE, monospace", label: '🔤 ARDECODE' },
+                // Google Fonts — decorative
                 { value: "'Lilita One', cursive", label: 'Lilita One' },
+                { value: "'Pacifico', cursive", label: 'Pacifico' },
+                { value: "'Lobster', cursive", label: 'Lobster' },
+                { value: "'Dancing Script', cursive", label: 'Dancing Script' },
+                { value: "'Righteous', cursive", label: 'Righteous' },
+                // Google Fonts — display/heading
+                { value: "'Playfair Display', serif", label: 'Playfair Display' },
+                { value: "'Oswald', sans-serif", label: 'Oswald' },
+                { value: "'Raleway', sans-serif", label: 'Raleway' },
+                { value: "'Merriweather', serif", label: 'Merriweather' },
+                { value: "'Nunito', sans-serif", label: 'Nunito' },
+                // System fonts
                 { value: "'Segoe UI', sans-serif", label: 'Segoe UI' },
                 { value: "Arial, sans-serif", label: 'Arial' },
-                { value: "'Times New Roman', serif", label: 'Times New Roman' },
-                { value: "Georgia, serif", label: 'Georgia' },
-                { value: "'Courier New', monospace", label: 'Courier New' },
                 { value: "Impact, sans-serif", label: 'Impact' },
-                { value: "'Comic Sans MS', cursive", label: 'Comic Sans' },
                 { value: "Verdana, sans-serif", label: 'Verdana' },
                 { value: "'Trebuchet MS', sans-serif", label: 'Trebuchet MS' },
+                { value: "'Times New Roman', serif", label: 'Times New Roman' },
+                { value: "Georgia, serif", label: 'Georgia' },
                 { value: "'Palatino', serif", label: 'Palatino' },
+                { value: "'Courier New', monospace", label: 'Courier New' },
+                { value: "'Comic Sans MS', cursive", label: 'Comic Sans' },
             ];
         }
 
@@ -2182,9 +2212,13 @@
         showPopupStatus('☕ Cuppa ready! Add images and customize your layout.', 'info');
         // Force load the font on page load
         window.addEventListener('load', () => {
-            document.fonts.load("bold 16px 'Lilita One'").then(() => {
-                console.log('Lilita One font loaded');
-            });
+            const fontsToLoad = [
+                "bold 16px 'Lilita One'", "bold 16px 'Pacifico'", "bold 16px 'Lobster'",
+                "bold 16px 'Dancing Script'", "bold 16px 'Righteous'",
+                "bold 16px 'Playfair Display'", "bold 16px 'Oswald'", "bold 16px 'Raleway'",
+                "bold 16px 'Merriweather'", "bold 16px 'Nunito'", "16px ARDECODE"
+            ];
+            fontsToLoad.forEach(f => document.fonts.load(f));
         });
     </script>
 </body>
