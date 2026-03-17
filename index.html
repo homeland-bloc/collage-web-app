@@ -757,6 +757,149 @@
             margin: 15px 0;
             flex-wrap: wrap;
         }
+
+        /* Text cell thumbnail */
+        .text-cell-item {
+            position: relative;
+            border-radius: 8px;
+            background: #5D4037;
+            box-shadow: 0 4px 15px rgba(62, 39, 35, 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .text-cell-item:hover { transform: scale(1.05); }
+
+        .text-cell-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            overflow: hidden;
+            word-break: break-word;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.3;
+        }
+
+        .edit-cell-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(109, 76, 65, 0.92);
+            color: #FFF8E1;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .edit-cell-btn:hover { background: rgba(62, 39, 35, 1); }
+
+        /* Cell customisation modal */
+        .cell-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell-modal {
+            background: #FFFAF0;
+            border-radius: 16px;
+            padding: 28px 24px 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            width: min(480px, 95vw);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .cell-modal h3 {
+            color: #5D4037;
+            margin-bottom: 16px;
+            font-size: 1.2em;
+        }
+
+        .cell-modal label {
+            display: block;
+            font-weight: 600;
+            color: #5D4037;
+            font-size: 13px;
+            margin-bottom: 4px;
+            margin-top: 12px;
+        }
+
+        .cell-modal label:first-of-type { margin-top: 0; }
+
+        .cell-modal textarea,
+        .cell-modal input[type="text"],
+        .cell-modal input[type="number"],
+        .cell-modal select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px solid #D7CCC8;
+            border-radius: 7px;
+            font-size: 14px;
+            background: #FFFAF0;
+            color: #3E2723;
+            box-sizing: border-box;
+        }
+
+        .cell-modal textarea { resize: vertical; min-height: 80px; }
+
+        .cell-modal textarea:focus,
+        .cell-modal input:focus,
+        .cell-modal select:focus {
+            outline: none;
+            border-color: #6D4C41;
+            box-shadow: 0 0 0 3px rgba(109,76,65,0.12);
+        }
+
+        .cell-modal-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .cell-modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-align-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .align-btn {
+            flex: 1;
+            padding: 6px;
+            border: 2px solid #D7CCC8;
+            border-radius: 6px;
+            background: #FFFAF0;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.15s;
+        }
+
+        .align-btn.active {
+            border-color: #6D4C41;
+            background: #EFE5DC;
+        }
     </style>
 </head>
 <body>
@@ -786,6 +929,7 @@
                     <div class="button-row">
                         <button type="button" class="btn btn-compact" id="addUrlBtn">Add URL</button>
                         <button type="button" class="btn btn-compact" id="clearUrlBtn">Clear</button>
+                        <button type="button" class="btn btn-compact" id="addTextCellBtn">Add Text Cell</button>
                         <button type="button" class="btn btn-compact" id="addEmptyCellBtn">Add Empty Cell</button>
                     </div>
                 </div>
@@ -936,6 +1080,7 @@
         const urlInput = document.getElementById('urlInput');
         const addUrlBtn = document.getElementById('addUrlBtn');
         const clearUrlBtn = document.getElementById('clearUrlBtn');
+        const addTextCellBtn = document.getElementById('addTextCellBtn');
         const addEmptyCellBtn = document.getElementById('addEmptyCellBtn');
         const imageCounter = document.getElementById('imageCounter');
         const imagesGrid = document.getElementById('imagesGrid');
@@ -967,6 +1112,7 @@
         fileInput.addEventListener('change', handleFileSelect);
         addUrlBtn.addEventListener('click', addImageFromUrl);
         clearUrlBtn.addEventListener('click', clearUrlInput);
+        addTextCellBtn.addEventListener('click', addTextCell);
         addEmptyCellBtn.addEventListener('click', addEmptyCell);
         generateBtn.addEventListener('click', generateCollage);
         downloadBtn.addEventListener('click', downloadCollage);
@@ -1206,6 +1352,120 @@
             
             updateUI();
             showPopupStatus('✅ Empty cell added!', 'success');
+        }
+
+        function addTextCell() {
+            images.push({
+                type: 'text',
+                text: '',
+                fontFamily: "'Lilita One', cursive",
+                fontSize: 48,
+                bold: false,
+                italic: false,
+                color: '#FFFFFF',
+                bgColor: '#5D4037',
+                align: 'center',
+                valign: 'middle',
+                filename: 'Text Cell',
+                filesize: 0,
+                url: null,
+                aspectRatio: 1,
+                label: '',
+                dateAdded: Date.now()
+            });
+            updateUI();
+            const newIndex = images.length - 1;
+            openTextCellModal(newIndex);
+        }
+
+        function openTextCellModal(index) {
+            const cell = images[index];
+            const overlay = document.createElement('div');
+            overlay.className = 'cell-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cell-modal" id="cellModalBox">
+                    <h3>✏️ Edit Text Cell</h3>
+                    <label>Text content</label>
+                    <textarea id="tcText" rows="4">${cell.text || ''}</textarea>
+                    <div class="cell-modal-row">
+                        <div>
+                            <label>Font size (px)</label>
+                            <input type="number" id="tcFontSize" min="8" max="500" value="${cell.fontSize || 48}">
+                        </div>
+                        <div>
+                            <label>Text colour</label>
+                            <input type="color" id="tcColor" value="${cell.color || '#ffffff'}" style="width:100%;height:38px;border-radius:7px;border:2px solid #D7CCC8;padding:2px;cursor:pointer">
+                        </div>
+                    </div>
+                    <label>Font family</label>
+                    <select id="tcFont">
+                        ${fontOptions().map(f => `<option value="${f.value}" ${cell.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}
+                    </select>
+                    <label>Horizontal alignment</label>
+                    <div class="modal-align-row">
+                        <button type="button" class="align-btn ${(cell.align||'center')==='left'?'active':''}" data-align="left">⬛ Left</button>
+                        <button type="button" class="align-btn ${(cell.align||'center')==='center'?'active':''}" data-align="center">▣ Centre</button>
+                        <button type="button" class="align-btn ${(cell.align||'center')==='right'?'active':''}" data-align="right">⬛ Right</button>
+                    </div>
+                    <label>Vertical alignment</label>
+                    <div class="modal-align-row">
+                        <button type="button" class="align-btn ${(cell.valign||'middle')==='top'?'active':''}" data-valign="top">⬆ Top</button>
+                        <button type="button" class="align-btn ${(cell.valign||'middle')==='middle'?'active':''}" data-valign="middle">↕ Middle</button>
+                        <button type="button" class="align-btn ${(cell.valign||'middle')==='bottom'?'active':''}" data-valign="bottom">⬇ Bottom</button>
+                    </div>
+                    <div class="cell-modal-actions">
+                        <button type="button" class="btn" id="tcCancel">Cancel</button>
+                        <button type="button" class="btn btn-success" id="tcSave">Save</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            // Align button toggles
+            overlay.querySelectorAll('[data-align]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    overlay.querySelectorAll('[data-align]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+            overlay.querySelectorAll('[data-valign]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    overlay.querySelectorAll('[data-valign]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+
+            document.getElementById('tcCancel').onclick = () => document.body.removeChild(overlay);
+            overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+
+            document.getElementById('tcSave').onclick = () => {
+                images[index].text = document.getElementById('tcText').value;
+                images[index].fontSize = Math.max(8, parseInt(document.getElementById('tcFontSize').value) || 48);
+                images[index].color = document.getElementById('tcColor').value;
+                images[index].fontFamily = document.getElementById('tcFont').value;
+                const activeAlign = overlay.querySelector('[data-align].active');
+                const activeValign = overlay.querySelector('[data-valign].active');
+                if (activeAlign) images[index].align = activeAlign.dataset.align;
+                if (activeValign) images[index].valign = activeValign.dataset.valign;
+                document.body.removeChild(overlay);
+                updateUI();
+            };
+        }
+
+        function fontOptions() {
+            return [
+                { value: "'Lilita One', cursive", label: 'Lilita One' },
+                { value: "'Segoe UI', sans-serif", label: 'Segoe UI' },
+                { value: "Arial, sans-serif", label: 'Arial' },
+                { value: "'Times New Roman', serif", label: 'Times New Roman' },
+                { value: "Georgia, serif", label: 'Georgia' },
+                { value: "'Courier New', monospace", label: 'Courier New' },
+                { value: "Impact, sans-serif", label: 'Impact' },
+                { value: "'Comic Sans MS', cursive", label: 'Comic Sans' },
+                { value: "Verdana, sans-serif", label: 'Verdana' },
+                { value: "'Trebuchet MS', sans-serif", label: 'Trebuchet MS' },
+                { value: "'Palatino', serif", label: 'Palatino' },
+            ];
         }
 
         async function loadImageFromUrl(url) {
@@ -1455,6 +1715,19 @@
                                 <div class="drag-handle" title="Drag to reorder">⠿</div>
                             </div>
                         `;
+                    } else if (img.type === 'text') {
+                        const previewBg = img.bgColor || '#5D4037';
+                        const previewColor = img.color || '#FFFFFF';
+                        const previewFont = `${img.italic ? 'italic ' : ''}${img.bold ? 'bold ' : ''}13px ${img.fontFamily || 'sans-serif'}`;
+                        const safeText = (img.text || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return `
+                            <div class="text-cell-item" draggable="true" data-index="${index}" style="background:${previewBg}">
+                                <div class="text-cell-preview" style="color:${previewColor};font:${previewFont};text-align:${img.align||'center'}">${safeText || '<em style="opacity:.5">No text</em>'}</div>
+                                <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
+                                <div class="drag-handle" title="Drag to reorder">⠿</div>
+                                <button class="edit-cell-btn" onclick="openTextCellModal(${index})">✏️ Edit</button>
+                            </div>
+                        `;
                     } else {
                         return `
                             <div class="image-item" draggable="true" data-index="${index}">
@@ -1528,6 +1801,23 @@
             }
         }
 
+        function wrapTextLines(ctx, text, maxWidth) {
+            const words = text.split(' ');
+            const lines = [];
+            let current = '';
+            for (const word of words) {
+                const test = current ? current + ' ' + word : word;
+                if (ctx.measureText(test).width > maxWidth && current) {
+                    lines.push(current);
+                    current = word;
+                } else {
+                    current = test;
+                }
+            }
+            if (current) lines.push(current);
+            return lines.length ? lines : [''];
+        }
+
         function createCollageCanvas(imageItems, rows, cols, cellDims, spacing = 5) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -1546,21 +1836,46 @@
                 if (item.type === 'empty') {
                     continue;
                 }
-                
-                const img = item.element;
+
                 let row = Math.floor(i / cols);
                 let col = i % cols;
                 let xOffset = 0;
-                
-                const isLastRow = row === rows - 1;
-                const itemsInThisRow = isLastRow ? imageItems.length - (row * cols) : cols;
-                
-                if (isLastRow && itemsInThisRow < cols) {
-                    const emptySpaces = cols - itemsInThisRow;
-                    xOffset = (emptySpaces * (cellDims.width + spacing)) / 2;
+                const isLastRowCheck = row === rows - 1;
+                const itemsInThisRowCheck = isLastRowCheck ? imageItems.length - (row * cols) : cols;
+                if (isLastRowCheck && itemsInThisRowCheck < cols) {
+                    xOffset = ((cols - itemsInThisRowCheck) * (cellDims.width + spacing)) / 2;
                 }
-                
-                const resizedImg = resizeImageToFit(img, cellDims.width, cellDims.height);
+
+                if (item.type === 'text') {
+                    const tx = col * (cellDims.width + spacing) + xOffset;
+                    const ty = row * (cellDims.height + spacing);
+                    ctx.save();
+                    ctx.fillStyle = item.bgColor || '#5D4037';
+                    ctx.fillRect(tx, ty, cellDims.width, cellDims.height);
+                    const textContent = item.text || '';
+                    if (textContent) {
+                        const fStyle = `${item.italic ? 'italic ' : ''}${item.bold ? 'bold ' : ''}${item.fontSize || 48}px ${item.fontFamily || 'sans-serif'}`;
+                        ctx.font = fStyle;
+                        ctx.fillStyle = item.color || '#FFFFFF';
+                        ctx.textAlign = item.align || 'center';
+                        ctx.textBaseline = 'middle';
+                        const lines = wrapTextLines(ctx, textContent, cellDims.width - 20);
+                        const lineH = (item.fontSize || 48) * 1.25;
+                        const totalH = lines.length * lineH;
+                        let startY;
+                        if ((item.valign || 'middle') === 'top') startY = ty + lineH / 2 + 10;
+                        else if (item.valign === 'bottom') startY = ty + cellDims.height - totalH + lineH / 2 - 10;
+                        else startY = ty + (cellDims.height - totalH) / 2 + lineH / 2;
+                        let lx = tx + cellDims.width / 2;
+                        if (item.align === 'left') lx = tx + 10;
+                        else if (item.align === 'right') lx = tx + cellDims.width - 10;
+                        lines.forEach((line, li) => ctx.fillText(line, lx, startY + li * lineH));
+                    }
+                    ctx.restore();
+                    continue;
+                }
+
+                const img = item.element;
                 
                 // Calculate positioning with label space if needed
                 const labelHeight = showLabels && item.label ? 20 : 0;
