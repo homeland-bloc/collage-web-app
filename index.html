@@ -934,17 +934,111 @@
             border-color: #6D4C41;
             background: #EFE5DC;
         }
+
+        /* App header */
+        .app-header {
+            background: linear-gradient(90deg, #3E2723 0%, #5D4037 60%, #8D6E63 100%);
+            color: #fff;
+            padding: 0 16px;
+            padding-top: env(safe-area-inset-top, 0px);
+            display: flex;
+            align-items: center;
+            height: calc(56px + env(safe-area-inset-top, 0px));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            position: relative;
+            z-index: 100;
+            gap: 10px;
+        }
+
+        .app-header-hamburger {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 8px;
+            line-height: 1;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+        .app-header-hamburger:hover { background: rgba(255,255,255,0.15); }
+
+        .app-header-logo-btn {
+            background: rgba(255,255,255,0.18);
+            border: none;
+            color: #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+        .app-header-logo-btn:hover { background: rgba(255,255,255,0.28); }
+
+        .app-header-title {
+            font-size: 1.25em;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            flex: 1;
+            white-space: nowrap;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .app-header-title:hover { text-decoration: underline; }
+
+        .app-menu-dropdown {
+            position: absolute;
+            top: calc(56px + env(safe-area-inset-top, 0px));
+            right: 12px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.22);
+            min-width: 180px;
+            z-index: 200;
+            overflow: hidden;
+            animation: menuSlideIn 0.15s ease-out;
+        }
+
+        @keyframes menuSlideIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 13px 18px;
+            background: none;
+            border: none;
+            font-size: 15px;
+            color: #3E2723;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.12s;
+        }
+
+        .app-menu-item:hover { background: #FFF8E1; }
+
+        .app-menu-item .menu-emoji { font-size: 18px; }
+        .app-menu-item .menu-name { font-weight: 700; }
+        .app-menu-divider { height: 1px; background: #EEE; margin: 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo-space"></div>
-            <h1>☕ Cuppa</h1>
-            <p>Simple and minimalistic collage creator for your photos. Upload images, adjust layout 
-                controls, and generate your collage. Discord CDN links are 
-                automatically converted to media.discordapp.net for compatibility.</p>
-        </div>
+        <header safe-header id="appHeader"></header>
 
         <div class="main-content">
             <div class="upload-section">
@@ -1112,6 +1206,52 @@
     </div>
 
     <script>
+        const state = {
+            showAppMenu: false,
+        };
+
+        function backToHome() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            state.showAppMenu = false;
+            renderHeader();
+        }
+
+        function toggleAppMenu() {
+            state.showAppMenu = !state.showAppMenu;
+            renderHeader();
+        }
+
+        function renderHeader() {
+            const header = document.getElementById('appHeader');
+            header.innerHTML = `
+                <div class="app-header">
+                    <button class="app-header-hamburger" onclick="toggleAppMenu()" aria-label="Menu">&#9776;</button>
+                    <button class="app-header-logo-btn" onclick="backToHome()" aria-label="Home">☕</button>
+                    <span class="app-header-title" onclick="backToHome()" role="button" tabindex="0">Cuppa</span>
+                </div>
+                ${state.showAppMenu ? `
+                <div class="app-menu-dropdown" id="appMenuDropdown">
+                    <button class="app-menu-item" onclick="backToHome()">
+                        <span class="menu-emoji">☕</span><span class="menu-name">Cuppa</span>
+                    </button>
+                    <div class="app-menu-divider"></div>
+                    <button class="app-menu-item" onclick="window.location.href='https://bicipikay.github.io/peony/'">
+                        <span class="menu-emoji">🌺</span><span class="menu-name">Peony</span>
+                    </button>
+                </div>` : ''}
+            `;
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', e => {
+            if (!state.showAppMenu) return;
+            const header = document.getElementById('appHeader');
+            if (header && !header.contains(e.target)) {
+                state.showAppMenu = false;
+                renderHeader();
+            }
+        });
+
         let images = [];
         let userRows = 5;
         let userCellWidth = 500;
@@ -2262,6 +2402,7 @@
             showPopupStatus(`Sorted by ${by} (${direction === 'asc' ? 'ascending' : 'descending'})`, 'info');
         }
 
+        renderHeader();
         updateUI();
         updateAspectRatioLabel();
         showPopupStatus('☕ Cuppa ready! Add images and customize your layout.', 'info');
