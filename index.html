@@ -951,9 +951,14 @@
 
         .app-header-title:hover { text-decoration: underline; }
 
+        .hamburger-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
         .app-menu-dropdown {
             position: absolute;
-            top: calc(56px + env(safe-area-inset-top, 0px));
+            top: calc(100% + 6px);
             left: 0;
             background: linear-gradient(160deg, #FFFAF0, #FFF3E0);
             border-radius: 10px;
@@ -987,7 +992,7 @@
         .app-menu-item:hover { background: linear-gradient(135deg, #FFF8E1, #F5E6D3); }
 
         .app-menu-item .menu-emoji { font-size: 18px; }
-        .app-menu-item .menu-name { font-weight: 700; font-family: 'Lilita One', cursive; }
+        .app-menu-item .menu-name { font-weight: 700; }
         .app-menu-divider { height: 1px; background: #EEE; margin: 0; }
 
         .color-picker-inline {
@@ -1077,6 +1082,17 @@
             white-space: nowrap;
         }
         .csr-label strong { color: #6D4C41; }
+        .slider-number-input {
+            width: 54px;
+            border: 1px solid #D7CCC8;
+            border-radius: 5px;
+            padding: 2px 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #6D4C41;
+            text-align: center;
+            background: #FFFAF0;
+        }
 
         .icon-toolbar {
             display: flex;
@@ -1086,14 +1102,18 @@
             flex-wrap: wrap;
         }
         .toolbar-pill {
-            padding: 5px 14px;
+            padding: 5px 12px;
             border: 2px solid #D7CCC8;
             border-radius: 20px;
             background: #FFFAF0;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 13px;
             transition: all 0.15s;
             line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
         }
         .toolbar-pill:hover { border-color: #8D6E63; }
         .toolbar-pill.active {
@@ -1300,6 +1320,22 @@
             line-height: 1;
         }
         .grid-del-btn:hover { background: rgba(229,62,62,1); }
+        .grid-pencil-btn {
+            background: rgba(109,76,65,0.75);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            width: 22px;
+            height: 22px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+        }
+        .grid-pencil-btn:hover { background: rgba(62,39,35,1); }
 
         .image-pool {
             display: flex;
@@ -1388,36 +1424,42 @@
                     <button class="controls-collapse-btn" id="controlsCollapseBtn" onclick="toggleControlsCollapse()">🎛️ Layout &amp; Style <span class="collapse-arrow">▼</span></button>
                     <div class="controls-collapsible" id="controlsBody">
                         <div class="compact-slider-row">
-                            <span class="csr-label">Rows: <strong id="rowsValue">3</strong></span>
+                            <span class="csr-label">Rows:</span>
                             <button class="increment-btn" onclick="adjustRows(-1)">−</button>
                             <input type="range" id="rowsSlider" min="1" max="10" value="3" class="slider">
                             <button class="increment-btn" onclick="adjustRows(1)">+</button>
+                            <input type="number" id="rowsValue" class="slider-number-input" value="3" min="1" max="10" onchange="rowsSlider.value=Math.max(1,Math.min(10,parseInt(this.value)||1));updateRows()">
                         </div>
                         <div class="compact-slider-row">
-                            <span class="csr-label">Cols: <strong id="colsValue">3</strong></span>
+                            <span class="csr-label">Cols:</span>
                             <button class="increment-btn" onclick="adjustCols(-1)">−</button>
                             <input type="range" id="colsSlider" min="1" max="10" value="3" class="slider">
                             <button class="increment-btn" onclick="adjustCols(1)">+</button>
+                            <input type="number" id="colsValue" class="slider-number-input" value="3" min="1" max="10" onchange="colsSlider.value=Math.max(1,Math.min(10,parseInt(this.value)||1));updateCols()">
                         </div>
                         <div class="compact-slider-row">
-                            <span class="csr-label">Cell Width: <strong id="cellWidthValue">500px</strong></span>
-                            <button class="increment-btn" onclick="adjustCellWidth(-1)">−</button>
-                            <input type="range" id="cellWidthSlider" min="50" max="1000" value="500" class="slider">
-                            <button class="increment-btn" onclick="adjustCellWidth(1)">+</button>
+                            <span class="csr-label">Cell Width:</span>
+                            <button class="increment-btn" onclick="adjustCellWidth(-10)">−</button>
+                            <input type="range" id="cellWidthSlider" min="50" max="2000" value="500" class="slider">
+                            <button class="increment-btn" onclick="adjustCellWidth(10)">+</button>
+                            <input type="number" id="cellWidthValue" class="slider-number-input" value="500" min="50" max="2000" onchange="cellWidthSlider.value=Math.max(50,Math.min(2000,parseInt(this.value)||500));updateCellWidth()">
                         </div>
                         <div class="compact-slider-row">
-                            <span class="csr-label">Cell Height: <strong id="cellHeightValue">800px</strong></span>
-                            <button class="increment-btn" onclick="adjustCellHeight(-1)">−</button>
-                            <input type="range" id="cellHeightSlider" min="50" max="1000" value="800" class="slider">
-                            <button class="increment-btn" onclick="adjustCellHeight(1)">+</button>
+                            <span class="csr-label">Cell Height:</span>
+                            <button class="increment-btn" onclick="adjustCellHeight(-10)">−</button>
+                            <input type="range" id="cellHeightSlider" min="50" max="2000" value="800" class="slider">
+                            <button class="increment-btn" onclick="adjustCellHeight(10)">+</button>
+                            <input type="number" id="cellHeightValue" class="slider-number-input" value="800" min="50" max="2000" onchange="cellHeightSlider.value=Math.max(50,Math.min(2000,parseInt(this.value)||800));updateCellHeight()">
                         </div>
                         <div class="compact-slider-row">
-                            <span class="csr-label">Spacing: <strong id="cellSpacingValue">5px</strong></span>
+                            <span class="csr-label">Spacing:</span>
                             <button class="increment-btn" onclick="adjustCellSpacing(-1)">−</button>
                             <input type="range" id="cellSpacingSlider" min="0" max="50" value="5" class="slider">
                             <button class="increment-btn" onclick="adjustCellSpacing(1)">+</button>
+                            <input type="number" id="cellSpacingValue" class="slider-number-input" value="5" min="0" max="50" onchange="cellSpacingSlider.value=Math.max(0,Math.min(50,parseInt(this.value)||0));updateCellSpacing()">
                         </div>
 
+                        <div style="font-size:11px;color:#8D6E63;margin:4px 0 2px">Cell size presets:</div>
                         <div class="preset-row">
                             <button type="button" class="preset-pill" onclick="setPreset(1000, 1000)">Square</button>
                             <button type="button" class="preset-pill" onclick="setPreset(500, 800)">Portrait</button>
@@ -1425,9 +1467,9 @@
                         </div>
 
                         <div class="icon-toolbar">
-                            <button type="button" class="toolbar-pill" id="tbAspectLock" onclick="toggleAspectRatioLockBtn()" title="Lock Aspect Ratio">🔒</button>
-                            <button type="button" class="toolbar-pill" id="tbLabels" onclick="toggleShowLabelsBtn()" title="Show Labels">🏷️</button>
-                            <button type="button" class="toolbar-pill" id="tbBgColor" onclick="toggleBgColorRow()" title="Background Colour">🎨</button>
+                            <button type="button" class="toolbar-pill" id="tbAspectLock" onclick="toggleAspectRatioLockBtn()">🔒 Lock ratio</button>
+                            <button type="button" class="toolbar-pill" id="tbLabels" onclick="toggleShowLabelsBtn()">🏷️ Image labels</button>
+                            <button type="button" class="toolbar-pill" id="tbBgColor" onclick="toggleBgColorRow()">🎨 Background</button>
                         </div>
 
                         <div class="bg-color-row" id="bgColorRow" style="display:none">
@@ -1484,7 +1526,7 @@
 
                         <div style="margin-top:8px">
                             <div class="icon-toolbar" style="justify-content:flex-start;margin:0 0 6px">
-                                <button type="button" class="toolbar-pill" id="tbBorders" onclick="toggleBordersBtn()" title="Show Borders">🔲 Borders</button>
+                                <button type="button" class="toolbar-pill" id="tbBorders" onclick="toggleBordersBtn()">🔲 Enable table borders</button>
                             </div>
                             <div id="borderControlsRow" style="display:none">
                                 <div class="label-controls-row">
@@ -1515,6 +1557,11 @@
                     </div>
                 </div>
 
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 2px">
+                    <span style="font-size:11px;color:#8D6E63;font-weight:600">Image pool:</span>
+                    <button type="button" class="btn btn-compact" onclick="autoFillPool()" style="font-size:11px;padding:3px 10px">⬇ Fill grid</button>
+                    <button type="button" class="btn btn-compact" onclick="autoFillLabels()" style="font-size:11px;padding:3px 10px">🔢 Auto-number</button>
+                </div>
                 <div class="image-pool" id="imagePool">
                     <span class="image-pool-empty">Upload images above — they appear here for placement into the grid</span>
                 </div>
@@ -1576,33 +1623,23 @@
             const header = document.getElementById('appHeader');
             header.innerHTML = `
                 <div class="app-header">
-                    <button class="app-header-hamburger" onclick="toggleAppMenu(event)" aria-label="Menu">&#9776;</button>
+                    <div class="hamburger-wrap">
+                        <button class="app-header-hamburger" onclick="toggleAppMenu(event)" aria-label="Menu">&#9776;</button>
+                        ${state.showAppMenu ? `
+                        <div class="app-menu-dropdown" id="appMenuDropdown">
+                            <button class="app-menu-item" onclick="backToHome()">
+                                <span class="menu-emoji">☕</span><span class="menu-name">Cuppa</span>
+                            </button>
+                            <div class="app-menu-divider"></div>
+                            <button class="app-menu-item" onclick="window.location.href='https://bicipikay.github.io/peony/'">
+                                <span class="menu-emoji">🌺</span><span class="menu-name">Peony</span>
+                            </button>
+                        </div>` : ''}
+                    </div>
                     <button class="app-header-logo-btn" onclick="backToHome()" aria-label="Home">☕</button>
                     <span class="app-header-title" onclick="backToHome()" role="button" tabindex="0">Cuppa</span>
                 </div>
-                ${state.showAppMenu ? `
-                <div class="app-menu-dropdown" id="appMenuDropdown">
-                    <button class="app-menu-item" onclick="backToHome()">
-                        <span class="menu-emoji">☕</span><span class="menu-name">Cuppa</span>
-                    </button>
-                    <div class="app-menu-divider"></div>
-                    <button class="app-menu-item" onclick="window.location.href='https://bicipikay.github.io/peony/'">
-                        <span class="menu-emoji">🌺</span><span class="menu-name">Peony</span>
-                    </button>
-                </div>` : ''}
             `;
-            if (state.showAppMenu) {
-                requestAnimationFrame(() => {
-                    const hamburger = header.querySelector('.app-header-hamburger');
-                    const dropdown = document.getElementById('appMenuDropdown');
-                    if (hamburger && dropdown) {
-                        const hRect = hamburger.getBoundingClientRect();
-                        const headerRect = header.getBoundingClientRect();
-                        const centerX = hRect.left + hRect.width / 2 - headerRect.left;
-                        dropdown.style.left = Math.max(0, centerX - dropdown.offsetWidth / 2) + 'px';
-                    }
-                });
-            }
         }
 
         // Close menu when clicking outside
@@ -1656,6 +1693,8 @@
         let numRows = 3;
         let numCols = 3;
         let imagePool = [];
+        let rowHeights = []; // per-row heights (px)
+        let colWidths = [];  // per-col widths (px)
         let userCellWidth = 500;
         let userCellHeight = 800;
         let userCellSpacing = 5;
@@ -1686,6 +1725,8 @@
                     grid[r][c] = makeEmptyCell();
                 }
             }
+            rowHeights = Array.from({length: numRows}, () => userCellHeight);
+            colWidths = Array.from({length: numCols}, () => userCellWidth);
         }
 
         function resizeGrid(newRows, newCols) {
@@ -1717,6 +1758,11 @@
                     }
                 }
             }
+            // Resize per-row/col size arrays
+            const oldRowHeights = rowHeights.slice();
+            const oldColWidths = colWidths.slice();
+            rowHeights = Array.from({length: newRows}, (_, i) => oldRowHeights[i] != null ? oldRowHeights[i] : userCellHeight);
+            colWidths = Array.from({length: newCols}, (_, i) => oldColWidths[i] != null ? oldColWidths[i] : userCellWidth);
             numRows = newRows;
             numCols = newCols;
         }
@@ -1738,6 +1784,62 @@
                 }
             }
             return shadow;
+        }
+
+        // Like getShadowSet but distinguishes:
+        //   skipSlotOnly: cells whose table SLOT is covered but spacer is NOT (first col of a rowspan)
+        //   skipBoth: cells where both spacer AND slot are covered (interior cols, or colspan shadows)
+        function getShadowSetDetailed() {
+            const skipBoth = new Set();
+            const skipSlotOnly = new Set();
+            for (let r = 0; r < numRows; r++) {
+                for (let c = 0; c < numCols; c++) {
+                    const cell = grid[r] && grid[r][c];
+                    if (!cell) continue;
+                    const cs = Math.min(cell.colspan || 1, numCols - c);
+                    const rs = Math.min(cell.rowspan || 1, numRows - r);
+                    for (let dr = 0; dr < rs; dr++) {
+                        for (let dc = 0; dc < cs; dc++) {
+                            if (dr === 0 && dc === 0) continue;
+                            const key = `${r+dr},${c+dc}`;
+                            if (dc === 0) {
+                                // First col of rowspan — spacer before it is NOT covered
+                                skipSlotOnly.add(key);
+                            } else {
+                                // Interior col — both spacer and slot covered
+                                skipBoth.add(key);
+                            }
+                        }
+                    }
+                }
+            }
+            return { skipBoth, skipSlotOnly };
+        }
+
+        // Returns two Sets (skipBoth, skipSlotOnly) of grid-col indices for the
+        // INSERT ROW between row boundary_r and boundary_r+1, indicating which
+        // table columns are covered by rowspans from above.
+        function getInsertRowSkipSets(boundary_r) {
+            const shadow = getShadowSet();
+            const skipBoth = new Set();  // grid col indices: skip both spacer+slot
+            const skipSlotOnly = new Set(); // grid col indices: skip only slot
+            for (let rr = 0; rr <= boundary_r; rr++) {
+                for (let cc = 0; cc < numCols; cc++) {
+                    if (shadow.has(`${rr},${cc}`)) continue;
+                    const cell = grid[rr] && grid[rr][cc];
+                    if (!cell) continue;
+                    const rs = Math.min(cell.rowspan || 1, numRows - rr);
+                    const cs = Math.min(cell.colspan || 1, numCols - cc);
+                    if (rr + rs > boundary_r + 1) {
+                        // Cell spans across this boundary
+                        skipSlotOnly.add(cc); // first col: slot covered, spacer not
+                        for (let dc = 1; dc < cs; dc++) {
+                            skipBoth.add(cc + dc); // interior cols: both covered
+                        }
+                    }
+                }
+            }
+            return { skipBoth, skipSlotOnly };
         }
 
         initGrid();
@@ -1839,13 +1941,13 @@
         }
 
         function adjustCellWidth(delta) {
-            const newValue = Math.max(50, Math.min(1000, userCellWidth + delta));
+            const newValue = Math.max(50, Math.min(2000, userCellWidth + delta));
             cellWidthSlider.value = newValue;
             updateCellWidth();
         }
 
         function adjustCellHeight(delta) {
-            const newValue = Math.max(50, Math.min(1000, userCellHeight + delta));
+            const newValue = Math.max(50, Math.min(2000, userCellHeight + delta));
             cellHeightSlider.value = newValue;
             updateCellHeight();
         }
@@ -1975,10 +2077,6 @@
                     <div id="cmTextFields" style="display:${isText ? 'block' : 'none'}">
                         <label>Text content</label>
                         <textarea id="tcText" rows="3">${escapeHtml(cell.text || '')}</textarea>
-                        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:6px 8px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
-                            <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41;flex-shrink:0">
-                            <label for="tcAutofill" style="margin:0;font-size:12px;cursor:pointer">🔡 Autofill</label>
-                        </div>
                         <div class="cell-modal-row">
                             <div><label>Font size</label><input type="number" id="tcFontSize" min="8" max="500" value="${cell.fontSize || 48}"></div>
                             <div><label>Text colour</label><div id="tcColorPicker"></div></div>
@@ -2000,7 +2098,7 @@
                             <button type="button" class="align-btn ${(cell.valign||'middle')==='bottom'?'active':''}" data-valign="bottom">⬇ Bottom</button>
                         </div>
                     </div>
-                    <div style="margin-top:12px">
+                    <div style="margin-top:12px" id="cmBgSection" ${isText ? 'hidden' : ''}>
                         <label style="margin:0 0 4px">Cell background colour</label>
                         <div id="cmBgColorPicker"></div>
                     </div>
@@ -2029,11 +2127,14 @@
                 tcBgColorState = makeColorPicker(document.getElementById('tcBgColorPicker'), cell.bgColor || '#5d4037', cell.bgAlpha != null ? cell.bgAlpha : 1.0, () => {});
             }
 
-            // Type selector shows/hides text fields
+            // Type selector shows/hides text fields and bg section
             document.getElementById('cmType').addEventListener('change', function() {
                 const tf = document.getElementById('cmTextFields');
-                tf.style.display = this.value === 'text' ? 'block' : 'none';
-                if (this.value === 'text' && !tcColorState) {
+                const bgSec = document.getElementById('cmBgSection');
+                const isT = this.value === 'text';
+                tf.style.display = isT ? 'block' : 'none';
+                if (bgSec) bgSec.hidden = isT;
+                if (isT && !tcColorState) {
                     tcColorState = makeColorPicker(document.getElementById('tcColorPicker'), '#ffffff', 1.0, () => {});
                     tcBgColorState = makeColorPicker(document.getElementById('tcBgColorPicker'), '#5d4037', 1.0, () => {});
                 }
@@ -2090,7 +2191,6 @@
                     c.text = document.getElementById('tcText').value;
                     c.fontSize = Math.max(8, parseInt(document.getElementById('tcFontSize').value) || 48);
                     c.fontFamily = document.getElementById('tcFont').value;
-                    c.autofill = document.getElementById('tcAutofill').checked;
                     if (tcColorState) { c.color = tcColorState.hex; c.colorAlpha = tcColorState.alpha; }
                     if (tcBgColorState) { c.bgColor = tcBgColorState.hex; c.bgAlpha = tcBgColorState.alpha; }
                     const activeAlign = overlay.querySelector('[data-align].active');
@@ -2220,25 +2320,25 @@
         function updateRows() {
             const newVal = parseInt(rowsSlider.value);
             resizeGrid(newVal, numCols);
-            rowsValue.textContent = numRows;
+            rowsValue.value = numRows;
             updateUI();
         }
 
         function updateCols() {
             const newVal = parseInt(colsSlider.value);
             resizeGrid(numRows, newVal);
-            colsValue.textContent = numCols;
+            colsValue.value = numCols;
             updateUI();
         }
 
         function updateCellWidth() {
             userCellWidth = parseInt(cellWidthSlider.value);
-            cellWidthValue.textContent = userCellWidth + 'px';
+            cellWidthValue.value = userCellWidth;
             if (aspectRatioLocked) {
                 userCellHeight = Math.round(userCellWidth / currentAspectRatio);
-                userCellHeight = Math.max(50, Math.min(1000, userCellHeight));
+                userCellHeight = Math.max(50, Math.min(2000, userCellHeight));
                 cellHeightSlider.value = userCellHeight;
-                cellHeightValue.textContent = userCellHeight + 'px';
+                cellHeightValue.value = userCellHeight;
             }
             updateAspectRatioLabel();
             updateLayoutPreview();
@@ -2246,12 +2346,12 @@
 
         function updateCellHeight() {
             userCellHeight = parseInt(cellHeightSlider.value);
-            cellHeightValue.textContent = userCellHeight + 'px';
+            cellHeightValue.value = userCellHeight;
             if (aspectRatioLocked) {
                 userCellWidth = Math.round(userCellHeight * currentAspectRatio);
-                userCellWidth = Math.max(50, Math.min(1000, userCellWidth));
+                userCellWidth = Math.max(50, Math.min(2000, userCellWidth));
                 cellWidthSlider.value = userCellWidth;
-                cellWidthValue.textContent = userCellWidth + 'px';
+                cellWidthValue.value = userCellWidth;
             }
             updateAspectRatioLabel();
             updateLayoutPreview();
@@ -2259,17 +2359,17 @@
 
         function updateCellSpacing() {
             userCellSpacing = parseInt(cellSpacingSlider.value);
-            cellSpacingValue.textContent = userCellSpacing + 'px';
+            cellSpacingValue.value = userCellSpacing;
             updateLayoutPreview();
         }
 
         function setPreset(width, height) {
             userCellWidth = width;
             userCellHeight = height;
-            cellWidthSlider.value = width;
-            cellHeightSlider.value = height;
-            cellWidthValue.textContent = width + 'px';
-            cellHeightValue.textContent = height + 'px';
+            cellWidthSlider.value = Math.min(width, 2000);
+            cellHeightSlider.value = Math.min(height, 2000);
+            cellWidthValue.value = width;
+            cellHeightValue.value = height;
             if (aspectRatioLocked) currentAspectRatio = width / height;
             updateAspectRatioLabel();
             updateLayoutPreview();
@@ -2282,8 +2382,8 @@
                 preview.className = 'layout-preview';
                 document.querySelector('.controls-section').appendChild(preview);
             }
-            const estimatedWidth = numCols * userCellWidth + (numCols - 1) * userCellSpacing;
-            const estimatedHeight = numRows * userCellHeight + (numRows - 1) * userCellSpacing;
+            const estimatedWidth = (colWidths.length ? colWidths.reduce((s,w)=>s+w,0) : numCols * userCellWidth) + (numCols - 1) * userCellSpacing;
+            const estimatedHeight = (rowHeights.length ? rowHeights.reduce((s,h)=>s+h,0) : numRows * userCellHeight) + (numRows - 1) * userCellSpacing;
             let imgCount = 0, txtCount = 0;
             for (let r = 0; r < numRows; r++) for (let c = 0; c < numCols; c++) {
                 if (grid[r][c].type === 'image') imgCount++;
@@ -2322,58 +2422,92 @@
 
         function renderGridEditor() {
             const container = document.getElementById('gridEditorContainer');
-            const shadow = getShadowSet();
-            let html = '<table class="grid-editor">';
+            const { skipBoth, skipSlotOnly } = getShadowSetDetailed();
 
-            // Column add/delete header row
-            html += '<tr><td style="border:none;width:24px;height:24px;background:none"></td>';
+            // Helper to emit an insert-row (spacer row) at boundary between row `boundary_r` and `boundary_r+1`
+            // or before-first (boundary_r=-1) / after-last (boundary_r=numRows-1 for after).
+            // `insertIndex` is the index passed to insertRow().
+            function makeInsertRow(insertIndex, skipB, skipSO) {
+                const SP = 'border:none;background:none;padding:0;';
+                let h = `<tr><td style="${SP}width:24px;height:8px"><button class="grid-add-btn" onclick="insertRow(${insertIndex})">+</button></td>`;
+                h += `<td style="${SP}width:8px;height:8px"></td>`; // lead-pad
+                for (let c = 0; c < numCols; c++) {
+                    if (skipB.has(c)) continue;
+                    if (c > 0 && !skipSO.has(c)) h += `<td style="${SP}width:8px;height:8px;border-left:1px dashed rgba(93,64,55,0.15)"></td>`;
+                    else if (c > 0) h += `<td style="${SP}width:8px;height:8px"></td>`;
+                    if (!skipSO.has(c)) h += `<td style="${SP}height:8px"></td>`;
+                }
+                h += `<td style="${SP}width:8px;height:8px"></td>`; // trail-pad
+                h += '</tr>';
+                return h;
+            }
+
+            const SP = 'border:none;background:none;padding:0;';
+            let html = '<table class="grid-editor" style="border-collapse:separate;border-spacing:0">';
+
+            // ── Column pencil/delete header row ────────────────────────────────────
+            // Layout: corner | add[0] | pencil[0] | add[1] | pencil[1] | ... | pencil[n-1] | add[n]
+            html += '<tr>';
+            html += `<td style="${SP}width:24px;height:24px"></td>`; // corner
+            html += `<td style="${SP}width:8px;height:24px"><button class="grid-add-btn" onclick="insertCol(0)" title="Insert column before first" style="height:20px">+</button></td>`;
             for (let c = 0; c < numCols; c++) {
-                if (c > 0) html += `<td style="border:none;width:8px;height:24px;background:none;padding:0"><button class="grid-add-btn" onclick="insertCol(${c})" title="Insert column">+</button></td>`;
-                html += `<td style="border:none;height:24px;background:none;text-align:center"><button class="grid-del-btn" onclick="deleteCol(${c})" title="Delete column">−</button></td>`;
+                html += `<td style="${SP}height:24px;text-align:center"><button class="grid-pencil-btn" onclick="openColModal(${c})" title="Column ${c+1} settings (${colWidths[c]||userCellWidth}px)">✏️</button></td>`;
+                html += `<td style="${SP}width:8px;height:24px"><button class="grid-add-btn" onclick="insertCol(${c+1})" title="Insert column" style="height:20px">+</button></td>`;
             }
             html += '</tr>';
 
+            // ── Before-first row insert ─────────────────────────────────────────────
+            html += makeInsertRow(0, new Set(), new Set());
+
+            // ── Data rows ──────────────────────────────────────────────────────────
             for (let r = 0; r < numRows; r++) {
-                // Row insert button row
+                // Between-rows insert button
                 if (r > 0) {
-                    html += `<tr><td style="border:none;width:24px;height:8px;background:none;padding:0"><button class="grid-add-btn" onclick="insertRow(${r})" title="Insert row">+</button></td>`;
-                    for (let c = 0; c < numCols; c++) {
-                        if (c > 0) html += '<td style="border:none;width:8px;height:8px;background:none;padding:0"></td>';
-                        html += '<td style="border:none;height:8px;background:none;padding:0"></td>';
-                    }
-                    html += '</tr>';
+                    const { skipBoth: ib, skipSlotOnly: iso } = getInsertRowSkipSets(r - 1);
+                    html += makeInsertRow(r, ib, iso);
                 }
 
+                // Data row
                 html += '<tr>';
-                // Row delete button
-                html += `<td style="border:none;width:24px;background:none;padding:0;vertical-align:middle"><button class="grid-del-btn" onclick="deleteRow(${r})" title="Delete row">−</button></td>`;
+                // Row pencil button
+                html += `<td style="${SP}width:24px;vertical-align:middle"><button class="grid-pencil-btn" onclick="openRowModal(${r})" title="Row ${r+1} settings (${rowHeights[r]||userCellHeight}px)">✏️</button></td>`;
+                html += `<td style="${SP}width:8px"></td>`; // lead-pad
 
                 for (let c = 0; c < numCols; c++) {
-                    if (c > 0) html += '<td style="border:none;width:8px;background:none;padding:0"></td>'; // spacer between cols for add buttons
-
-                    if (shadow.has(`${r},${c}`)) continue; // skip shadow cells
+                    const key = `${r},${c}`;
+                    if (skipBoth.has(key)) continue; // skip spacer + slot
+                    if (c > 0) {
+                        const spStyle = `border-left:1px dashed rgba(93,64,55,0.15)`;
+                        html += `<td style="${SP}width:8px;${spStyle}"></td>`; // col spacer/guide
+                    }
+                    if (skipSlotOnly.has(key)) continue; // spacer emitted, skip slot
 
                     const cell = grid[r][c];
                     const cs = Math.min(cell.colspan || 1, numCols - c);
                     const rs = Math.min(cell.rowspan || 1, numRows - r);
-                    // Compute actual colspan accounting for spacer columns
                     const tdColspan = cs > 1 ? cs * 2 - 1 : 1;
                     const tdRowspan = rs > 1 ? rs * 2 - 1 : 1;
 
-                    let cls = '';
-                    let content = '<span style="font-size:24px;opacity:0.3">⬜</span>';
+                    let cls = 'class="';
+                    let content = '';
                     if (cell.type === 'image' && cell.url) {
-                        cls = ' class="cell-image"';
+                        cls += 'cell-image"';
                         content = `<img src="${cell.url}" alt="${escapeHtml(cell.filename || '')}">`;
                     } else if (cell.type === 'text') {
-                        cls = ' class="cell-text"';
+                        cls += 'cell-text"';
                         const bg = cell.bgColor || '#5D4037';
                         const clr = cell.color || '#FFFFFF';
                         const safeText = escapeHtml(cell.text || '');
                         content = `<div class="cell-text-preview" style="background:${bg};color:${clr};border-radius:4px">${safeText || '<em style="opacity:.4">Text</em>'}</div>`;
+                    } else {
+                        cls += '"';
+                        content = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:4px">
+                            <span style="font-size:20px;opacity:0.25">⬜</span>
+                            <button type="button" style="font-size:9px;padding:2px 6px;border:1px solid #BCAAA4;border-radius:3px;background:#FFFAF0;cursor:pointer;color:#6D4C41;white-space:nowrap" onclick="event.stopPropagation();convertCellToText(${r},${c})">📝 Text</button>
+                        </div>`;
                     }
 
-                    html += `<td${cls} colspan="${tdColspan}" rowspan="${tdRowspan}" draggable="true" data-row="${r}" data-col="${c}">`;
+                    html += `<td ${cls} colspan="${tdColspan}" rowspan="${tdRowspan}" draggable="true" data-row="${r}" data-col="${c}">`;
                     html += content;
                     html += `<button class="cell-edit-btn" onclick="openCellModal(${r},${c})">✏️</button>`;
                     if (showLabels && cell.type === 'image') {
@@ -2381,8 +2515,13 @@
                     }
                     html += '</td>';
                 }
+                html += `<td style="${SP}width:8px"></td>`; // trail-pad
                 html += '</tr>';
             }
+
+            // ── After-last row insert ───────────────────────────────────────────────
+            html += makeInsertRow(numRows, new Set(), new Set());
+
             html += '</table>';
             container.innerHTML = html;
 
@@ -2444,9 +2583,10 @@
             const newRow = [];
             for (let c = 0; c < numCols; c++) newRow.push(makeEmptyCell());
             grid.splice(atIndex, 0, newRow);
+            rowHeights.splice(atIndex, 0, userCellHeight);
             numRows++;
             rowsSlider.value = numRows;
-            rowsValue.textContent = numRows;
+            rowsValue.value = numRows;
             updateUI();
         }
 
@@ -2454,9 +2594,10 @@
             for (let r = 0; r < numRows; r++) {
                 grid[r].splice(atIndex, 0, makeEmptyCell());
             }
+            colWidths.splice(atIndex, 0, userCellWidth);
             numCols++;
             colsSlider.value = numCols;
-            colsValue.textContent = numCols;
+            colsValue.value = numCols;
             updateUI();
         }
 
@@ -2469,9 +2610,10 @@
                     if (c.type === 'image' && c.url) imagePool.push({ element: c.element, url: c.url, filename: c.filename, filesize: c.filesize, aspectRatio: c.element ? c.element.width / c.element.height : 1, label: c.label, dateAdded: c.dateAdded });
                 });
                 grid.splice(rowIdx, 1);
+                rowHeights.splice(rowIdx, 1);
                 numRows--;
                 rowsSlider.value = numRows;
-                rowsValue.textContent = numRows;
+                rowsValue.value = numRows;
                 updateUI();
             };
             if (hasContent) {
@@ -2490,9 +2632,10 @@
                     if (c && c.type === 'image' && c.url) imagePool.push({ element: c.element, url: c.url, filename: c.filename, filesize: c.filesize, aspectRatio: c.element ? c.element.width / c.element.height : 1, label: c.label, dateAdded: c.dateAdded });
                     grid[r].splice(colIdx, 1);
                 }
+                colWidths.splice(colIdx, 1);
                 numCols--;
                 colsSlider.value = numCols;
-                colsValue.textContent = numCols;
+                colsValue.value = numCols;
                 updateUI();
             };
             if (hasContent) {
@@ -2524,6 +2667,120 @@
             grid[row][col].label = value.slice(0, 40);
         }
 
+        function openRowModal(r) {
+            const overlay = document.createElement('div');
+            overlay.className = 'cell-modal-overlay';
+            const h = rowHeights[r] || userCellHeight;
+            overlay.innerHTML = `
+                <div class="cell-modal" style="max-width:320px">
+                    <h3>✏️ Row ${r + 1} settings</h3>
+                    <label>Row height (px)</label>
+                    <div class="compact-slider-row" style="margin:8px 0">
+                        <input type="range" id="rmSlider" min="50" max="2000" value="${h}" class="slider" style="flex:1" oninput="document.getElementById('rmInput').value=this.value">
+                        <input type="number" id="rmInput" class="slider-number-input" value="${h}" min="50" max="2000" onchange="document.getElementById('rmSlider').value=Math.max(50,Math.min(2000,parseInt(this.value)||50))">
+                    </div>
+                    <div class="cell-modal-actions" style="justify-content:space-between">
+                        <button type="button" class="btn" style="background:linear-gradient(135deg,#e53e3e,#c53030);font-size:12px;padding:5px 12px" id="rmDelete">🗑️ Delete row</button>
+                        <div style="display:flex;gap:6px">
+                            <button type="button" class="btn" id="rmCancel">Cancel</button>
+                            <button type="button" class="btn btn-success" id="rmSave">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            document.getElementById('rmCancel').onclick = () => document.body.removeChild(overlay);
+            overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+            document.getElementById('rmDelete').onclick = () => {
+                document.body.removeChild(overlay);
+                deleteRow(r);
+            };
+            document.getElementById('rmSave').onclick = () => {
+                rowHeights[r] = Math.max(50, Math.min(2000, parseInt(document.getElementById('rmSlider').value) || userCellHeight));
+                document.body.removeChild(overlay);
+                updateUI();
+            };
+        }
+
+        function openColModal(c) {
+            const overlay = document.createElement('div');
+            overlay.className = 'cell-modal-overlay';
+            const w = colWidths[c] || userCellWidth;
+            overlay.innerHTML = `
+                <div class="cell-modal" style="max-width:320px">
+                    <h3>✏️ Column ${c + 1} settings</h3>
+                    <label>Column width (px)</label>
+                    <div class="compact-slider-row" style="margin:8px 0">
+                        <input type="range" id="cmSlider" min="50" max="2000" value="${w}" class="slider" style="flex:1" oninput="document.getElementById('cmInput').value=this.value">
+                        <input type="number" id="cmInput" class="slider-number-input" value="${w}" min="50" max="2000" onchange="document.getElementById('cmSlider').value=Math.max(50,Math.min(2000,parseInt(this.value)||50))">
+                    </div>
+                    <div class="cell-modal-actions" style="justify-content:space-between">
+                        <button type="button" class="btn" style="background:linear-gradient(135deg,#e53e3e,#c53030);font-size:12px;padding:5px 12px" id="colmDelete">🗑️ Delete column</button>
+                        <div style="display:flex;gap:6px">
+                            <button type="button" class="btn" id="colmCancel">Cancel</button>
+                            <button type="button" class="btn btn-success" id="colmSave">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            document.getElementById('colmCancel').onclick = () => document.body.removeChild(overlay);
+            overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+            document.getElementById('colmDelete').onclick = () => {
+                document.body.removeChild(overlay);
+                deleteCol(c);
+            };
+            document.getElementById('colmSave').onclick = () => {
+                colWidths[c] = Math.max(50, Math.min(2000, parseInt(document.getElementById('cmSlider').value) || userCellWidth));
+                document.body.removeChild(overlay);
+                updateUI();
+            };
+        }
+
+        function autoFillPool() {
+            if (imagePool.length === 0) { showPopupStatus('No images in pool to fill.', 'info'); return; }
+            const shadow = getShadowSet();
+            let filled = 0;
+            for (let r = 0; r < numRows && imagePool.length > 0; r++) {
+                for (let c = 0; c < numCols && imagePool.length > 0; c++) {
+                    if (shadow.has(`${r},${c}`)) continue;
+                    if (grid[r][c].type !== 'empty') continue;
+                    const poolImg = imagePool.shift();
+                    grid[r][c] = Object.assign(makeEmptyCell(), {
+                        type: 'image', element: poolImg.element, url: poolImg.url,
+                        filename: poolImg.filename, filesize: poolImg.filesize,
+                        label: poolImg.label || '', dateAdded: poolImg.dateAdded
+                    });
+                    filled++;
+                }
+            }
+            updateUI();
+            showPopupStatus(`Filled ${filled} cell${filled !== 1 ? 's' : ''} from pool.`, 'success');
+        }
+
+        function autoFillLabels() {
+            const shadow = getShadowSet();
+            let n = 1;
+            for (let r = 0; r < numRows; r++) {
+                for (let c = 0; c < numCols; c++) {
+                    if (shadow.has(`${r},${c}`)) continue;
+                    if (grid[r][c].type === 'image') {
+                        grid[r][c].label = String(n++);
+                    }
+                }
+            }
+            if (!showLabels) toggleShowLabelsBtn();
+            updateUI();
+            showPopupStatus(`Auto-numbered ${n - 1} image cell${n - 1 !== 1 ? 's' : ''}.`, 'success');
+        }
+
+        function convertCellToText(r, c) {
+            grid[r][c].type = 'text';
+            grid[r][c].text = '';
+            updateUI();
+            openCellModal(r, c);
+        }
+
         async function generateCollage() {
             try {
                 generateBtn.innerHTML = '<div class="loading"></div>Generating...';
@@ -2539,7 +2796,6 @@
                 document.getElementById('collageInfo').innerHTML = `
                     <p><strong>Layout:</strong> ${numRows}×${numCols} grid</p>
                     <p><strong>Canvas size:</strong> ${canvas.width}×${canvas.height}px</p>
-                    <p><strong>Cell size:</strong> ${cellDims.width}×${cellDims.height}px</p>
                     <p><strong>Cell spacing:</strong> ${userCellSpacing}px</p>
                 `;
                 showPopupStatus(`🎉 Collage generated! ${numRows}×${numCols}`, 'success');
@@ -2592,8 +2848,16 @@
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            const collageWidth = cols * cellDims.width + (cols - 1) * spacing;
-            const collageHeight = rows * cellDims.height + (rows - 1) * spacing;
+            // Use per-row/col dimensions (fall back to global)
+            const rh = Array.from({length: rows}, (_, i) => (rowHeights[i] || cellDims.height));
+            const cw = Array.from({length: cols}, (_, i) => (colWidths[i] || cellDims.width));
+
+            // Cumulative offsets
+            const colX = []; { let x = 0; for (let c = 0; c < cols; c++) { colX.push(x); x += cw[c] + spacing; } }
+            const rowY = []; { let y = 0; for (let r = 0; r < rows; r++) { rowY.push(y); y += rh[r] + spacing; } }
+
+            const collageWidth = cw.reduce((s, w) => s + w, 0) + (cols - 1) * spacing;
+            const collageHeight = rh.reduce((s, h) => s + h, 0) + (rows - 1) * spacing;
 
             canvas.width = collageWidth;
             canvas.height = collageHeight;
@@ -2617,10 +2881,12 @@
             }
 
             for (const { item, row, col, colspan, rowspan } of placements) {
-                const cellW = colspan * cellDims.width + (colspan - 1) * spacing;
-                const cellH = rowspan * cellDims.height + (rowspan - 1) * spacing;
-                const tx = col * (cellDims.width + spacing);
-                const ty = row * (cellDims.height + spacing);
+                // Compute actual cell size from per-row/col arrays
+                let cellW = 0, cellH = 0;
+                for (let dc = 0; dc < colspan; dc++) cellW += cw[col + dc] + (dc > 0 ? spacing : 0);
+                for (let dr = 0; dr < rowspan; dr++) cellH += rh[row + dr] + (dr > 0 ? spacing : 0);
+                const tx = colX[col];
+                const ty = rowY[row];
 
                 if (item.type === 'empty') {
                     if ((item.bgAlpha || 0) > 0) {
@@ -2707,10 +2973,11 @@
                 ctx.strokeStyle = toRgba(borderColor.hex, borderColor.alpha);
                 ctx.lineWidth = borderThickness;
                 for (const { item, row, col, colspan, rowspan } of placements) {
-                    const cellW = colspan * cellDims.width + (colspan - 1) * spacing;
-                    const cellH = rowspan * cellDims.height + (rowspan - 1) * spacing;
-                    const bx = col * (cellDims.width + spacing);
-                    const by = row * (cellDims.height + spacing);
+                    let cellW = 0, cellH = 0;
+                    for (let dc = 0; dc < colspan; dc++) cellW += cw[col + dc] + (dc > 0 ? spacing : 0);
+                    for (let dr = 0; dr < rowspan; dr++) cellH += rh[row + dr] + (dr > 0 ? spacing : 0);
+                    const bx = colX[col];
+                    const by = rowY[row];
                     const edges = { top: false, right: false, bottom: false, left: false };
                     if (borderMode === 'all') {
                         edges.top = edges.right = edges.bottom = edges.left = true;
