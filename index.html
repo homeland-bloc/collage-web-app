@@ -954,8 +954,8 @@
         .app-menu-dropdown {
             position: absolute;
             top: calc(56px + env(safe-area-inset-top, 0px));
-            right: 12px;
-            background: #fff;
+            left: 0;
+            background: linear-gradient(160deg, #FFFAF0, #FFF3E0);
             border-radius: 10px;
             box-shadow: 0 8px 28px rgba(0,0,0,0.22);
             min-width: 180px;
@@ -984,11 +984,376 @@
             transition: background 0.12s;
         }
 
-        .app-menu-item:hover { background: #FFF8E1; }
+        .app-menu-item:hover { background: linear-gradient(135deg, #FFF8E1, #F5E6D3); }
 
         .app-menu-item .menu-emoji { font-size: 18px; }
-        .app-menu-item .menu-name { font-weight: 700; }
+        .app-menu-item .menu-name { font-weight: 700; font-family: 'Lilita One', cursive; }
         .app-menu-divider { height: 1px; background: #EEE; margin: 0; }
+
+        .color-picker-inline {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .color-picker-inline input[type="color"] {
+            width: 36px;
+            height: 28px;
+            border: 2px solid #D7CCC8;
+            border-radius: 6px;
+            padding: 2px;
+            cursor: pointer;
+            background: none;
+            flex-shrink: 0;
+        }
+        .color-picker-inline input[type="range"] {
+            flex: 1;
+            min-width: 50px;
+            height: 6px;
+            border-radius: 3px;
+            background: #D7CCC8;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .color-picker-inline input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: linear-gradient(135deg, #6D4C41, #5D4037);
+            cursor: pointer;
+        }
+        .color-picker-inline input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: linear-gradient(135deg, #6D4C41, #5D4037);
+            cursor: pointer; border: none;
+        }
+        .color-picker-inline .alpha-label {
+            font-size: 12px;
+            color: #6D4C41;
+            font-weight: 600;
+            min-width: 32px;
+            text-align: right;
+        }
+
+        .controls-collapse-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #5D4037;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+        }
+        .controls-collapse-btn:hover { color: #3E2723; }
+        .controls-collapse-btn .collapse-arrow {
+            transition: transform 0.3s;
+            font-size: 0.8em;
+        }
+        .controls-collapse-btn.collapsed .collapse-arrow { transform: rotate(-90deg); }
+        .controls-collapsible {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .controls-collapsible.collapsed {
+            max-height: 0;
+        }
+
+        .compact-slider-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .csr-label {
+            min-width: 120px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #5D4037;
+            white-space: nowrap;
+        }
+        .csr-label strong { color: #6D4C41; }
+
+        .icon-toolbar {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin: 10px 0 6px;
+            flex-wrap: wrap;
+        }
+        .toolbar-pill {
+            padding: 5px 14px;
+            border: 2px solid #D7CCC8;
+            border-radius: 20px;
+            background: #FFFAF0;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.15s;
+            line-height: 1;
+        }
+        .toolbar-pill:hover { border-color: #8D6E63; }
+        .toolbar-pill.active {
+            border-color: #6D4C41;
+            background: linear-gradient(135deg, #EFE5DC, #E8D5C4);
+        }
+
+        .preset-pill {
+            padding: 4px 14px;
+            font-size: 12px;
+            border-radius: 20px;
+            border: none;
+            background: linear-gradient(135deg, #8D6E63, #6D4C41);
+            color: #FFF8E1;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .preset-pill:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(109,76,65,0.3);
+        }
+        .preset-row {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin: 8px 0;
+        }
+
+        .label-controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 8px;
+            background: #FFFAF0;
+            border-radius: 8px;
+            border: 1px solid #D7CCC8;
+            margin-bottom: 6px;
+        }
+        .label-controls-row .control-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #5D4037;
+        }
+        .label-controls-row .control-item select {
+            padding: 3px 6px;
+            font-size: 12px;
+            border: 1px solid #D7CCC8;
+            border-radius: 5px;
+            background: #fff;
+            max-width: 130px;
+        }
+        .label-controls-row .control-item input[type="range"] {
+            width: 60px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #D7CCC8;
+            border-radius: 2px;
+            outline: none;
+        }
+        .label-controls-row .control-item input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: linear-gradient(135deg, #6D4C41, #5D4037);
+            cursor: pointer;
+        }
+        .label-controls-row .control-item input[type="range"]::-moz-range-thumb {
+            width: 14px; height: 14px; border-radius: 50%;
+            background: linear-gradient(135deg, #6D4C41, #5D4037);
+            cursor: pointer; border: none;
+        }
+
+        .bg-color-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            background: #FFFAF0;
+            border-radius: 8px;
+            border: 1px solid #D7CCC8;
+            margin-bottom: 6px;
+        }
+        .bg-color-row label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #5D4037;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        .grid-editor-wrap {
+            overflow-x: auto;
+            margin: 15px 0;
+            padding: 10px;
+            background: #FFFAF0;
+            border-radius: 10px;
+            border: 2px solid #D7CCC8;
+        }
+        .grid-editor-wrap h3 {
+            font-size: 14px;
+            color: #5D4037;
+            margin-bottom: 8px;
+        }
+        .grid-editor {
+            border-collapse: separate;
+            border-spacing: 4px;
+            margin: 0 auto;
+        }
+        .grid-editor td {
+            width: 90px;
+            height: 90px;
+            border: 2px dashed #D7CCC8;
+            border-radius: 6px;
+            vertical-align: middle;
+            text-align: center;
+            position: relative;
+            background: #FFFAF0;
+            cursor: default;
+            font-size: 11px;
+            color: #A1887F;
+            overflow: hidden;
+            padding: 0;
+        }
+        .grid-editor td.cell-image {
+            border-style: solid;
+            border-color: #8D6E63;
+        }
+        .grid-editor td.cell-text {
+            border-style: solid;
+            border-color: #5D4037;
+        }
+        .grid-editor td.drag-over-cell {
+            outline: 3px solid #6D4C41;
+            outline-offset: -3px;
+            background: #FFF8E1;
+        }
+        .grid-editor td img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 4px;
+        }
+        .grid-editor td .cell-edit-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(109,76,65,0.85);
+            color: #FFF8E1;
+            border: none;
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 11px;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .grid-editor td .cell-edit-btn:hover { background: rgba(62,39,35,1); }
+        .grid-editor td .cell-text-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            overflow: hidden;
+            word-break: break-word;
+            font-size: 10px;
+            line-height: 1.2;
+        }
+        .grid-add-btn {
+            background: #FFFAF0;
+            border: 2px dashed #BCAAA4;
+            border-radius: 4px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #8D6E63;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+        }
+        .grid-add-btn:hover { border-color: #6D4C41; color: #5D4037; }
+        .grid-del-btn {
+            background: rgba(229,62,62,0.75);
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+        }
+        .grid-del-btn:hover { background: rgba(229,62,62,1); }
+
+        .image-pool {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 10px;
+            background: #FFFAF0;
+            border: 2px dashed #D7CCC8;
+            border-radius: 8px;
+            min-height: 70px;
+            margin: 10px 0;
+            align-items: center;
+        }
+        .image-pool-empty {
+            color: #A1887F;
+            font-style: italic;
+            font-size: 13px;
+            padding: 10px;
+        }
+        .pool-thumb {
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+            border: 2px solid #8D6E63;
+            background: #fff;
+        }
+        .pool-thumb:active { cursor: grabbing; }
+        .pool-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+        .pool-thumb .pool-remove {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            background: rgba(229,62,62,0.9);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
     </style>
 </head>
 <body>
@@ -1012,8 +1377,6 @@
                     <div class="button-row">
                         <button type="button" class="btn btn-compact" id="addUrlBtn">Add URL</button>
                         <button type="button" class="btn btn-compact" id="clearUrlBtn">Clear</button>
-                        <button type="button" class="btn btn-compact" id="addTextCellBtn">Add Text Cell</button>
-                        <button type="button" class="btn btn-compact" id="addEmptyCellBtn">Add Empty Cell</button>
                     </div>
                 </div>
 
@@ -1022,124 +1385,143 @@
                 </div>
 
                 <div class="controls-section">
-                    <h3>🎛️ Layout Controls</h3>
-                    <div class="controls-grid">
-                        <div class="control-group">
-                            <label for="rowsSlider">Rows: <span id="rowsValue">5</span></label>
-                            <div class="slider-container">
-                                <button class="increment-btn" onclick="adjustRows(-1)">-</button>
-                                <input type="range" id="rowsSlider" min="1" max="10" value="5" class="slider">
-                                <button class="increment-btn" onclick="adjustRows(1)">+</button>
+                    <button class="controls-collapse-btn" id="controlsCollapseBtn" onclick="toggleControlsCollapse()">🎛️ Layout &amp; Style <span class="collapse-arrow">▼</span></button>
+                    <div class="controls-collapsible" id="controlsBody">
+                        <div class="compact-slider-row">
+                            <span class="csr-label">Rows: <strong id="rowsValue">3</strong></span>
+                            <button class="increment-btn" onclick="adjustRows(-1)">−</button>
+                            <input type="range" id="rowsSlider" min="1" max="10" value="3" class="slider">
+                            <button class="increment-btn" onclick="adjustRows(1)">+</button>
+                        </div>
+                        <div class="compact-slider-row">
+                            <span class="csr-label">Cols: <strong id="colsValue">3</strong></span>
+                            <button class="increment-btn" onclick="adjustCols(-1)">−</button>
+                            <input type="range" id="colsSlider" min="1" max="10" value="3" class="slider">
+                            <button class="increment-btn" onclick="adjustCols(1)">+</button>
+                        </div>
+                        <div class="compact-slider-row">
+                            <span class="csr-label">Cell Width: <strong id="cellWidthValue">500px</strong></span>
+                            <button class="increment-btn" onclick="adjustCellWidth(-1)">−</button>
+                            <input type="range" id="cellWidthSlider" min="50" max="1000" value="500" class="slider">
+                            <button class="increment-btn" onclick="adjustCellWidth(1)">+</button>
+                        </div>
+                        <div class="compact-slider-row">
+                            <span class="csr-label">Cell Height: <strong id="cellHeightValue">800px</strong></span>
+                            <button class="increment-btn" onclick="adjustCellHeight(-1)">−</button>
+                            <input type="range" id="cellHeightSlider" min="50" max="1000" value="800" class="slider">
+                            <button class="increment-btn" onclick="adjustCellHeight(1)">+</button>
+                        </div>
+                        <div class="compact-slider-row">
+                            <span class="csr-label">Spacing: <strong id="cellSpacingValue">5px</strong></span>
+                            <button class="increment-btn" onclick="adjustCellSpacing(-1)">−</button>
+                            <input type="range" id="cellSpacingSlider" min="0" max="50" value="5" class="slider">
+                            <button class="increment-btn" onclick="adjustCellSpacing(1)">+</button>
+                        </div>
+
+                        <div class="preset-row">
+                            <button type="button" class="preset-pill" onclick="setPreset(1000, 1000)">Square</button>
+                            <button type="button" class="preset-pill" onclick="setPreset(500, 800)">Portrait</button>
+                            <button type="button" class="preset-pill" onclick="setPreset(800, 500)">Landscape</button>
+                        </div>
+
+                        <div class="icon-toolbar">
+                            <button type="button" class="toolbar-pill" id="tbAspectLock" onclick="toggleAspectRatioLockBtn()" title="Lock Aspect Ratio">🔒</button>
+                            <button type="button" class="toolbar-pill" id="tbLabels" onclick="toggleShowLabelsBtn()" title="Show Labels">🏷️</button>
+                            <button type="button" class="toolbar-pill" id="tbBgColor" onclick="toggleBgColorRow()" title="Background Colour">🎨</button>
+                        </div>
+
+                        <div class="bg-color-row" id="bgColorRow" style="display:none">
+                            <label>Background</label>
+                            <div id="collageBgColorPicker"></div>
+                        </div>
+
+                        <div class="label-controls-row" id="labelControlsRow" style="display:none">
+                            <div class="control-item">
+                                <span>Size:</span>
+                                <input type="range" id="labelFontSlider" min="10" max="240" value="48">
+                                <span id="labelFontValue">48px</span>
+                            </div>
+                            <div class="control-item">
+                                <span>Font:</span>
+                                <select id="labelFontSelect" onchange="updateLabelFontStyle()">
+                                    <option value="ARDECODE, monospace">ARDECODE</option>
+                                    <option value="Arial, sans-serif">Arial</option>
+                                    <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                                    <option value="'Courier New', monospace">Courier New</option>
+                                    <option value="'Dancing Script', cursive">Dancing Script</option>
+                                    <option value="Georgia, serif">Georgia</option>
+                                    <option value="Impact, sans-serif">Impact</option>
+                                    <option value="'Lilita One', cursive" selected>Lilita One</option>
+                                    <option value="'Lobster', cursive">Lobster</option>
+                                    <option value="'Merriweather', serif">Merriweather</option>
+                                    <option value="'Nunito', sans-serif">Nunito</option>
+                                    <option value="'Oswald', sans-serif">Oswald</option>
+                                    <option value="'Pacifico', cursive">Pacifico</option>
+                                    <option value="'Palatino', serif">Palatino</option>
+                                    <option value="'Playfair Display', serif">Playfair Display</option>
+                                    <option value="'Raleway', sans-serif">Raleway</option>
+                                    <option value="'Righteous', cursive">Righteous</option>
+                                    <option value="'Segoe UI', sans-serif">Segoe UI</option>
+                                    <option value="'Times New Roman', serif">Times New Roman</option>
+                                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                                    <option value="Verdana, sans-serif">Verdana</option>
+                                </select>
+                            </div>
+                            <div class="control-item">
+                                <span>Outline:</span>
+                                <input type="range" id="labelOutlineSlider" min="0" max="40" value="20">
+                                <span id="labelOutlineValue">20px</span>
+                            </div>
+                            <div class="control-item">
+                                <span>Text:</span>
+                                <div id="labelTextColorPicker"></div>
+                            </div>
+                            <div class="control-item">
+                                <span>Stroke:</span>
+                                <div id="labelOutlineColorPicker"></div>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label for="cellWidthSlider">Cell Width: <span id="cellWidthValue">500px</span></label>
-                            <div class="slider-container">
-                                <button class="increment-btn" onclick="adjustCellWidth(-1)">-</button>
-                                <input type="range" id="cellWidthSlider" min="50" max="1000" value="500" class="slider">
-                                <button class="increment-btn" onclick="adjustCellWidth(1)">+</button>
+
+                        <div style="margin-top:8px">
+                            <div class="icon-toolbar" style="justify-content:flex-start;margin:0 0 6px">
+                                <button type="button" class="toolbar-pill" id="tbBorders" onclick="toggleBordersBtn()" title="Show Borders">🔲 Borders</button>
+                            </div>
+                            <div id="borderControlsRow" style="display:none">
+                                <div class="label-controls-row">
+                                    <div class="control-item">
+                                        <span>Width:</span>
+                                        <input type="range" id="borderThicknessSlider" min="1" max="20" value="2" oninput="borderThickness=parseInt(this.value);document.getElementById('borderThicknessVal').textContent=this.value+'px'">
+                                        <span id="borderThicknessVal">2px</span>
+                                    </div>
+                                    <div class="control-item">
+                                        <span>Colour:</span>
+                                        <div id="borderColorPicker"></div>
+                                    </div>
+                                </div>
+                                <div class="icon-toolbar" style="margin:6px 0">
+                                    <button type="button" class="toolbar-pill border-mode-btn active" data-bmode="all" onclick="setBorderMode('all')">All</button>
+                                    <button type="button" class="toolbar-pill border-mode-btn" data-bmode="outer" onclick="setBorderMode('outer')">Outer</button>
+                                    <button type="button" class="toolbar-pill border-mode-btn" data-bmode="inner" onclick="setBorderMode('inner')">Inner</button>
+                                    <button type="button" class="toolbar-pill border-mode-btn" data-bmode="custom" onclick="setBorderMode('custom')">Custom</button>
+                                </div>
+                                <div id="borderCustomRow" style="display:none" class="label-controls-row">
+                                    <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;margin:0;cursor:pointer"><input type="checkbox" checked onchange="borderSides.top=this.checked" style="accent-color:#6D4C41"> Top</label>
+                                    <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;margin:0;cursor:pointer"><input type="checkbox" checked onchange="borderSides.right=this.checked" style="accent-color:#6D4C41"> Right</label>
+                                    <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;margin:0;cursor:pointer"><input type="checkbox" checked onchange="borderSides.bottom=this.checked" style="accent-color:#6D4C41"> Bottom</label>
+                                    <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;margin:0;cursor:pointer"><input type="checkbox" checked onchange="borderSides.left=this.checked" style="accent-color:#6D4C41"> Left</label>
+                                </div>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label for="cellHeightSlider">Cell Height: <span id="cellHeightValue">800px</span></label>
-                            <div class="slider-container">
-                                <button class="increment-btn" onclick="adjustCellHeight(-1)">-</button>
-                                <input type="range" id="cellHeightSlider" min="50" max="1000" value="800" class="slider">
-                                <button class="increment-btn" onclick="adjustCellHeight(1)">+</button>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label for="cellSpacingSlider">Cell Spacing: <span id="cellSpacingValue">5px</span></label>
-                            <div class="slider-container">
-                                <button class="increment-btn" onclick="adjustCellSpacing(-1)">-</button>
-                                <input type="range" id="cellSpacingSlider" min="0" max="50" value="5" class="slider">
-                                <button class="increment-btn" onclick="adjustCellSpacing(1)">+</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="toggle-section">
-                        <input type="checkbox" id="aspectRatioLock" onchange="toggleAspectRatioLock()">
-                        <label for="aspectRatioLock">🔒 Lock Aspect Ratio (5:8)</label>
-                    </div>
-
-                    <div class="toggle-section">
-                        <input type="checkbox" id="showLabelsToggle" onchange="toggleShowLabels()">
-                        <label for="showLabelsToggle">🏷️ Enable Image Labels</label>
-                    </div>
-
-                    <div class="control-group" id="labelFontSizeControl" style="display: none;">
-                        <label for="labelFontSlider">Label Font Size: <span id="labelFontValue">48px</span></label>
-                        <div class="slider-container">
-                            <button class="increment-btn" onclick="adjustLabelFont(-1)">-</button>
-                            <input type="range" id="labelFontSlider" min="10" max="240" value="48" class="slider">
-                            <button class="increment-btn" onclick="adjustLabelFont(1)">+</button>
-                        </div>
-                    </div>
-                    
-                    <div class="control-group" id="labelFontStyleControl" style="display: none;">
-                        <label for="labelFontSelect">Label Font Style:</label>
-                        <select id="labelFontSelect" class="font-select" onchange="updateLabelFontStyle()">
-                            <option value="ARDECODE, monospace">ARDECODE</option>
-                            <option value="Arial, sans-serif">Arial</option>
-                            <option value="'Comic Sans MS', cursive">Comic Sans</option>
-                            <option value="'Courier New', monospace">Courier New</option>
-                            <option value="'Dancing Script', cursive">Dancing Script</option>
-                            <option value="Georgia, serif">Georgia</option>
-                            <option value="Impact, sans-serif">Impact</option>
-                            <option value="'Lilita One', cursive" selected>Lilita One (Default)</option>
-                            <option value="'Lobster', cursive">Lobster</option>
-                            <option value="'Merriweather', serif">Merriweather</option>
-                            <option value="'Nunito', sans-serif">Nunito</option>
-                            <option value="'Oswald', sans-serif">Oswald</option>
-                            <option value="'Pacifico', cursive">Pacifico</option>
-                            <option value="'Palatino', serif">Palatino</option>
-                            <option value="'Playfair Display', serif">Playfair Display</option>
-                            <option value="'Raleway', sans-serif">Raleway</option>
-                            <option value="'Righteous', cursive">Righteous</option>
-                            <option value="'Segoe UI', sans-serif">Segoe UI</option>
-                            <option value="'Times New Roman', serif">Times New Roman</option>
-                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                            <option value="Verdana, sans-serif">Verdana</option>
-                        </select>
-                    </div>
-
-                    <div class="control-group" id="labelOutlineControl" style="display: none;">
-                        <label for="labelOutlineSlider">Label Outline Width: <span id="labelOutlineValue">20px</span></label>
-                        <div class="slider-container">
-                            <button class="increment-btn" onclick="adjustLabelOutline(-1)">-</button>
-                            <input type="range" id="labelOutlineSlider" min="0" max="40" value="20" class="slider">
-                            <button class="increment-btn" onclick="adjustLabelOutline(1)">+</button>
-                        </div>
-                    </div>
-
-                    <div class="preset-buttons">
-                        <button type="button" class="btn preset-btn" onclick="setPreset(1000, 1000)">Square</button>
-                        <button type="button" class="btn preset-btn" onclick="setPreset(500, 800)">Portrait</button>
-                        <button type="button" class="btn preset-btn" onclick="setPreset(800, 500)">Landscape</button>
-                    </div>
-
-                    <div class="toggle-section" style="justify-content:space-between">
-                        <label for="collageBgColor" style="font-weight:600;color:#5D4037;margin:0;cursor:pointer">🎨 Collage Background Colour</label>
-                        <input type="color" id="collageBgColor" value="#ffffff" style="width:44px;height:32px;border:2px solid #D7CCC8;border-radius:6px;padding:2px;cursor:pointer;background:none" onchange="updateCollageBg()">
                     </div>
                 </div>
 
-                <div class="sort-row" id="sortButtons" style="display: none;">
-                    <span>Sort:</span>
-                    <select onchange="if(this.value){const[f,d]=this.value.split('-');sortImages(f,d);this.value=''}">
-                        <option value="">— choose —</option>
-                        <option value="label-asc">Name A → Z</option>
-                        <option value="label-desc">Name Z → A</option>
-                        <option value="date-asc">Date oldest first</option>
-                        <option value="date-desc">Date newest first</option>
-                    </select>
+                <div class="image-pool" id="imagePool">
+                    <span class="image-pool-empty">Upload images above — they appear here for placement into the grid</span>
                 </div>
 
-                <div class="images-grid" id="imagesGrid">
-                    <div class="empty-state">
-                        No images added yet. Start by uploading or dragging images above.
-                    </div>
+                <div class="grid-editor-wrap">
+                    <h3>📐 Grid Editor</h3>
+                    <div id="gridEditorContainer"></div>
                 </div>
 
                 <div class="generate-section">
@@ -1209,6 +1591,18 @@
                     </button>
                 </div>` : ''}
             `;
+            if (state.showAppMenu) {
+                requestAnimationFrame(() => {
+                    const hamburger = header.querySelector('.app-header-hamburger');
+                    const dropdown = document.getElementById('appMenuDropdown');
+                    if (hamburger && dropdown) {
+                        const hRect = hamburger.getBoundingClientRect();
+                        const headerRect = header.getBoundingClientRect();
+                        const centerX = hRect.left + hRect.width / 2 - headerRect.left;
+                        dropdown.style.left = Math.max(0, centerX - dropdown.offsetWidth / 2) + 'px';
+                    }
+                });
+            }
         }
 
         // Close menu when clicking outside
@@ -1221,8 +1615,47 @@
             }
         });
 
-        let images = [];
-        let userRows = 5;
+        function toRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r},${g},${b},${alpha})`;
+        }
+
+        function makeColorPicker(container, initialHex, initialAlpha, onChange) {
+            if (typeof container === 'string') container = document.getElementById(container);
+            const cpState = { hex: initialHex, alpha: initialAlpha };
+            container.classList.add('color-picker-inline');
+            const colorInput = document.createElement('input');
+            colorInput.type = 'color';
+            colorInput.value = initialHex;
+            const rangeInput = document.createElement('input');
+            rangeInput.type = 'range';
+            rangeInput.min = '0';
+            rangeInput.max = '100';
+            rangeInput.value = Math.round(initialAlpha * 100);
+            const lbl = document.createElement('span');
+            lbl.className = 'alpha-label';
+            lbl.textContent = Math.round(initialAlpha * 100) + '%';
+            colorInput.addEventListener('input', () => {
+                cpState.hex = colorInput.value;
+                onChange(cpState);
+            });
+            rangeInput.addEventListener('input', () => {
+                cpState.alpha = parseInt(rangeInput.value) / 100;
+                lbl.textContent = rangeInput.value + '%';
+                onChange(cpState);
+            });
+            container.appendChild(colorInput);
+            container.appendChild(rangeInput);
+            container.appendChild(lbl);
+            return cpState;
+        }
+
+        let grid = [];
+        let numRows = 3;
+        let numCols = 3;
+        let imagePool = [];
         let userCellWidth = 500;
         let userCellHeight = 800;
         let userCellSpacing = 5;
@@ -1232,31 +1665,104 @@
         let labelFontSize = 48;
         let labelFontStyle = "'Lilita One', cursive";
         let labelOutlineWidth = 20;
-        let collageBgColor = '#ffffff';
+        let collageBgColor = { hex: '#ffffff', alpha: 0.0 };
+        let labelTextColor = { hex: '#ffffff', alpha: 1.0 };
+        let labelOutlineColor = { hex: '#000000', alpha: 1.0 };
+        let showBorders = false;
+        let borderThickness = 2;
+        let borderColor = { hex: '#000000', alpha: 1.0 };
+        let borderMode = 'all';
+        let borderSides = { top: true, right: true, bottom: true, left: true };
+
+        function makeEmptyCell() {
+            return { type: 'empty', element: null, url: null, filename: null, filesize: null, label: '', colspan: 1, rowspan: 1, bgColor: '#ffffff', bgAlpha: 0.0, text: '', fontFamily: "'Lilita One', cursive", fontSize: 48, bold: false, italic: false, color: '#FFFFFF', colorAlpha: 1.0, align: 'center', valign: 'middle', autofill: false, dateAdded: Date.now() };
+        }
+
+        function initGrid() {
+            grid = [];
+            for (let r = 0; r < numRows; r++) {
+                grid[r] = [];
+                for (let c = 0; c < numCols; c++) {
+                    grid[r][c] = makeEmptyCell();
+                }
+            }
+        }
+
+        function resizeGrid(newRows, newCols) {
+            const oldGrid = grid;
+            const oldRows = oldGrid.length;
+            const oldCols = oldRows > 0 ? oldGrid[0].length : 0;
+            grid = [];
+            for (let r = 0; r < newRows; r++) {
+                grid[r] = [];
+                for (let c = 0; c < newCols; c++) {
+                    if (r < oldRows && c < oldCols) {
+                        grid[r][c] = oldGrid[r][c];
+                        // Clamp span to fit new dimensions
+                        if (grid[r][c].colspan > newCols - c) grid[r][c].colspan = newCols - c;
+                        if (grid[r][c].rowspan > newRows - r) grid[r][c].rowspan = newRows - r;
+                    } else {
+                        grid[r][c] = makeEmptyCell();
+                    }
+                }
+            }
+            // Return removed non-empty cells' images to pool
+            for (let r = 0; r < oldRows; r++) {
+                for (let c = 0; c < oldCols; c++) {
+                    if (r >= newRows || c >= newCols) {
+                        const cell = oldGrid[r][c];
+                        if (cell.type === 'image' && cell.url) {
+                            imagePool.push({ element: cell.element, url: cell.url, filename: cell.filename, filesize: cell.filesize, aspectRatio: cell.element ? cell.element.width / cell.element.height : 1, label: cell.label, dateAdded: cell.dateAdded });
+                        }
+                    }
+                }
+            }
+            numRows = newRows;
+            numCols = newCols;
+        }
+
+        function getShadowSet() {
+            const shadow = new Set();
+            for (let r = 0; r < numRows; r++) {
+                for (let c = 0; c < numCols; c++) {
+                    const cell = grid[r] && grid[r][c];
+                    if (!cell) continue;
+                    const cs = Math.min(cell.colspan || 1, numCols - c);
+                    const rs = Math.min(cell.rowspan || 1, numRows - r);
+                    for (let dr = 0; dr < rs; dr++) {
+                        for (let dc = 0; dc < cs; dc++) {
+                            if (dr === 0 && dc === 0) continue;
+                            shadow.add(`${r+dr},${c+dc}`);
+                        }
+                    }
+                }
+            }
+            return shadow;
+        }
+
+        initGrid();
 
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const urlInput = document.getElementById('urlInput');
         const addUrlBtn = document.getElementById('addUrlBtn');
         const clearUrlBtn = document.getElementById('clearUrlBtn');
-        const addTextCellBtn = document.getElementById('addTextCellBtn');
-        const addEmptyCellBtn = document.getElementById('addEmptyCellBtn');
         const imageCounter = document.getElementById('imageCounter');
-        const imagesGrid = document.getElementById('imagesGrid');
         const generateBtn = document.getElementById('generateBtn');
         const collagePreview = document.getElementById('collagePreview');
         const collageCanvas = document.getElementById('collageCanvas');
         const downloadBtn = document.getElementById('downloadBtn');
 
         const rowsSlider = document.getElementById('rowsSlider');
+        const colsSlider = document.getElementById('colsSlider');
         const cellWidthSlider = document.getElementById('cellWidthSlider');
         const cellHeightSlider = document.getElementById('cellHeightSlider');
         const cellSpacingSlider = document.getElementById('cellSpacingSlider');
         const rowsValue = document.getElementById('rowsValue');
+        const colsValue = document.getElementById('colsValue');
         const cellWidthValue = document.getElementById('cellWidthValue');
         const cellHeightValue = document.getElementById('cellHeightValue');
         const cellSpacingValue = document.getElementById('cellSpacingValue');
-        const aspectRatioLock = document.getElementById('aspectRatioLock');
 
         const labelFontSlider = document.getElementById('labelFontSlider');
         const labelOutlineSlider = document.getElementById('labelOutlineSlider');
@@ -1271,12 +1777,11 @@
         fileInput.addEventListener('change', handleFileSelect);
         addUrlBtn.addEventListener('click', addImageFromUrl);
         clearUrlBtn.addEventListener('click', clearUrlInput);
-        addTextCellBtn.addEventListener('click', addTextCell);
-        addEmptyCellBtn.addEventListener('click', addEmptyCell);
         generateBtn.addEventListener('click', generateCollage);
         downloadBtn.addEventListener('click', downloadCollage);
 
         rowsSlider.addEventListener('input', updateRows);
+        colsSlider.addEventListener('input', updateCols);
         cellWidthSlider.addEventListener('input', updateCellWidth);
         cellHeightSlider.addEventListener('input', updateCellHeight);
         cellSpacingSlider.addEventListener('input', updateCellSpacing);
@@ -1322,9 +1827,15 @@
         });
 
         function adjustRows(delta) {
-            const newValue = Math.max(1, Math.min(10, userRows + delta));
+            const newValue = Math.max(1, Math.min(10, numRows + delta));
             rowsSlider.value = newValue;
             updateRows();
+        }
+
+        function adjustCols(delta) {
+            const newValue = Math.max(1, Math.min(10, numCols + delta));
+            colsSlider.value = newValue;
+            updateCols();
         }
 
         function adjustCellWidth(delta) {
@@ -1345,22 +1856,21 @@
             updateCellSpacing();
         }
 
-        function toggleAspectRatioLock() {
-            aspectRatioLocked = aspectRatioLock.checked;
+        function toggleAspectRatioLockBtn() {
+            aspectRatioLocked = !aspectRatioLocked;
+            const btn = document.getElementById('tbAspectLock');
+            if (btn) btn.classList.toggle('active', aspectRatioLocked);
             if (aspectRatioLocked) {
                 currentAspectRatio = userCellWidth / userCellHeight;
-                updateAspectRatioLabel();
             }
         }
 
+        function toggleAspectRatioLock() {
+            toggleAspectRatioLockBtn();
+        }
+
         function updateAspectRatioLabel() {
-            const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-            const divisor = gcd(userCellWidth, userCellHeight);
-            const ratioW = userCellWidth / divisor;
-            const ratioH = userCellHeight / divisor;
-            
-            const label = aspectRatioLock.nextElementSibling;
-            label.textContent = `🔒 Lock Aspect Ratio (${ratioW}:${ratioH})`;
+            // no-op: ratio info now implied by toolbar pill
         }
 
         function convertDiscordUrl(url) {
@@ -1388,39 +1898,21 @@
         }
 
         async function addImageFromBlob(blob, filename, filesize = blob.size) {
-            // Add duplicate check for files
-            const isDuplicate = images.some(img => 
-                img.filename === filename && 
-                img.filesize === filesize
-            );
-            
+            const isDuplicate = imagePool.some(img => img.filename === filename && img.filesize === filesize);
             if (isDuplicate) {
                 const shouldAdd = await showDuplicateDialog(filename);
-                if (!shouldAdd) {
-                    return;
-                }
+                if (!shouldAdd) return;
             }
-            
             try {
                 const url = URL.createObjectURL(blob);
                 const img = await loadImageFromUrl(url);
-                
-                images.push({
-                    type: 'image',
-                    element: img,
-                    filename: filename,
-                    filesize: filesize,
-                    url: url,
-                    aspectRatio: img.width / img.height,
-                    label: filename.replace(/\.[^/.]+$/, ''),
-                    colspan: 1,
-                    rowspan: 1,
-                    dateAdded: Date.now()
+                imagePool.push({
+                    element: img, filename: filename, filesize: filesize,
+                    url: url, aspectRatio: img.width / img.height,
+                    label: filename.replace(/\.[^/.]+$/, ''), dateAdded: Date.now()
                 });
-                
                 updateUI();
-                showPopupStatus(`✅ Added ${filename}`, 'success');
-                
+                showPopupStatus(`✅ Added ${filename} to pool`, 'success');
             } catch (error) {
                 showPopupStatus(`Failed to add ${filename}: ${error.message}`, 'error');
             }
@@ -1428,56 +1920,29 @@
 
         async function addImageFromUrl() {
             let url = urlInput.value.trim();
-            
-            if (!url) {
-                showPopupStatus('Please enter an image URL!', 'error');
-                return;
-            }
-            
+            if (!url) { showPopupStatus('Please enter an image URL!', 'error'); return; }
             const originalUrl = url;
             url = convertDiscordUrl(url);
-            
-            if (url !== originalUrl) {
-                showPopupStatus('🔄 Auto-converted Discord CDN URL', 'info');
-            }
-            
+            if (url !== originalUrl) showPopupStatus('🔄 Auto-converted Discord CDN URL', 'info');
             try {
-                const isDuplicate = images.some(existingImg => existingImg.url === url);
-                if (isDuplicate) {
-                    const shouldAdd = await showDuplicateDialog('URL Image');
-                    if (!shouldAdd) return;
-                }
-
+                const isDuplicate = imagePool.some(p => p.url === url);
+                if (isDuplicate) { const shouldAdd = await showDuplicateDialog('URL Image'); if (!shouldAdd) return; }
                 addUrlBtn.innerHTML = '<div class="loading"></div>Loading...';
                 addUrlBtn.disabled = true;
-
                 const img = await loadImageFromUrl(url);
-                const defaultLabel = 'URL Image';
-
-                images.push({
-                    type: 'image',
-                    element: img,
-                    filename: 'URL Image',
-                    filesize: 0,
-                    url: url,
-                    aspectRatio: img.width / img.height,
-                    label: defaultLabel,
-                    colspan: 1,
-                    rowspan: 1,
-                    dateAdded: Date.now()
+                imagePool.push({
+                    element: img, filename: 'URL Image', filesize: 0,
+                    url: url, aspectRatio: img.width / img.height,
+                    label: 'URL Image', dateAdded: Date.now()
                 });
-                
                 updateUI();
                 urlInput.value = '';
-                showPopupStatus('✅ Image added from URL!', 'success');
-                
+                showPopupStatus('✅ Image added to pool!', 'success');
             } catch (error) {
                 let errorMessage = `Failed to load image: ${error.message}`;
-                
                 if (originalUrl.includes('cdn.discordapp.com') && url === originalUrl) {
                     errorMessage += '. Try using media.discordapp.net instead of cdn.discordapp.com';
                 }
-                
                 showPopupStatus(errorMessage, 'error');
             } finally {
                 addUrlBtn.innerHTML = 'Add URL';
@@ -1485,176 +1950,153 @@
             }
         }
 
-        function addEmptyCell() {
-            images.push({
-                type: 'empty',
-                element: null,
-                filename: 'Empty Cell',
-                filesize: 0,
-                url: null,
-                aspectRatio: 1,
-                label: '',
-                colspan: 1,
-                rowspan: 1,
-                dateAdded: Date.now()
-            });
-            
-            updateUI();
-            showPopupStatus('✅ Empty cell added!', 'success');
-        }
-
-        function addTextCell() {
-            images.push({
-                type: 'text',
-                text: '',
-                fontFamily: "'Lilita One', cursive",
-                fontSize: 48,
-                bold: false,
-                italic: false,
-                color: '#FFFFFF',
-                bgColor: '#5D4037',
-                align: 'center',
-                valign: 'middle',
-                autofill: false,
-                filename: 'Text Cell',
-                filesize: 0,
-                url: null,
-                aspectRatio: 1,
-                label: '',
-                colspan: 1,
-                rowspan: 1,
-                dateAdded: Date.now()
-            });
-            updateUI();
-            const newIndex = images.length - 1;
-            openTextCellModal(newIndex);
-        }
-
-        function openTextCellModal(index) {
-            const cell = images[index];
+        function openCellModal(row, col) {
+            const cell = grid[row][col];
             const overlay = document.createElement('div');
             overlay.className = 'cell-modal-overlay';
+
+            const typeOptions = ['empty', 'image', 'text'].map(t =>
+                `<option value="${t}" ${cell.type === t ? 'selected' : ''}>${t.charAt(0).toUpperCase() + t.slice(1)}</option>`
+            ).join('');
+
+            const isText = cell.type === 'text';
+            const isImage = cell.type === 'image';
+
+            // Check merge possibilities
+            const canMergeRight = (col + (cell.colspan || 1)) < numCols;
+            const canMergeDown = (row + (cell.rowspan || 1)) < numRows;
+
             overlay.innerHTML = `
-                <div class="cell-modal" id="cellModalBox">
-                    <h3>✏️ Edit Text Cell</h3>
-                    <label>Text content</label>
-                    <textarea id="tcText" rows="4">${escapeHtml(cell.text)}</textarea>
-                    <div style="display:flex;align-items:center;gap:10px;margin-top:10px;padding:7px 10px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
-                        <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41;flex-shrink:0">
-                        <label for="tcAutofill" style="margin:0;font-size:13px;cursor:pointer">🔡 Autofill — shrink font to fit cell</label>
-                    </div>
-                    <div class="cell-modal-row">
-                        <div>
-                            <label>Font size (px)</label>
-                            <input type="number" id="tcFontSize" min="8" max="500" value="${cell.fontSize || 48}">
+                <div class="cell-modal">
+                    <h3>✏️ Cell [${row},${col}]</h3>
+                    <label>Cell type</label>
+                    <select id="cmType">${typeOptions}</select>
+                    ${isImage && cell.url ? `<div style="margin:8px 0;text-align:center"><img src="${cell.url}" style="max-width:120px;max-height:80px;border-radius:6px;border:2px solid #D7CCC8"></div>` : ''}
+                    <div id="cmTextFields" style="display:${isText ? 'block' : 'none'}">
+                        <label>Text content</label>
+                        <textarea id="tcText" rows="3">${escapeHtml(cell.text || '')}</textarea>
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding:6px 8px;background:#FFF8E1;border-radius:7px;border:1px solid #D7CCC8">
+                            <input type="checkbox" id="tcAutofill" ${cell.autofill ? 'checked' : ''} style="width:16px;height:16px;accent-color:#6D4C41;flex-shrink:0">
+                            <label for="tcAutofill" style="margin:0;font-size:12px;cursor:pointer">🔡 Autofill</label>
                         </div>
-                        <div>
-                            <label>Text colour</label>
-                            <input type="color" id="tcColor" value="${cell.color || '#ffffff'}" style="width:100%;height:38px;border-radius:7px;border:2px solid #D7CCC8;padding:2px;cursor:pointer">
+                        <div class="cell-modal-row">
+                            <div><label>Font size</label><input type="number" id="tcFontSize" min="8" max="500" value="${cell.fontSize || 48}"></div>
+                            <div><label>Text colour</label><div id="tcColorPicker"></div></div>
+                        </div>
+                        <label>Background colour</label>
+                        <div id="tcBgColorPicker"></div>
+                        <label>Font family</label>
+                        <select id="tcFont">${fontOptions().map(f => `<option value="${f.value}" ${cell.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}</select>
+                        <label>Horizontal alignment</label>
+                        <div class="modal-align-row">
+                            <button type="button" class="align-btn ${(cell.align||'center')==='left'?'active':''}" data-align="left">⬛ Left</button>
+                            <button type="button" class="align-btn ${(cell.align||'center')==='center'?'active':''}" data-align="center">▣ Centre</button>
+                            <button type="button" class="align-btn ${(cell.align||'center')==='right'?'active':''}" data-align="right">⬛ Right</button>
+                        </div>
+                        <label>Vertical alignment</label>
+                        <div class="modal-align-row">
+                            <button type="button" class="align-btn ${(cell.valign||'middle')==='top'?'active':''}" data-valign="top">⬆ Top</button>
+                            <button type="button" class="align-btn ${(cell.valign||'middle')==='middle'?'active':''}" data-valign="middle">↕ Middle</button>
+                            <button type="button" class="align-btn ${(cell.valign||'middle')==='bottom'?'active':''}" data-valign="bottom">⬇ Bottom</button>
                         </div>
                     </div>
-                    <label>Background colour</label>
-                    <input type="color" id="tcBgColor" value="${cell.bgColor || '#5d4037'}" style="width:100%;height:38px;border-radius:7px;border:2px solid #D7CCC8;padding:2px;cursor:pointer">
-                    <label>Font family</label>
-                    <select id="tcFont">
-                        ${fontOptions().map(f => `<option value="${f.value}" ${cell.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}
-                    </select>
-                    <label>Horizontal alignment</label>
-                    <div class="modal-align-row">
-                        <button type="button" class="align-btn ${(cell.align||'center')==='left'?'active':''}" data-align="left">⬛ Left</button>
-                        <button type="button" class="align-btn ${(cell.align||'center')==='center'?'active':''}" data-align="center">▣ Centre</button>
-                        <button type="button" class="align-btn ${(cell.align||'center')==='right'?'active':''}" data-align="right">⬛ Right</button>
+                    <div style="margin-top:12px">
+                        <label style="margin:0 0 4px">Cell background colour</label>
+                        <div id="cmBgColorPicker"></div>
                     </div>
-                    <label>Vertical alignment</label>
-                    <div class="modal-align-row">
-                        <button type="button" class="align-btn ${(cell.valign||'middle')==='top'?'active':''}" data-valign="top">⬆ Top</button>
-                        <button type="button" class="align-btn ${(cell.valign||'middle')==='middle'?'active':''}" data-valign="middle">↕ Middle</button>
-                        <button type="button" class="align-btn ${(cell.valign||'middle')==='bottom'?'active':''}" data-valign="bottom">⬇ Bottom</button>
+                    <div class="cell-modal-row" style="margin-top:10px">
+                        <div><label>Colspan</label><input type="number" id="cmColspan" min="1" max="${numCols - col}" value="${cell.colspan || 1}"></div>
+                        <div><label>Rowspan</label><input type="number" id="cmRowspan" min="1" max="${numRows - row}" value="${cell.rowspan || 1}"></div>
+                    </div>
+                    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+                        ${canMergeRight ? `<button type="button" class="btn" id="cmMergeRight" style="font-size:12px;padding:5px 10px">Merge right →</button>` : ''}
+                        ${canMergeDown ? `<button type="button" class="btn" id="cmMergeDown" style="font-size:12px;padding:5px 10px">Merge down ↓</button>` : ''}
+                        ${(cell.colspan > 1 || cell.rowspan > 1) ? `<button type="button" class="btn" id="cmUnmerge" style="font-size:12px;padding:5px 10px">Unmerge</button>` : ''}
+                        <button type="button" class="btn" id="cmClear" style="font-size:12px;padding:5px 10px;background:linear-gradient(135deg,#e53e3e,#c53030)">Clear cell</button>
                     </div>
                     <div class="cell-modal-actions">
-                        <button type="button" class="btn" id="tcCancel">Cancel</button>
-                        <button type="button" class="btn btn-success" id="tcSave">Save</button>
+                        <button type="button" class="btn" id="cmCancel">Cancel</button>
+                        <button type="button" class="btn btn-success" id="cmSave">Save</button>
                     </div>
                 </div>
             `;
             document.body.appendChild(overlay);
 
-            // Align button toggles
+            const cmBgState = makeColorPicker(document.getElementById('cmBgColorPicker'), cell.bgColor || '#ffffff', cell.bgAlpha != null ? cell.bgAlpha : 0.0, () => {});
+            let tcColorState = null, tcBgColorState = null;
+            if (isText) {
+                tcColorState = makeColorPicker(document.getElementById('tcColorPicker'), cell.color || '#ffffff', cell.colorAlpha != null ? cell.colorAlpha : 1.0, () => {});
+                tcBgColorState = makeColorPicker(document.getElementById('tcBgColorPicker'), cell.bgColor || '#5d4037', cell.bgAlpha != null ? cell.bgAlpha : 1.0, () => {});
+            }
+
+            // Type selector shows/hides text fields
+            document.getElementById('cmType').addEventListener('change', function() {
+                const tf = document.getElementById('cmTextFields');
+                tf.style.display = this.value === 'text' ? 'block' : 'none';
+                if (this.value === 'text' && !tcColorState) {
+                    tcColorState = makeColorPicker(document.getElementById('tcColorPicker'), '#ffffff', 1.0, () => {});
+                    tcBgColorState = makeColorPicker(document.getElementById('tcBgColorPicker'), '#5d4037', 1.0, () => {});
+                }
+            });
+
             overlay.querySelectorAll('[data-align]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    overlay.querySelectorAll('[data-align]').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                });
+                btn.addEventListener('click', () => { overlay.querySelectorAll('[data-align]').forEach(b => b.classList.remove('active')); btn.classList.add('active'); });
             });
             overlay.querySelectorAll('[data-valign]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    overlay.querySelectorAll('[data-valign]').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                });
+                btn.addEventListener('click', () => { overlay.querySelectorAll('[data-valign]').forEach(b => b.classList.remove('active')); btn.classList.add('active'); });
             });
 
-            document.getElementById('tcCancel').onclick = () => document.body.removeChild(overlay);
-            overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
-
-            document.getElementById('tcSave').onclick = () => {
-                images[index].text = document.getElementById('tcText').value;
-                images[index].fontSize = Math.max(8, parseInt(document.getElementById('tcFontSize').value) || 48);
-                images[index].color = document.getElementById('tcColor').value;
-                images[index].bgColor = document.getElementById('tcBgColor').value;
-                images[index].fontFamily = document.getElementById('tcFont').value;
-                images[index].autofill = document.getElementById('tcAutofill').checked;
-                const activeAlign = overlay.querySelector('[data-align].active');
-                const activeValign = overlay.querySelector('[data-valign].active');
-                if (activeAlign) images[index].align = activeAlign.dataset.align;
-                if (activeValign) images[index].valign = activeValign.dataset.valign;
+            // Merge buttons
+            const mrBtn = document.getElementById('cmMergeRight');
+            if (mrBtn) mrBtn.onclick = () => {
+                const ci = document.getElementById('cmColspan');
+                ci.value = Math.min(numCols - col, parseInt(ci.value) + 1);
+            };
+            const mdBtn = document.getElementById('cmMergeDown');
+            if (mdBtn) mdBtn.onclick = () => {
+                const ri = document.getElementById('cmRowspan');
+                ri.value = Math.min(numRows - row, parseInt(ri.value) + 1);
+            };
+            const umBtn = document.getElementById('cmUnmerge');
+            if (umBtn) umBtn.onclick = () => {
+                document.getElementById('cmColspan').value = 1;
+                document.getElementById('cmRowspan').value = 1;
+            };
+            document.getElementById('cmClear').onclick = () => {
+                if (cell.type === 'image' && cell.url) {
+                    imagePool.push({ element: cell.element, url: cell.url, filename: cell.filename, filesize: cell.filesize, aspectRatio: cell.element ? cell.element.width / cell.element.height : 1, label: cell.label, dateAdded: cell.dateAdded });
+                }
+                grid[row][col] = makeEmptyCell();
                 document.body.removeChild(overlay);
                 updateUI();
             };
-        }
 
-        function openMergeModal(index) {
-            const cell = images[index];
-            const cols = Math.ceil(images.length / userRows);
-            const showBg = cell.type === 'image' || cell.type === 'empty';
-            const overlay = document.createElement('div');
-            overlay.className = 'cell-modal-overlay';
-            overlay.innerHTML = `
-                <div class="cell-modal" style="max-width:340px">
-                    <h3>⊞ Cell Options</h3>
-                    <div class="cell-modal-row">
-                        <div>
-                            <label>Colspan (columns)</label>
-                            <input type="number" id="mcColspan" min="1" max="${cols}" value="${cell.colspan || 1}">
-                        </div>
-                        <div>
-                            <label>Rowspan (rows)</label>
-                            <input type="number" id="mcRowspan" min="1" max="10" value="${cell.rowspan || 1}">
-                        </div>
-                    </div>
-                    ${showBg ? `
-                    <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
-                        <label style="margin:0">Cell background colour</label>
-                        <input type="color" id="mcBgColor" value="${cell.bgColor || '#ffffff'}" style="width:44px;height:32px;border:2px solid #D7CCC8;border-radius:6px;padding:2px;cursor:pointer">
-                        <button type="button" id="mcBgClear" style="font-size:12px;padding:4px 8px;border:1px solid #D7CCC8;border-radius:5px;background:#FFFAF0;cursor:pointer">Clear</button>
-                    </div>` : ''}
-                    <div class="cell-modal-actions">
-                        <button type="button" class="btn" id="mcCancel">Cancel</button>
-                        <button type="button" class="btn btn-success" id="mcSave">Apply</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-            document.getElementById('mcCancel').onclick = () => document.body.removeChild(overlay);
+            document.getElementById('cmCancel').onclick = () => document.body.removeChild(overlay);
             overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
-            if (showBg && document.getElementById('mcBgClear')) {
-                document.getElementById('mcBgClear').onclick = () => { document.getElementById('mcBgColor').value = '#ffffff'; };
-            }
-            document.getElementById('mcSave').onclick = () => {
-                images[index].colspan = Math.max(1, parseInt(document.getElementById('mcColspan').value) || 1);
-                images[index].rowspan = Math.max(1, parseInt(document.getElementById('mcRowspan').value) || 1);
-                if (showBg) {
-                    const bg = document.getElementById('mcBgColor').value;
-                    images[index].bgColor = bg === '#ffffff' ? null : bg;
+
+            document.getElementById('cmSave').onclick = () => {
+                const newType = document.getElementById('cmType').value;
+                const c = grid[row][col];
+                // If switching from image to non-image, return image to pool
+                if (c.type === 'image' && newType !== 'image' && c.url) {
+                    imagePool.push({ element: c.element, url: c.url, filename: c.filename, filesize: c.filesize, aspectRatio: c.element ? c.element.width / c.element.height : 1, label: c.label, dateAdded: c.dateAdded });
+                }
+                c.type = newType;
+                c.colspan = Math.max(1, parseInt(document.getElementById('cmColspan').value) || 1);
+                c.rowspan = Math.max(1, parseInt(document.getElementById('cmRowspan').value) || 1);
+                c.bgColor = cmBgState.hex;
+                c.bgAlpha = cmBgState.alpha;
+                if (newType === 'text') {
+                    c.text = document.getElementById('tcText').value;
+                    c.fontSize = Math.max(8, parseInt(document.getElementById('tcFontSize').value) || 48);
+                    c.fontFamily = document.getElementById('tcFont').value;
+                    c.autofill = document.getElementById('tcAutofill').checked;
+                    if (tcColorState) { c.color = tcColorState.hex; c.colorAlpha = tcColorState.alpha; }
+                    if (tcBgColorState) { c.bgColor = tcBgColorState.hex; c.bgAlpha = tcBgColorState.alpha; }
+                    const activeAlign = overlay.querySelector('[data-align].active');
+                    const activeValign = overlay.querySelector('[data-valign].active');
+                    if (activeAlign) c.align = activeAlign.dataset.align;
+                    if (activeValign) c.valign = activeValign.dataset.valign;
                 }
                 document.body.removeChild(overlay);
                 updateUI();
@@ -1741,103 +2183,63 @@
             });
         }
 
-        function confirmRemoveImage(index) {
-            const img = images[index];
-            showDeleteDialog(img.filename, index);
-        }
-
-        function showDeleteDialog(filename, index) {
+        function showDeleteDialog(filename, callback) {
             return new Promise((resolve) => {
                 const overlay = document.createElement('div');
                 overlay.className = 'dialog-overlay';
-                
                 const dialog = document.createElement('div');
                 dialog.className = 'duplicate-dialog';
                 dialog.innerHTML = `
                     <h3>🗑️ Delete ${escapeHtml(filename)}?</h3>
-                    <p>Are you sure you want to remove "<strong>${escapeHtml(filename)}</strong>" from the collage?</p>
+                    <p>Are you sure you want to remove "<strong>${escapeHtml(filename)}</strong>"?</p>
                     <div class="dialog-buttons">
                         <button class="btn" id="deleteCancel">Cancel</button>
                         <button class="btn btn-success" id="deleteConfirm" style="background: linear-gradient(135deg, #e53e3e, #c53030);">Delete</button>
                     </div>
                 `;
-                
                 document.body.appendChild(overlay);
                 document.body.appendChild(dialog);
-                
-                document.getElementById('deleteCancel').onclick = () => {
-                    document.body.removeChild(overlay);
-                    document.body.removeChild(dialog);
-                    resolve(false);
-                };
-                
-                document.getElementById('deleteConfirm').onclick = () => {
-                    document.body.removeChild(overlay);
-                    document.body.removeChild(dialog);
-                    removeImage(index);
-                    resolve(true);
-                };
-                
-                overlay.onclick = () => {
-                    document.body.removeChild(overlay);
-                    document.body.removeChild(dialog);
-                    resolve(false);
-                };
+                const close = (val) => { document.body.removeChild(overlay); document.body.removeChild(dialog); resolve(val); };
+                document.getElementById('deleteCancel').onclick = () => close(false);
+                document.getElementById('deleteConfirm').onclick = () => { if (callback) callback(); close(true); };
+                overlay.onclick = () => close(false);
             });
         }
 
-        let dragSrcIndex = null;
-
-        function attachDragHandlers() {
-            const cells = imagesGrid.querySelectorAll('[draggable="true"]');
-            cells.forEach(cell => {
-                cell.addEventListener('dragstart', e => {
-                    dragSrcIndex = parseInt(cell.dataset.index);
-                    cell.classList.add('dragging');
-                    e.dataTransfer.effectAllowed = 'move';
-                });
-                cell.addEventListener('dragend', () => {
-                    cell.classList.remove('dragging');
-                    imagesGrid.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-                });
-                cell.addEventListener('dragover', e => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'move';
-                    imagesGrid.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-                    cell.classList.add('drag-over');
-                });
-                cell.addEventListener('dragleave', () => {
-                    cell.classList.remove('drag-over');
-                });
-                cell.addEventListener('drop', e => {
-                    e.preventDefault();
-                    const destIndex = parseInt(cell.dataset.index);
-                    if (dragSrcIndex === null || dragSrcIndex === destIndex) return;
-                    const [moved] = images.splice(dragSrcIndex, 1);
-                    images.splice(destIndex, 0, moved);
-                    dragSrcIndex = null;
-                    updateUI();
-                });
+        function removePoolImage(poolIndex) {
+            const img = imagePool[poolIndex];
+            showDeleteDialog(img.filename || 'Image', () => {
+                if (img.url && img.url.startsWith('blob:')) URL.revokeObjectURL(img.url);
+                imagePool.splice(poolIndex, 1);
+                updateUI();
             });
         }
+
+        let gridDragSrc = null; // {type: 'grid', row, col} or {type: 'pool', index}
 
         function updateRows() {
-            userRows = parseInt(rowsSlider.value);
-            rowsValue.textContent = userRows;
-            updateLayoutPreview();
+            const newVal = parseInt(rowsSlider.value);
+            resizeGrid(newVal, numCols);
+            rowsValue.textContent = numRows;
+            updateUI();
+        }
+
+        function updateCols() {
+            const newVal = parseInt(colsSlider.value);
+            resizeGrid(numRows, newVal);
+            colsValue.textContent = numCols;
+            updateUI();
         }
 
         function updateCellWidth() {
             userCellWidth = parseInt(cellWidthSlider.value);
             cellWidthValue.textContent = userCellWidth + 'px';
-            
             if (aspectRatioLocked) {
                 userCellHeight = Math.round(userCellWidth / currentAspectRatio);
                 userCellHeight = Math.max(50, Math.min(1000, userCellHeight));
                 cellHeightSlider.value = userCellHeight;
                 cellHeightValue.textContent = userCellHeight + 'px';
             }
-            
             updateAspectRatioLabel();
             updateLayoutPreview();
         }
@@ -1845,14 +2247,12 @@
         function updateCellHeight() {
             userCellHeight = parseInt(cellHeightSlider.value);
             cellHeightValue.textContent = userCellHeight + 'px';
-            
             if (aspectRatioLocked) {
                 userCellWidth = Math.round(userCellHeight * currentAspectRatio);
                 userCellWidth = Math.max(50, Math.min(1000, userCellWidth));
                 cellWidthSlider.value = userCellWidth;
                 cellWidthValue.textContent = userCellWidth + 'px';
             }
-            
             updateAspectRatioLabel();
             updateLayoutPreview();
         }
@@ -1870,210 +2270,285 @@
             cellHeightSlider.value = height;
             cellWidthValue.textContent = width + 'px';
             cellHeightValue.textContent = height + 'px';
-            
-            if (aspectRatioLocked) {
-                currentAspectRatio = width / height;
-            }
-            
+            if (aspectRatioLocked) currentAspectRatio = width / height;
             updateAspectRatioLabel();
             updateLayoutPreview();
         }
 
         function updateLayoutPreview() {
-            if (images.length === 0) return;
-
-            const cols = Math.ceil(images.length / userRows);
-            const imageCells = images.filter(c => c.type === 'image').length;
-            const textCells  = images.filter(c => c.type === 'text').length;
-            const emptyCells = images.filter(c => c.type === 'empty').length;
-
             let preview = document.querySelector('.layout-preview');
             if (!preview) {
                 preview = document.createElement('div');
                 preview.className = 'layout-preview';
                 document.querySelector('.controls-section').appendChild(preview);
             }
-
-            const estimatedWidth  = cols * userCellWidth  + (cols - 1)     * userCellSpacing;
-            const estimatedHeight = userRows * userCellHeight + (userRows - 1) * userCellSpacing;
-
-            const parts = [`${imageCells} image${imageCells !== 1 ? 's' : ''}`];
-            if (textCells  > 0) parts.push(`${textCells} text`);
-            if (emptyCells > 0) parts.push(`${emptyCells} empty`);
-
-            preview.innerHTML = `
-                📐 ${userRows}×${cols} grid — ${parts.join(', ')}
-                <br>🎯 Canvas: ~${estimatedWidth}×${estimatedHeight}px &nbsp;·&nbsp; spacing: ${userCellSpacing}px
-            `;
+            const estimatedWidth = numCols * userCellWidth + (numCols - 1) * userCellSpacing;
+            const estimatedHeight = numRows * userCellHeight + (numRows - 1) * userCellSpacing;
+            let imgCount = 0, txtCount = 0;
+            for (let r = 0; r < numRows; r++) for (let c = 0; c < numCols; c++) {
+                if (grid[r][c].type === 'image') imgCount++;
+                if (grid[r][c].type === 'text') txtCount++;
+            }
+            const parts = [`${imgCount} image${imgCount !== 1 ? 's' : ''}`];
+            if (txtCount > 0) parts.push(`${txtCount} text`);
+            preview.innerHTML = `📐 ${numRows}×${numCols} grid — ${parts.join(', ')}<br>🎯 Canvas: ~${estimatedWidth}×${estimatedHeight}px · spacing: ${userCellSpacing}px`;
         }
 
         function getCellDimensions() {
             return { width: userCellWidth, height: userCellHeight };
         }
 
-        function updateUI() {
-            const realImages = images.filter(c => c.type === 'image').length;
-            const textCells = images.filter(c => c.type === 'text').length;
-            const emptyCells = images.filter(c => c.type === 'empty').length;
-            const parts = [`${realImages} image${realImages !== 1 ? 's' : ''}`];
-            if (textCells > 0) parts.push(`${textCells} text cell${textCells !== 1 ? 's' : ''}`);
-            if (emptyCells > 0) parts.push(`${emptyCells} empty cell${emptyCells !== 1 ? 's' : ''}`);
-            imageCounter.textContent = parts.join(' + ') + ' added';
-            
-            const sortButtons = document.getElementById('sortButtons');
-            if (sortButtons) {
-                sortButtons.style.display = images.length > 1 ? 'flex' : 'none';
+        function renderImagePool() {
+            const poolEl = document.getElementById('imagePool');
+            if (imagePool.length === 0) {
+                poolEl.innerHTML = '<span class="image-pool-empty">Upload images above — they appear here for placement into the grid</span>';
+                return;
             }
-            
-            if (images.length === 0) {
-                imagesGrid.innerHTML = '<div class="empty-state">No images added yet. Start by uploading or dragging images above.</div>';
-            } else {
-                imagesGrid.innerHTML = images.map((img, index) => {
-                    const cs = img.colspan || 1;
-                    const rs = img.rowspan || 1;
-                    const mergeBadge = (cs > 1 || rs > 1) ? `<span class="merge-badge">${cs}×${rs}</span>` : '';
-                    const mergeBtn = `<button class="merge-btn" onclick="openMergeModal(${index})" title="Set colspan/rowspan">⊞</button>`;
+            poolEl.innerHTML = imagePool.map((img, i) => `
+                <div class="pool-thumb" draggable="true" data-pool-index="${i}" title="${escapeHtml(img.filename || '')}">
+                    <img src="${img.url}" alt="${escapeHtml(img.filename || '')}">
+                    <button class="pool-remove" onclick="event.stopPropagation();removePoolImage(${i})">×</button>
+                </div>
+            `).join('');
+            // Attach drag events for pool thumbs
+            poolEl.querySelectorAll('.pool-thumb[draggable]').forEach(thumb => {
+                thumb.addEventListener('dragstart', e => {
+                    gridDragSrc = { type: 'pool', index: parseInt(thumb.dataset.poolIndex) };
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', 'pool');
+                });
+            });
+        }
 
-                    if (img.type === 'empty') {
-                        return `
-                            <div class="empty-cell-item" draggable="true" data-index="${index}">
-                                ⬜
-                                ${mergeBadge}
-                                <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
-                                <div class="drag-handle" title="Drag to reorder">⠿</div>
-                                ${mergeBtn}
-                            </div>
-                        `;
-                    } else if (img.type === 'text') {
-                        const previewBg = img.bgColor || '#5D4037';
-                        const previewColor = img.color || '#FFFFFF';
-                        const previewFont = `${img.italic ? 'italic ' : ''}${img.bold ? 'bold ' : ''}13px ${img.fontFamily || 'sans-serif'}`;
-                        const safeText = escapeHtml(img.text);
-                        return `
-                            <div class="text-cell-item" draggable="true" data-index="${index}" style="background:${previewBg}">
-                                <div class="text-cell-preview" style="color:${previewColor};font:${previewFont};text-align:${img.align||'center'}">${safeText || '<em style="opacity:.5">No text</em>'}</div>
-                                ${mergeBadge}
-                                <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
-                                <div class="drag-handle" title="Drag to reorder">⠿</div>
-                                <button class="edit-cell-btn" onclick="openTextCellModal(${index})">✏️ Edit</button>
-                                ${mergeBtn}
-                            </div>
-                        `;
-                    } else {
-                        return `
-                            <div class="image-item" draggable="true" data-index="${index}">
-                                <img src="${img.url}" alt="${escapeHtml(img.filename)}">
-                                ${mergeBadge}
-                                <button class="remove-btn" onclick="confirmRemoveImage(${index})">×</button>
-                                <div class="drag-handle" title="Drag to reorder">⠿</div>
-                                ${mergeBtn}
-                                ${showLabels ? `<input type="text" class="image-label-input" value="${escapeHtml(img.label)}" placeholder="Add label..." maxlength="40" onchange="updateImageLabel(${index}, this.value)">` : ''}
-                            </div>
-                        `;
-                    }
-                }).join('');
-                attachDragHandlers();
+        function renderGridEditor() {
+            const container = document.getElementById('gridEditorContainer');
+            const shadow = getShadowSet();
+            let html = '<table class="grid-editor">';
+
+            // Column add/delete header row
+            html += '<tr><td style="border:none;width:24px;height:24px;background:none"></td>';
+            for (let c = 0; c < numCols; c++) {
+                if (c > 0) html += `<td style="border:none;width:8px;height:24px;background:none;padding:0"><button class="grid-add-btn" onclick="insertCol(${c})" title="Insert column">+</button></td>`;
+                html += `<td style="border:none;height:24px;background:none;text-align:center"><button class="grid-del-btn" onclick="deleteCol(${c})" title="Delete column">−</button></td>`;
             }
-            
-            generateBtn.disabled = images.length === 0;
-            
+            html += '</tr>';
+
+            for (let r = 0; r < numRows; r++) {
+                // Row insert button row
+                if (r > 0) {
+                    html += `<tr><td style="border:none;width:24px;height:8px;background:none;padding:0"><button class="grid-add-btn" onclick="insertRow(${r})" title="Insert row">+</button></td>`;
+                    for (let c = 0; c < numCols; c++) {
+                        if (c > 0) html += '<td style="border:none;width:8px;height:8px;background:none;padding:0"></td>';
+                        html += '<td style="border:none;height:8px;background:none;padding:0"></td>';
+                    }
+                    html += '</tr>';
+                }
+
+                html += '<tr>';
+                // Row delete button
+                html += `<td style="border:none;width:24px;background:none;padding:0;vertical-align:middle"><button class="grid-del-btn" onclick="deleteRow(${r})" title="Delete row">−</button></td>`;
+
+                for (let c = 0; c < numCols; c++) {
+                    if (c > 0) html += '<td style="border:none;width:8px;background:none;padding:0"></td>'; // spacer between cols for add buttons
+
+                    if (shadow.has(`${r},${c}`)) continue; // skip shadow cells
+
+                    const cell = grid[r][c];
+                    const cs = Math.min(cell.colspan || 1, numCols - c);
+                    const rs = Math.min(cell.rowspan || 1, numRows - r);
+                    // Compute actual colspan accounting for spacer columns
+                    const tdColspan = cs > 1 ? cs * 2 - 1 : 1;
+                    const tdRowspan = rs > 1 ? rs * 2 - 1 : 1;
+
+                    let cls = '';
+                    let content = '<span style="font-size:24px;opacity:0.3">⬜</span>';
+                    if (cell.type === 'image' && cell.url) {
+                        cls = ' class="cell-image"';
+                        content = `<img src="${cell.url}" alt="${escapeHtml(cell.filename || '')}">`;
+                    } else if (cell.type === 'text') {
+                        cls = ' class="cell-text"';
+                        const bg = cell.bgColor || '#5D4037';
+                        const clr = cell.color || '#FFFFFF';
+                        const safeText = escapeHtml(cell.text || '');
+                        content = `<div class="cell-text-preview" style="background:${bg};color:${clr};border-radius:4px">${safeText || '<em style="opacity:.4">Text</em>'}</div>`;
+                    }
+
+                    html += `<td${cls} colspan="${tdColspan}" rowspan="${tdRowspan}" draggable="true" data-row="${r}" data-col="${c}">`;
+                    html += content;
+                    html += `<button class="cell-edit-btn" onclick="openCellModal(${r},${c})">✏️</button>`;
+                    if (showLabels && cell.type === 'image') {
+                        html += `<input type="text" class="image-label-input" value="${escapeHtml(cell.label || '')}" placeholder="Label" maxlength="40" onchange="grid[${r}][${c}].label=this.value" style="position:absolute;bottom:0;left:0;width:100%;font-size:9px;padding:2px">`;
+                    }
+                    html += '</td>';
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            container.innerHTML = html;
+
+            // Attach drag handlers for grid cells
+            container.querySelectorAll('td[draggable="true"]').forEach(td => {
+                td.addEventListener('dragstart', e => {
+                    const r = parseInt(td.dataset.row);
+                    const c = parseInt(td.dataset.col);
+                    gridDragSrc = { type: 'grid', row: r, col: c };
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', 'grid');
+                });
+                td.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    container.querySelectorAll('.drag-over-cell').forEach(el => el.classList.remove('drag-over-cell'));
+                    td.classList.add('drag-over-cell');
+                });
+                td.addEventListener('dragleave', () => td.classList.remove('drag-over-cell'));
+                td.addEventListener('drop', e => {
+                    e.preventDefault();
+                    td.classList.remove('drag-over-cell');
+                    const destR = parseInt(td.dataset.row);
+                    const destC = parseInt(td.dataset.col);
+                    if (!gridDragSrc) return;
+                    if (gridDragSrc.type === 'grid') {
+                        const sr = gridDragSrc.row, sc = gridDragSrc.col;
+                        if (sr === destR && sc === destC) return;
+                        const tmp = grid[destR][destC];
+                        grid[destR][destC] = grid[sr][sc];
+                        grid[sr][sc] = tmp;
+                    } else if (gridDragSrc.type === 'pool') {
+                        const pi = gridDragSrc.index;
+                        const poolImg = imagePool[pi];
+                        const destCell = grid[destR][destC];
+                        // If destination has image, swap to pool
+                        if (destCell.type === 'image' && destCell.url) {
+                            imagePool[pi] = { element: destCell.element, url: destCell.url, filename: destCell.filename, filesize: destCell.filesize, aspectRatio: destCell.element ? destCell.element.width / destCell.element.height : 1, label: destCell.label, dateAdded: destCell.dateAdded };
+                        } else {
+                            imagePool.splice(pi, 1);
+                        }
+                        grid[destR][destC] = Object.assign(makeEmptyCell(), {
+                            type: 'image', element: poolImg.element, url: poolImg.url,
+                            filename: poolImg.filename, filesize: poolImg.filesize,
+                            label: poolImg.label, dateAdded: poolImg.dateAdded,
+                            colspan: destCell.colspan || 1, rowspan: destCell.rowspan || 1
+                        });
+                    }
+                    gridDragSrc = null;
+                    updateUI();
+                });
+                td.addEventListener('dragend', () => {
+                    container.querySelectorAll('.drag-over-cell').forEach(el => el.classList.remove('drag-over-cell'));
+                });
+            });
+        }
+
+        function insertRow(atIndex) {
+            const newRow = [];
+            for (let c = 0; c < numCols; c++) newRow.push(makeEmptyCell());
+            grid.splice(atIndex, 0, newRow);
+            numRows++;
+            rowsSlider.value = numRows;
+            rowsValue.textContent = numRows;
+            updateUI();
+        }
+
+        function insertCol(atIndex) {
+            for (let r = 0; r < numRows; r++) {
+                grid[r].splice(atIndex, 0, makeEmptyCell());
+            }
+            numCols++;
+            colsSlider.value = numCols;
+            colsValue.textContent = numCols;
+            updateUI();
+        }
+
+        function deleteRow(rowIdx) {
+            if (numRows <= 1) return;
+            const hasContent = grid[rowIdx].some(c => c.type !== 'empty');
+            const doDelete = () => {
+                // Return images to pool
+                grid[rowIdx].forEach(c => {
+                    if (c.type === 'image' && c.url) imagePool.push({ element: c.element, url: c.url, filename: c.filename, filesize: c.filesize, aspectRatio: c.element ? c.element.width / c.element.height : 1, label: c.label, dateAdded: c.dateAdded });
+                });
+                grid.splice(rowIdx, 1);
+                numRows--;
+                rowsSlider.value = numRows;
+                rowsValue.textContent = numRows;
+                updateUI();
+            };
+            if (hasContent) {
+                showDeleteDialog('this row', doDelete);
+            } else {
+                doDelete();
+            }
+        }
+
+        function deleteCol(colIdx) {
+            if (numCols <= 1) return;
+            const hasContent = grid.some(row => row[colIdx] && row[colIdx].type !== 'empty');
+            const doDelete = () => {
+                for (let r = 0; r < numRows; r++) {
+                    const c = grid[r][colIdx];
+                    if (c && c.type === 'image' && c.url) imagePool.push({ element: c.element, url: c.url, filename: c.filename, filesize: c.filesize, aspectRatio: c.element ? c.element.width / c.element.height : 1, label: c.label, dateAdded: c.dateAdded });
+                    grid[r].splice(colIdx, 1);
+                }
+                numCols--;
+                colsSlider.value = numCols;
+                colsValue.textContent = numCols;
+                updateUI();
+            };
+            if (hasContent) {
+                showDeleteDialog('this column', doDelete);
+            } else {
+                doDelete();
+            }
+        }
+
+        function updateUI() {
+            // Count cells
+            let imgCount = 0, txtCount = 0;
+            for (let r = 0; r < numRows; r++) for (let c = 0; c < numCols; c++) {
+                if (grid[r][c].type === 'image') imgCount++;
+                if (grid[r][c].type === 'text') txtCount++;
+            }
+            const parts = [`${imgCount} image${imgCount !== 1 ? 's' : ''} in grid`];
+            if (txtCount > 0) parts.push(`${txtCount} text`);
+            if (imagePool.length > 0) parts.push(`${imagePool.length} in pool`);
+            imageCounter.textContent = parts.join(' + ');
+
+            renderGridEditor();
+            renderImagePool();
+            generateBtn.disabled = false;
             updateLayoutPreview();
         }
 
-        function removeImage(index) {
-            if (images[index].type === 'image' && images[index].url && images[index].url.startsWith('blob:')) {
-                URL.revokeObjectURL(images[index].url);
-            }
-            
-            images.splice(index, 1);
-            updateUI();
-            showPopupStatus('Image removed', 'info');
-        }
-
-        function calculateOptimalLayout(count) {
-            const cols = Math.ceil(count / userRows);
-            return { rows: userRows, cols: cols };
+        function updateImageLabel(row, col, value) {
+            grid[row][col].label = value.slice(0, 40);
         }
 
         async function generateCollage() {
-            if (images.length === 0) {
-                showPopupStatus('Add some images first!', 'error');
-                return;
-            }
-            
             try {
                 generateBtn.innerHTML = '<div class="loading"></div>Generating...';
                 generateBtn.disabled = true;
-                
-                const layout = calculateOptimalLayout(images.length);
                 const cellDims = getCellDimensions();
-                const canvas = createCollageCanvas(images, layout.rows, layout.cols, cellDims, userCellSpacing);
-                
+                const canvas = createCollageCanvas(numRows, numCols, cellDims, userCellSpacing);
                 collageCanvas.width = canvas.width;
                 collageCanvas.height = canvas.height;
                 const ctx = collageCanvas.getContext('2d');
                 ctx.drawImage(canvas, 0, 0);
-                
                 collagePreview.style.display = 'block';
                 collagePreview.scrollIntoView({ behavior: 'smooth' });
-                
                 document.getElementById('collageInfo').innerHTML = `
-                    <p><strong>Layout:</strong> ${layout.rows}×${layout.cols} grid (${images.length} items)</p>
+                    <p><strong>Layout:</strong> ${numRows}×${numCols} grid</p>
                     <p><strong>Canvas size:</strong> ${canvas.width}×${canvas.height}px</p>
                     <p><strong>Cell size:</strong> ${cellDims.width}×${cellDims.height}px</p>
                     <p><strong>Cell spacing:</strong> ${userCellSpacing}px</p>
                 `;
-                
-                showPopupStatus(`🎉 Collage generated! Layout: ${layout.rows}×${layout.cols}`, 'success');
-                
+                showPopupStatus(`🎉 Collage generated! ${numRows}×${numCols}`, 'success');
             } catch (error) {
                 showPopupStatus(`Failed to generate collage: ${error.message}`, 'error');
             } finally {
                 generateBtn.innerHTML = '🎨 Generate Collage';
                 generateBtn.disabled = false;
             }
-        }
-
-        // Returns [{item, row, col, colspan, rowspan}, ...] and total rows used
-        function placeItemsInGrid(items, cols) {
-            const placements = [];
-            // occupied[r][c] = true means that slot is taken
-            const occupied = [];
-            const ensureRow = r => { while (occupied.length <= r) occupied.push(new Array(cols).fill(false)); };
-
-            let cursor = 0; // flat slot index
-            for (const item of items) {
-                const cs = Math.min(item.colspan || 1, cols);
-                const rs = item.rowspan || 1;
-                // find first top-left where cs×rs block fits
-                let placed = false;
-                while (!placed) {
-                    const r = Math.floor(cursor / cols);
-                    const c = cursor % cols;
-                    ensureRow(r + rs - 1);
-                    // check all slots in the block
-                    if (c + cs <= cols) {
-                        let fits = true;
-                        outer: for (let dr = 0; dr < rs; dr++) {
-                            ensureRow(r + dr);
-                            for (let dc = 0; dc < cs; dc++) {
-                                if (occupied[r + dr][c + dc]) { fits = false; break outer; }
-                            }
-                        }
-                        if (fits) {
-                            for (let dr = 0; dr < rs; dr++) {
-                                ensureRow(r + dr);
-                                for (let dc = 0; dc < cs; dc++) occupied[r + dr][c + dc] = true;
-                            }
-                            placements.push({ item, row: r, col: c, colspan: cs, rowspan: rs });
-                            placed = true;
-                        }
-                    }
-                    cursor++;
-                }
-            }
-            const totalRows = occupied.length;
-            return { placements, totalRows };
         }
 
         // Binary-searches for the largest fontSize where all wrapped lines fit.
@@ -2113,33 +2588,55 @@
             return lines.length ? lines : [''];
         }
 
-        function createCollageCanvas(imageItems, rows, cols, cellDims, spacing = 5) {
+        function createCollageCanvas(rows, cols, cellDims, spacing = 5) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            const { placements, totalRows } = placeItemsInGrid(imageItems, cols);
-            const usedRows = Math.max(rows, totalRows);
-
             const collageWidth = cols * cellDims.width + (cols - 1) * spacing;
-            const collageHeight = usedRows * cellDims.height + (usedRows - 1) * spacing;
+            const collageHeight = rows * cellDims.height + (rows - 1) * spacing;
 
             canvas.width = collageWidth;
             canvas.height = collageHeight;
-            ctx.fillStyle = collageBgColor;
-            ctx.fillRect(0, 0, collageWidth, collageHeight);
+            if (collageBgColor.alpha > 0) {
+                ctx.fillStyle = toRgba(collageBgColor.hex, collageBgColor.alpha);
+                ctx.fillRect(0, 0, collageWidth, collageHeight);
+            }
+
+            // Build placements from grid
+            const shadow = getShadowSet();
+            const placements = [];
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (shadow.has(`${r},${c}`)) continue;
+                    const cell = grid[r] && grid[r][c];
+                    if (!cell) continue;
+                    const cs = Math.min(cell.colspan || 1, cols - c);
+                    const rs = Math.min(cell.rowspan || 1, rows - r);
+                    placements.push({ item: cell, row: r, col: c, colspan: cs, rowspan: rs });
+                }
+            }
 
             for (const { item, row, col, colspan, rowspan } of placements) {
-                if (item.type === 'empty') continue;
-
                 const cellW = colspan * cellDims.width + (colspan - 1) * spacing;
                 const cellH = rowspan * cellDims.height + (rowspan - 1) * spacing;
                 const tx = col * (cellDims.width + spacing);
                 const ty = row * (cellDims.height + spacing);
 
+                if (item.type === 'empty') {
+                    if ((item.bgAlpha || 0) > 0) {
+                        ctx.fillStyle = toRgba(item.bgColor || '#ffffff', item.bgAlpha);
+                        ctx.fillRect(tx, ty, cellW, cellH);
+                    }
+                    continue;
+                }
+
                 if (item.type === 'text') {
                     ctx.save();
-                    ctx.fillStyle = item.bgColor || '#5D4037';
-                    ctx.fillRect(tx, ty, cellW, cellH);
+                    const tbgAlpha = item.bgAlpha != null ? item.bgAlpha : 1.0;
+                    if (tbgAlpha > 0) {
+                        ctx.fillStyle = toRgba(item.bgColor || '#5D4037', tbgAlpha);
+                        ctx.fillRect(tx, ty, cellW, cellH);
+                    }
                     const textContent = item.text || '';
                     if (textContent) {
                         const prefix = `${item.italic ? 'italic ' : ''}${item.bold ? 'bold ' : ''}`;
@@ -2150,7 +2647,7 @@
                             fontSize = fitFontSize(ctx, textContent, `${prefix}__SIZE__px ${family}`, cellW, cellH, baseSize);
                         }
                         ctx.font = `${prefix}${fontSize}px ${family}`;
-                        ctx.fillStyle = item.color || '#FFFFFF';
+                        ctx.fillStyle = toRgba(item.color || '#FFFFFF', item.colorAlpha != null ? item.colorAlpha : 1.0);
                         ctx.textAlign = item.align || 'center';
                         ctx.textBaseline = 'middle';
                         const lines = wrapTextLines(ctx, textContent, cellW - 20);
@@ -2171,8 +2668,8 @@
 
                 // image cell
                 const img = item.element;
-                if (item.bgColor) {
-                    ctx.fillStyle = item.bgColor;
+                if ((item.bgAlpha || 0) > 0) {
+                    ctx.fillStyle = toRgba(item.bgColor || '#ffffff', item.bgAlpha);
                     ctx.fillRect(tx, ty, cellW, cellH);
                 }
                 const labelHeight = showLabels && item.label ? 20 : 0;
@@ -2194,14 +2691,53 @@
                         displayLabel = displayLabel.slice(0, -1);
                     }
                     if (displayLabel.length < item.label.length) displayLabel = displayLabel.trim() + '...';
-                    ctx.strokeStyle = '#000000';
+                    ctx.strokeStyle = toRgba(labelOutlineColor.hex, labelOutlineColor.alpha);
                     ctx.lineWidth = labelOutlineWidth;
                     ctx.lineJoin = 'round';
                     ctx.strokeText(displayLabel, labelX, labelY);
-                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillStyle = toRgba(labelTextColor.hex, labelTextColor.alpha);
                     ctx.fillText(displayLabel, labelX, labelY);
                     ctx.restore();
                 }
+            }
+
+            // Border rendering pass
+            if (showBorders) {
+                ctx.save();
+                ctx.strokeStyle = toRgba(borderColor.hex, borderColor.alpha);
+                ctx.lineWidth = borderThickness;
+                for (const { item, row, col, colspan, rowspan } of placements) {
+                    const cellW = colspan * cellDims.width + (colspan - 1) * spacing;
+                    const cellH = rowspan * cellDims.height + (rowspan - 1) * spacing;
+                    const bx = col * (cellDims.width + spacing);
+                    const by = row * (cellDims.height + spacing);
+                    const edges = { top: false, right: false, bottom: false, left: false };
+                    if (borderMode === 'all') {
+                        edges.top = edges.right = edges.bottom = edges.left = true;
+                    } else if (borderMode === 'outer') {
+                        if (row === 0) edges.top = true;
+                        if (col + colspan >= cols) edges.right = true;
+                        if (row + rowspan >= rows) edges.bottom = true;
+                        if (col === 0) edges.left = true;
+                    } else if (borderMode === 'inner') {
+                        if (row > 0) edges.top = true;
+                        if (col + colspan < cols) edges.right = true;
+                        if (row + rowspan < rows) edges.bottom = true;
+                        if (col > 0) edges.left = true;
+                    } else if (borderMode === 'custom') {
+                        edges.top = borderSides.top;
+                        edges.right = borderSides.right;
+                        edges.bottom = borderSides.bottom;
+                        edges.left = borderSides.left;
+                    }
+                    ctx.beginPath();
+                    if (edges.top) { ctx.moveTo(bx, by); ctx.lineTo(bx + cellW, by); }
+                    if (edges.right) { ctx.moveTo(bx + cellW, by); ctx.lineTo(bx + cellW, by + cellH); }
+                    if (edges.bottom) { ctx.moveTo(bx + cellW, by + cellH); ctx.lineTo(bx, by + cellH); }
+                    if (edges.left) { ctx.moveTo(bx, by + cellH); ctx.lineTo(bx, by); }
+                    ctx.stroke();
+                }
+                ctx.restore();
             }
 
             return canvas;
@@ -2229,7 +2765,7 @@
         function downloadCollage() {
             try {
                 const link = document.createElement('a');
-                link.download = `collage_${images.length}_images_${Date.now()}.png`;
+                link.download = `collage_${numRows}x${numCols}_${Date.now()}.png`;
                 link.href = collageCanvas.toDataURL('image/png');
                 
                 document.body.appendChild(link);
@@ -2264,26 +2800,49 @@
             }, 2000);
         }
 
-        function toggleShowLabels() {
-            const toggle = document.getElementById('showLabelsToggle');
-            showLabels = toggle.checked;
-            
-            // Show/hide font controls
-            const fontSizeControl = document.getElementById('labelFontSizeControl');
-            const fontStyleControl = document.getElementById('labelFontStyleControl');
-            if (fontSizeControl) {
-                fontSizeControl.style.display = showLabels ? 'block' : 'none';
-            }
-            if (fontStyleControl) {
-                fontStyleControl.style.display = showLabels ? 'block' : 'none';
-            }
-
-            const fontOutlineControl = document.getElementById('labelOutlineControl');
-            if (fontOutlineControl) {
-                fontOutlineControl.style.display = showLabels ? 'block' : 'none';
-            }
-            
+        function toggleShowLabelsBtn() {
+            showLabels = !showLabels;
+            const btn = document.getElementById('tbLabels');
+            if (btn) btn.classList.toggle('active', showLabels);
+            const row = document.getElementById('labelControlsRow');
+            if (row) row.style.display = showLabels ? 'flex' : 'none';
             updateUI();
+        }
+
+        function toggleShowLabels() {
+            toggleShowLabelsBtn();
+        }
+
+        function toggleBgColorRow() {
+            const row = document.getElementById('bgColorRow');
+            const btn = document.getElementById('tbBgColor');
+            const visible = row.style.display !== 'none';
+            row.style.display = visible ? 'none' : 'flex';
+            if (btn) btn.classList.toggle('active', !visible);
+        }
+
+        function toggleControlsCollapse() {
+            const body = document.getElementById('controlsBody');
+            const btn = document.getElementById('controlsCollapseBtn');
+            body.classList.toggle('collapsed');
+            btn.classList.toggle('collapsed');
+        }
+
+        function toggleBordersBtn() {
+            showBorders = !showBorders;
+            const btn = document.getElementById('tbBorders');
+            if (btn) btn.classList.toggle('active', showBorders);
+            const row = document.getElementById('borderControlsRow');
+            if (row) row.style.display = showBorders ? 'block' : 'none';
+        }
+
+        function setBorderMode(mode) {
+            borderMode = mode;
+            document.querySelectorAll('.border-mode-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.bmode === mode);
+            });
+            const customRow = document.getElementById('borderCustomRow');
+            if (customRow) customRow.style.display = mode === 'custom' ? 'flex' : 'none';
         }
 
         function adjustLabelFont(delta) {
@@ -2298,11 +2857,6 @@
             labelFontSize = parseInt(slider.value);
             document.getElementById('labelFontValue').textContent = labelFontSize + 'px';
         }
-
-        function updateImageLabel(index, value) {
-            images[index].label = value.slice(0, 40);
-        }
-
 
         function updateLabelFontStyle() {
             const select = document.getElementById('labelFontSelect');
@@ -2323,42 +2877,14 @@
         }
 
         function updateCollageBg() {
-            collageBgColor = document.getElementById('collageBgColor').value;
+            // handled by makeColorPicker onChange
         }
 
-        function sortImages(by, direction) {
-            if (images.length === 0) return;
-            
-            const sortedImages = [...images];
-            
-            if (by === 'label') {
-                sortedImages.sort((a, b) => {
-                    const labelA = (a.label || a.filename || '').toLowerCase();
-                    const labelB = (b.label || b.filename || '').toLowerCase();
-                    
-                    if (direction === 'asc') {
-                        return labelA.localeCompare(labelB, undefined, {numeric: true, sensitivity: 'base'});
-                    } else {
-                        return labelB.localeCompare(labelA, undefined, {numeric: true, sensitivity: 'base'});
-                    }
-                });
-            } else if (by === 'date') {
-                sortedImages.sort((a, b) => {
-                    const dateA = a.dateAdded || 0;
-                    const dateB = b.dateAdded || 0;
-                    
-                    if (direction === 'asc') {
-                        return dateA - dateB;
-                    } else {
-                        return dateB - dateA;
-                    }
-                });
-            }
-            
-            images = sortedImages;
-            updateUI();
-            showPopupStatus(`Sorted by ${by} (${direction === 'asc' ? 'ascending' : 'descending'})`, 'info');
-        }
+        // Initialize color pickers
+        makeColorPicker('collageBgColorPicker', collageBgColor.hex, collageBgColor.alpha, (s) => { collageBgColor.hex = s.hex; collageBgColor.alpha = s.alpha; });
+        makeColorPicker('labelTextColorPicker', labelTextColor.hex, labelTextColor.alpha, (s) => { labelTextColor.hex = s.hex; labelTextColor.alpha = s.alpha; });
+        makeColorPicker('labelOutlineColorPicker', labelOutlineColor.hex, labelOutlineColor.alpha, (s) => { labelOutlineColor.hex = s.hex; labelOutlineColor.alpha = s.alpha; });
+        makeColorPicker('borderColorPicker', borderColor.hex, borderColor.alpha, (s) => { borderColor.hex = s.hex; borderColor.alpha = s.alpha; });
 
         renderHeader();
         updateUI();
