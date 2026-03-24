@@ -960,13 +960,17 @@
             position: absolute;
             top: calc(100% + 6px);
             left: 0;
-            background: linear-gradient(160deg, #FFFAF0, #FFF3E0);
-            border-radius: 10px;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.22);
-            min-width: 180px;
+            background: #FFFAF0;
+            border-radius: 12px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+            min-width: 200px;
             z-index: 200;
             overflow: hidden;
             animation: menuSlideIn 0.15s ease-out;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         @keyframes menuSlideIn {
@@ -979,21 +983,49 @@
             align-items: center;
             gap: 10px;
             width: 100%;
-            padding: 13px 18px;
+            padding: 10px 14px;
             background: none;
             border: none;
-            font-size: 15px;
-            color: #3E2723;
+            font-size: 14px;
             cursor: pointer;
             text-align: left;
-            transition: background 0.12s;
+            transition: filter 0.15s;
+            border-radius: 0;
+        }
+        .app-menu-item { border-radius: 8px; }
+        .app-menu-item:hover { filter: brightness(1.1); }
+
+        .app-menu-item .menu-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .app-menu-item .menu-name { font-weight: 700; }
+
+        /* Cuppa menu row */
+        .app-menu-item.menu-cuppa {
+            background: linear-gradient(90deg, #3E2723 0%, #5D4037 60%, #8D6E63 100%);
+            color: #fff;
+        }
+        .app-menu-item.menu-cuppa .menu-logo {
+            background: rgba(255,255,255,0.18);
         }
 
-        .app-menu-item:hover { background: linear-gradient(135deg, #FFF8E1, #F5E6D3); }
+        /* Peony menu row */
+        .app-menu-item.menu-peony {
+            background: linear-gradient(90deg, #7B5EA7 0%, #9E7BB5 40%, #5E8C61 100%);
+            color: #fff;
+        }
+        .app-menu-item.menu-peony .menu-logo {
+            background: rgba(255,255,255,0.18);
+        }
 
-        .app-menu-item .menu-emoji { font-size: 18px; }
-        .app-menu-item .menu-name { font-weight: 700; }
-        .app-menu-divider { height: 1px; background: #EEE; margin: 0; }
+        .app-menu-divider { height: 0; margin: 0; }
 
         .color-picker-inline {
             display: flex;
@@ -1334,6 +1366,7 @@
             justify-content: center;
             padding: 0;
             line-height: 1;
+            margin: 0 auto;
         }
         .grid-pencil-btn:hover { background: rgba(62,39,35,1); }
 
@@ -1470,6 +1503,7 @@
                             <button type="button" class="toolbar-pill" id="tbAspectLock" onclick="toggleAspectRatioLockBtn()">🔒 Lock ratio</button>
                             <button type="button" class="toolbar-pill" id="tbLabels" onclick="toggleShowLabelsBtn()">🏷️ Image labels</button>
                             <button type="button" class="toolbar-pill" id="tbBgColor" onclick="toggleBgColorRow()">🎨 Background</button>
+                            <button type="button" class="toolbar-pill" id="tbBorders" onclick="toggleBordersBtn()">🔲 Borders</button>
                         </div>
 
                         <div class="bg-color-row" id="bgColorRow" style="display:none">
@@ -1525,9 +1559,6 @@
                         </div>
 
                         <div style="margin-top:8px">
-                            <div class="icon-toolbar" style="justify-content:flex-start;margin:0 0 6px">
-                                <button type="button" class="toolbar-pill" id="tbBorders" onclick="toggleBordersBtn()">🔲 Enable table borders</button>
-                            </div>
                             <div id="borderControlsRow" style="display:none">
                                 <div class="label-controls-row">
                                     <div class="control-item">
@@ -1627,12 +1658,11 @@
                         <button class="app-header-hamburger" onclick="toggleAppMenu(event)" aria-label="Menu">&#9776;</button>
                         ${state.showAppMenu ? `
                         <div class="app-menu-dropdown" id="appMenuDropdown">
-                            <button class="app-menu-item" onclick="backToHome()">
-                                <span class="menu-emoji">☕</span><span class="menu-name">Cuppa</span>
+                            <button class="app-menu-item menu-cuppa" onclick="backToHome()">
+                                <span class="menu-logo">☕</span><span class="menu-name">Cuppa</span>
                             </button>
-                            <div class="app-menu-divider"></div>
-                            <button class="app-menu-item" onclick="window.location.href='https://bicipikay.github.io/peony/'">
-                                <span class="menu-emoji">🌺</span><span class="menu-name">Peony</span>
+                            <button class="app-menu-item menu-peony" onclick="window.location.href='https://bicipikay.github.io/peony/'">
+                                <span class="menu-logo">🌺</span><span class="menu-name">Peony</span>
                             </button>
                         </div>` : ''}
                     </div>
@@ -2470,7 +2500,7 @@
                 // Data row
                 html += '<tr>';
                 // Row pencil button
-                html += `<td style="${SP}width:24px;vertical-align:middle"><button class="grid-pencil-btn" onclick="openRowModal(${r})" title="Row ${r+1} settings (${rowHeights[r]||userCellHeight}px)">✏️</button></td>`;
+                html += `<td style="${SP}width:24px;vertical-align:middle;text-align:center"><button class="grid-pencil-btn" onclick="openRowModal(${r})" title="Row ${r+1} settings (${rowHeights[r]||userCellHeight}px)">✏️</button></td>`;
                 html += `<td style="${SP}width:8px"></td>`; // lead-pad
 
                 for (let c = 0; c < numCols; c++) {
